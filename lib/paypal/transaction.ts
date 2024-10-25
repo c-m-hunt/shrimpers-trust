@@ -1,5 +1,5 @@
 import { PayPal } from "./index.ts";
-import logger from "../../utils/index.ts";
+import logger, { transformKeysToCamelCase } from "../../utils/index.ts";
 import { Transaction as TransactionType } from "./transactionTypes.ts";
 
 export type TransactionSearchCriteria = {
@@ -35,7 +35,7 @@ export class Transaction extends PayPal {
       }
       page++;
     }
-    return transactions;
+    return transformKeysToCamelCase(transactions);
   };
 }
 
@@ -57,5 +57,3 @@ export const getTransactionSingleton = async (
   transactions[key] = trans;
   return trans;
 };
-
-

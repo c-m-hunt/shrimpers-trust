@@ -70,7 +70,7 @@ export class PayPal {
     // Cache key is MD5 hash of the URL
     const cacheKey = new TextEncoder().encode(url);
     const hash = await crypto.subtle.digest("SHA-256", cacheKey);
-    const cachedData = getCache(Buffer.from(hash).toString('hex'));
+    const cachedData = getCache(Buffer.from(hash).toString("hex"));
     if (cachedData) {
       return cachedData;
     }
@@ -100,7 +100,7 @@ export class PayPal {
 
     if (expectJson) {
       const returnData: any = await response.json();
-      setCache(Buffer.from(hash).toString('hex'), returnData);
+      setCache(Buffer.from(hash).toString("hex"), returnData);
       return returnData;
     } else {
       return await response.text();
