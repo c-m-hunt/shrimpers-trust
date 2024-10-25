@@ -1,6 +1,7 @@
 import { PayPal } from "./index.ts";
-import logger, { transformKeysToCamelCase } from "../../utils/index.ts";
+
 import { Transaction as TransactionType } from "./transactionTypes.ts";
+import logger, { transformKeysToCamelCase } from "../utils/index.ts";
 
 export type TransactionSearchCriteria = {
   start_date: string;

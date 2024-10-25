@@ -4,7 +4,7 @@ import winston from "winston";
 const options: winston.LoggerOptions = {
   transports: [
     new winston.transports.Console({
-      level: process.env.NODE_ENV === "production" ? "error" : "debug",
+      level: process.env.NODE_ENV === "production" ? "error" : "info",
     }),
     new winston.transports.File({ filename: "debug.log", level: "debug" }),
   ],
@@ -38,4 +38,18 @@ export const transformKeysToCamelCase = (obj: any): any => {
 
 export const isIterable = (obj: any): boolean => {
   return obj != null && typeof obj[Symbol.iterator] === "function";
+};
+
+export const formatMoney = (amount: number): string => {
+  // Format to 2 decimal places with a £ sign and commas for thousands
+  return `£${amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+};
+
+export const createDateFromMonth = (month: string, year: string) => {
+  const date = new Date();
+  date.setFullYear(parseInt(year));
+  date.setMonth(parseInt(month) - 1);
+  date.setDate(1);
+  date.setHours(0, 0, 0, 0);
+  return date;
 };

@@ -1,5 +1,5 @@
 import { PayPal } from "./index.ts";
-import logger from "../../utils/index.ts";
+import logger from "../utils/index.ts";
 
 export class Balances extends PayPal {
   get = async () => {
