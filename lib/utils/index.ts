@@ -23,6 +23,7 @@ function toCamelCase(snakeStr: string): string {
 }
 
 // Function to transform JSON object keys to camelCase
+// deno-lint-ignore no-explicit-any
 export const transformKeysToCamelCase = (obj: any): any => {
   if (Array.isArray(obj)) {
     return obj.map((item) => transformKeysToCamelCase(item));
@@ -31,11 +32,13 @@ export const transformKeysToCamelCase = (obj: any): any => {
       const camelCaseKey = toCamelCase(key);
       acc[camelCaseKey] = transformKeysToCamelCase(obj[key]);
       return acc;
+      // deno-lint-ignore no-explicit-any
     }, {} as any);
   }
   return obj; // If it's not an object or array, return the value as-is
 };
 
+// deno-lint-ignore no-explicit-any
 export const isIterable = (obj: any): boolean => {
   return obj != null && typeof obj[Symbol.iterator] === "function";
 };

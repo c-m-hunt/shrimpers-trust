@@ -10,6 +10,7 @@ type TransactionInfo = {
   transactionInitiationDate: string;
   transactionUpdatedDate: string;
   transactionAmount: CurrencyAmount;
+  shippingAmount: CurrencyAmount;
   feeAmount: CurrencyAmount;
   transactionStatus: string;
   endingBalance: CurrencyAmount;

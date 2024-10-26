@@ -8,7 +8,7 @@ export const getCache = (key: string): null | object => {
     const data = Deno.readFileSync(`${CACHE_PATH}/${key}.json`);
     const jsonString = new TextDecoder().decode(data);
     return JSON.parse(jsonString);
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 };

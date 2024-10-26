@@ -55,3 +55,8 @@ export interface Invoice {
   items: Item[];
   configuration: Configuration;
 }
+
+export type ItemSummary = {
+  total: number;
+  qty: number;
+};

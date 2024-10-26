@@ -14,8 +14,15 @@ export type TransactionSearchCriteria = {
   page?: string;
 };
 
+type TransactionSearchResponse = {
+  transaction_details: TransactionType[];
+  total_pages: number;
+};
+
 export class Transaction extends PayPal {
-  search = async (searchCritera: TransactionSearchCriteria) => {
+  search = async (
+    searchCritera: TransactionSearchCriteria,
+  ): Promise<TransactionType[]> => {
     const pageSize = 20;
     let page = 1;
     let transactions: TransactionType[] = [];
@@ -26,10 +33,10 @@ export class Transaction extends PayPal {
         page: page.toString(),
         page_size: pageSize.toString(),
       }).toString();
-      const resp: any = await this.request(
+      const resp: TransactionSearchResponse = await this.request(
         "/reporting/transactions?" + queryString,
         "GET",
-      );
+      ) as TransactionSearchResponse;
       transactions = transactions.concat(resp.transaction_details);
       if (resp.total_pages === page) {
         break;
@@ -46,7 +53,7 @@ export const getTransactionSingleton = async (
   clientId: string,
   secret: string,
   sandbox: boolean = false,
-  version: string = "v2",
+  version: string = "v1",
 ): Promise<Transaction> => {
   const key = `${clientId}${secret}${sandbox}${version}`;
   if (Object.keys(transactions).includes(key)) {

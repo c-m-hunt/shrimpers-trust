@@ -1,6 +1,7 @@
 import { getTransactionSingleton } from "./transaction.ts";
 import { formatMoney, isIterable } from "../utils/index.ts";
 import logger from "../utils/index.ts";
+import type { ItemSummary } from "./types.ts";
 
 const clientId = Deno.env.get("PAYPAL_CLIENT_ID");
 const secret = Deno.env.get("PAYPAL_SECRET");
@@ -16,11 +17,7 @@ export const reconcilePaypalTransactionsForMonth = async (
   const transClient = await getTransactionSingleton(
     clientId,
     secret,
-    false,
-    "v1",
   );
-
-  transClient.baseUrl = "https://api-m.paypal.com";
 
   const trans = await transClient.search({
     start_date: startDate.toISOString(), // "2024-09-01T00:00:00Z",
@@ -28,11 +25,9 @@ export const reconcilePaypalTransactionsForMonth = async (
     fields: "all",
   });
 
-  // console.log(trans);
-  // console.log(trans.length)
   const UNKNOWN = "unknown";
   const SHIPPING = "shipping";
-  const totalTemplate: any = {};
+  const totalTemplate: { [key: string]: ItemSummary } = {};
   totalTemplate[UNKNOWN] = {
     total: 0,
     qty: 0,
@@ -47,12 +42,31 @@ export const reconcilePaypalTransactionsForMonth = async (
   let refundsTotal = 0;
   let shippingTotal = 0;
 
-  const itemTotals: any = { ...totalTemplate };
-  const refundItemTotals: any = { ...totalTemplate };
+  const itemTotals = { ...totalTemplate };
+  const refundItemTotals = { ...totalTemplate };
 
   // Item 61
+  // Event codes https://developer.paypal.com/docs/transaction-search/transaction-event-codes/
+  const normalTransType = ["T0005", "T0006"];
+  const cardTransType = ["T0001"];
+  const refundTransType = ["T1107"];
+
+  const allKnownTransTypes = [
+    ...normalTransType,
+    ...refundTransType,
+    ...cardTransType,
+  ];
 
   for (const tran of trans) {
+    if (
+      !allKnownTransTypes.includes(tran.transactionInfo.transactionEventCode)
+    ) {
+      logger.error(
+        `Unknown transaction type: ${tran.transactionInfo.transactionId} ${tran.transactionInfo.transactionEventCode}`,
+      );
+      continue;
+    }
+
     if (tran.transactionInfo.transactionStatus === "P") {
       logger.debug(
         `Pending transaction: ${tran.transactionInfo.transactionId}`,
@@ -60,7 +74,9 @@ export const reconcilePaypalTransactionsForMonth = async (
       continue;
     }
 
-    let isRefund = false;
+    let isRefund = refundTransType.includes(
+      tran.transactionInfo.transactionEventCode,
+    );
     const transAmt = parseFloat(tran.transactionInfo.transactionAmount.value);
     if (!isNaN(transAmt)) {
       transTotal += transAmt;
@@ -91,10 +107,6 @@ export const reconcilePaypalTransactionsForMonth = async (
 
     // Things like card payments don't have cart items
     if (Object.keys(tran.cartInfo).length === 0) {
-      console.log("No cart info");
-      console.log(transAmt);
-      console.log(tran.transactionInfo.transactionId);
-      console.log("---------------");
       itemTotals[UNKNOWN]["total"] += transAmt;
     }
 
@@ -137,23 +149,18 @@ export const reconcilePaypalTransactionsForMonth = async (
 
   itemTotals[SHIPPING]["total"] = shippingTotal;
 
-  const itemsValue = Object.keys(itemTotals).reduce(
-    (acc, key) => acc + itemTotals[key]["total"],
-    0,
-  );
+  displaySummary({
+    transTotal,
+    feesTotal,
+    refundsTotal,
+    shippingTotal,
+    itemsValue: Object.keys(itemTotals).reduce(
+      (acc, key) => acc + itemTotals[key]["total"],
+      0,
+    ),
+    transactionCount: trans.length,
+  });
 
-  console.log("------------------------------------------------------------");
-  console.log(`Total:                          ${formatMoney(transTotal)}`);
-  console.log(`Fees:                           ${formatMoney(feesTotal)}`);
-  console.log(`Shipping:                       ${formatMoney(shippingTotal)}`);
-  console.log(`Refunds:                        ${formatMoney(refundsTotal)}`);
-  console.log(`Transaction count:              ${trans.length}`);
-  console.log("------------------------------------------------------------");
-  console.log(`Item values:                    ${formatMoney(itemsValue)}`);
-  console.log(
-    `Items value minus refunds:      ${formatMoney(itemsValue + refundsTotal)}`,
-  );
-  console.log("------------------------------------------------------------");
   const items = Object.keys(itemTotals).sort();
   for (const item of items) {
     console.log(
@@ -169,4 +176,40 @@ export const reconcilePaypalTransactionsForMonth = async (
       }`,
     );
   }
+};
+
+type SummaryData = {
+  transTotal: number;
+  feesTotal: number;
+  refundsTotal: number;
+  shippingTotal: number;
+  transactionCount: number;
+  itemsValue: number;
+};
+
+const displaySummary = (summary: SummaryData) => {
+  console.log("------------------------------------------------------------");
+  console.log(
+    `Total:                          ${formatMoney(summary.transTotal)}`,
+  );
+  console.log(
+    `Fees:                           ${formatMoney(summary.feesTotal)}`,
+  );
+  console.log(
+    `Shipping:                       ${formatMoney(summary.shippingTotal)}`,
+  );
+  console.log(
+    `Refunds:                        ${formatMoney(summary.refundsTotal)}`,
+  );
+  console.log(`Transaction count:              ${summary.transactionCount}`);
+  console.log("------------------------------------------------------------");
+  console.log(
+    `Item values:                    ${formatMoney(summary.itemsValue)}`,
+  );
+  console.log(
+    `Items value minus refunds:      ${
+      formatMoney(summary.itemsValue + summary.refundsTotal)
+    }`,
+  );
+  console.log("------------------------------------------------------------");
 };

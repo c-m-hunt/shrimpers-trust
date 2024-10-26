@@ -64,7 +64,7 @@ export class PayPal {
     method: RequestMethod = "GET",
     data: object | null = null,
     headers: object | null = null,
-    body: object | string | null = null,
+    _body: object | string | null = null,
     expectJson = true,
   ) => {
     // Cache key is MD5 hash of the URL
@@ -99,7 +99,7 @@ export class PayPal {
     logger.debug(`Status code ${response.status}`);
 
     if (expectJson) {
-      const returnData: any = await response.json();
+      const returnData: object = (await response.json()) as object;
       setCache(Buffer.from(hash).toString("hex"), returnData);
       return returnData;
     } else {
