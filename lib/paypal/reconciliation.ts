@@ -19,26 +19,25 @@ export const reconcilePaypalTransactionsForMonth = async (
     fields: "all",
   });
 
-  const UNKNOWN = "unknown";
-  const SHIPPING = "shipping";
-  const totalTemplate: { [key: string]: ItemSummary } = {};
-  totalTemplate[UNKNOWN] = {
-    total: 0,
-    qty: 0,
-  };
-  totalTemplate[SHIPPING] = {
-    total: 0,
-    qty: 0,
-  };
-
   let transTotal = 0;
   let feesTotal = 0;
   let withdrawalTotal = 0;
   let refundsTotal = 0;
   let shippingTotal = 0;
 
-  const itemTotals = { ...totalTemplate };
-  const refundItemTotals = { ...totalTemplate };
+  const UNKNOWN = "unknown";
+  const SHIPPING = "shipping";
+  const summaryTemplate: ItemSummary = {
+    total: 0,
+    qty: 0,
+  };
+
+  const itemTotals: { [key: string]: ItemSummary } = {};
+  itemTotals[UNKNOWN] = { ...summaryTemplate };
+  itemTotals[SHIPPING] = { ...summaryTemplate };
+  const refundItemTotals: { [key: string]: ItemSummary } = {};
+  refundItemTotals[UNKNOWN] = { ...summaryTemplate };
+  refundItemTotals[SHIPPING] = { ...summaryTemplate };
 
   // Event codes https://developer.paypal.com/docs/transaction-search/transaction-event-codes/
   const normalTransType = ["T0005", "T0006"];
@@ -176,4 +175,24 @@ export const reconcilePaypalTransactionsForMonth = async (
     refundItemTotals,
     `refunds-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
+  generateCSV(
+    mergeItemsAndRefunds(itemTotals, refundItemTotals),
+    `total-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+  );
+};
+
+const mergeItemsAndRefunds = (
+  items: { [key: string]: ItemSummary },
+  refunds: { [key: string]: ItemSummary },
+): { [key: string]: ItemSummary } => {
+  const merged = { ...items };
+  for (const key of Object.keys(refunds)) {
+    if (key in merged) {
+      merged[key]["total"] += refunds[key]["total"];
+      merged[key]["qty"] += refunds[key]["qty"];
+    } else {
+      merged[key] = refunds[key];
+    }
+  }
+  return merged;
 };
