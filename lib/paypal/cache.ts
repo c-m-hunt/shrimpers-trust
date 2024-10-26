@@ -1,6 +1,5 @@
 // Current path
 const currentDir = Deno.realPathSync(Deno.cwd());
-
 const CACHE_PATH = `${currentDir}/cache`;
 
 export const getCache = (key: string): null | object => {
