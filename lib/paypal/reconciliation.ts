@@ -39,6 +39,7 @@ export const reconcilePaypalTransactionsForMonth = async (
 
   let transTotal = 0;
   let feesTotal = 0;
+  let withdrawalTotal = 0;
   let refundsTotal = 0;
   let shippingTotal = 0;
 
@@ -50,23 +51,16 @@ export const reconcilePaypalTransactionsForMonth = async (
   const normalTransType = ["T0005", "T0006"];
   const cardTransType = ["T0001"];
   const refundTransType = ["T1107"];
+  const withdrawalTransType = ["T0403"];
 
   const allKnownTransTypes = [
     ...normalTransType,
     ...refundTransType,
     ...cardTransType,
+    ...withdrawalTransType,
   ];
 
   for (const tran of trans) {
-    if (
-      !allKnownTransTypes.includes(tran.transactionInfo.transactionEventCode)
-    ) {
-      logger.error(
-        `Unknown transaction type: ${tran.transactionInfo.transactionId} ${tran.transactionInfo.transactionEventCode}`,
-      );
-      continue;
-    }
-
     if (tran.transactionInfo.transactionStatus === "P") {
       logger.debug(
         `Pending transaction: ${tran.transactionInfo.transactionId}`,
@@ -74,9 +68,31 @@ export const reconcilePaypalTransactionsForMonth = async (
       continue;
     }
 
+
+    if (
+      !allKnownTransTypes.includes(tran.transactionInfo.transactionEventCode)
+    ) {
+      logger.error(
+        `Unknown transaction type: ${tran.transactionInfo.transactionId} ${tran.transactionInfo.transactionEventCode} ${tran.transactionInfo.transactionAmount.value}`,
+      );
+      continue;
+    }
+
+    // Count withdrawals and move on
+    if (
+      withdrawalTransType.includes(tran.transactionInfo.transactionEventCode)
+    ) {
+      withdrawalTotal += parseFloat(
+        tran.transactionInfo.transactionAmount.value,
+      );
+      continue;
+    }
+
+    // Find out if it's a refund
     let isRefund = refundTransType.includes(
       tran.transactionInfo.transactionEventCode,
     );
+
     const transAmt = parseFloat(tran.transactionInfo.transactionAmount.value);
     if (!isNaN(transAmt)) {
       transTotal += transAmt;
@@ -140,7 +156,6 @@ export const reconcilePaypalTransactionsForMonth = async (
             logger.debug(
               `Item amount not a number: ${tran.transactionInfo.transactionId}`,
             );
-            // itemsToAdd[UNKNOWN]["total"] += transAmt;
           }
         }
       }
@@ -153,6 +168,7 @@ export const reconcilePaypalTransactionsForMonth = async (
     transTotal,
     feesTotal,
     refundsTotal,
+    withdrawalTotal,
     shippingTotal,
     itemsValue: Object.keys(itemTotals).reduce(
       (acc, key) => acc + itemTotals[key]["total"],
@@ -183,6 +199,7 @@ type SummaryData = {
   feesTotal: number;
   refundsTotal: number;
   shippingTotal: number;
+  withdrawalTotal: number;
   transactionCount: number;
   itemsValue: number;
 };
@@ -200,6 +217,9 @@ const displaySummary = (summary: SummaryData) => {
   );
   console.log(
     `Refunds:                        ${formatMoney(summary.refundsTotal)}`,
+  );
+  console.log(
+    `Withdrawals:                    ${formatMoney(summary.withdrawalTotal)}`,
   );
   console.log(`Transaction count:              ${summary.transactionCount}`);
   console.log("------------------------------------------------------------");
