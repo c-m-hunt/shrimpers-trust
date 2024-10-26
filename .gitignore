@@ -1,4 +1,5 @@
 .env
 debug.log
 cache
+output
 .vscode

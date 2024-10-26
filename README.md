@@ -9,8 +9,15 @@ PAYPAL_CLIENT_ID=xxx
 PAYPAL_SECRET=yyy
 ```
 
+Set up the following directories:
+
+```
+mkdir -p cache
+mkdir -p output
+```
+
 ## Running
 
 ```
-deno run --allow-all --env-file main.ts
+deno run --allow-all --env-file main.ts actsum 9 2024
 ```

@@ -89,7 +89,7 @@ export class PayPal {
       options.body = JSON.stringify(data);
     }
 
-    logger.debug(`${this.baseUrl}/${this.version}${url}`);
+    logger.info(`Getting data from s${this.baseUrl}/${this.version}${url}`);
 
     const response = await fetch(
       `${this.baseUrl}/${this.version}${url}`,

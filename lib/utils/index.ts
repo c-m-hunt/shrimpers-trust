@@ -56,3 +56,15 @@ export const createDateFromMonth = (month: string, year: string) => {
   date.setHours(0, 0, 0, 0);
   return date;
 };
+
+export const getStartAndEndDates = (month: number, year: number) => {
+  const startDate = createDateFromMonth(month.toString(), year.toString());
+  let endMonth = month + 1;
+  let endYear = year;
+  if (endMonth === 13) {
+    endMonth = 1;
+    endYear++;
+  }
+  const endDate = createDateFromMonth(endMonth.toString(), endYear.toString());
+  return { startDate, endDate };
+};
