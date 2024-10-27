@@ -1,7 +1,7 @@
 import { PayPal } from "./index.ts";
 
 import { Transaction as TransactionType } from "./transactionTypes.ts";
-import logger, { transformKeysToCamelCase } from "../utils/index.ts";
+import { logger, transformKeysToCamelCase } from "../utils/index.ts";
 
 export type TransactionSearchCriteria = {
   start_date: string;
@@ -19,11 +19,12 @@ type TransactionSearchResponse = {
   total_pages: number;
 };
 
+// https://developer.paypal.com/docs/api/transaction-search/v1/
 export class Transaction extends PayPal {
   search = async (
     searchCritera: TransactionSearchCriteria,
   ): Promise<TransactionType[]> => {
-    const pageSize = 20;
+    const pageSize = 50;
     let page = 1;
     let transactions: TransactionType[] = [];
 

@@ -1,8 +1,46 @@
-import { getTransactionSingleton } from "./transaction.ts";
-import { formatMoney, isIterable } from "../utils/index.ts";
-import logger from "../utils/index.ts";
-import { PAYPAL_CLIENT_ID, PAYPAL_SECRET } from "./consts.ts";
-import { displaySummary, generateCSV, type ItemSummary } from "./report.ts";
+import { getTransactionSingleton } from "../lib/paypal/transaction.ts";
+import { isIterable } from "../lib/utils/index.ts";
+import { logger } from "../lib/utils/index.ts";
+import { PAYPAL_CLIENT_ID, PAYPAL_SECRET } from "../lib/paypal/consts.ts";
+import {
+  displaySummary,
+  generateCSV,
+  type ItemSummary,
+  type ReportBalances,
+} from "./report.ts";
+import { getBalancesSingleton } from "../lib/paypal/balances.ts";
+
+const getStartAndEndDateBalance = async (
+  startDate: Date,
+  endDate: Date,
+): Promise<ReportBalances> => {
+  const balanceService = await getBalancesSingleton(
+    PAYPAL_CLIENT_ID,
+    PAYPAL_SECRET,
+  );
+  const startBalanceResp = await balanceService.get(startDate);
+  const endBalanceResp = await balanceService.get(endDate);
+
+  if (startBalanceResp.balances.length !== 1) {
+    throw new Error("Unexpected number of balances returned");
+  }
+  if (endBalanceResp.balances.length !== 1) {
+    throw new Error("Unexpected number of balances returned");
+  }
+  if (
+    startBalanceResp.balances[0].currency !==
+      endBalanceResp.balances[0].currency
+  ) {
+    throw new Error("Currency mismatch");
+  }
+
+  const startBalance = parseFloat(
+    startBalanceResp.balances[0].totalBalance.value,
+  );
+  const endBalance = parseFloat(endBalanceResp.balances[0].totalBalance.value);
+
+  return { startBalance, endBalance };
+};
 
 export const reconcilePaypalTransactionsForMonth = async (
   startDate: Date,
@@ -24,6 +62,7 @@ export const reconcilePaypalTransactionsForMonth = async (
   let withdrawalTotal = 0;
   let refundsTotal = 0;
   let shippingTotal = 0;
+  let spendingTotal = 0;
 
   const UNKNOWN = "unknown";
   const SHIPPING = "shipping";
@@ -42,20 +81,31 @@ export const reconcilePaypalTransactionsForMonth = async (
   // Event codes https://developer.paypal.com/docs/transaction-search/transaction-event-codes/
   const normalTransType = ["T0005", "T0006"];
   const cardTransType = ["T0001"];
-  const refundTransType = ["T1107"];
+  const feeTransType = ["T0106"]; // Chargeback and chargeback processing fee
+  const virtualTerminalTransType = ["T0012"];
+  const refundTransType = ["T1107", "T1201"]; // Refund and chargeback
   const withdrawalTransType = ["T0403"];
 
   const allKnownTransTypes = [
     ...normalTransType,
+    ...virtualTerminalTransType,
     ...refundTransType,
+    ...feeTransType,
     ...cardTransType,
     ...withdrawalTransType,
   ];
 
   for (const tran of trans) {
+    logger.debug(tran.transactionInfo.transactionId);
     if (tran.transactionInfo.transactionStatus === "P") {
       logger.debug(
         `Pending transaction: ${tran.transactionInfo.transactionId}`,
+      );
+      continue;
+    }
+    if (tran.transactionInfo.transactionStatus === "D") {
+      logger.debug(
+        `Denied transaction: ${tran.transactionInfo.transactionId}`,
       );
       continue;
     }
@@ -106,10 +156,19 @@ export const reconcilePaypalTransactionsForMonth = async (
       shippingTotal += shippingAmt;
     }
 
-    // Refunds are negative
-    if (transAmt < 0) {
-      isRefund = true;
+    if (isRefund) {
       refundsTotal += transAmt;
+    }
+
+    // Refunds are negative
+    if (transAmt < 0 && !isRefund) {
+      isRefund = true;
+      spendingTotal += transAmt;
+      if (!isNaN(shippingAmt)) {
+        shippingTotal -= shippingAmt;
+      }
+      logger.warn(`Purchase: ${tran.transactionInfo.transactionId}`);
+      continue;
     }
 
     // Things like card payments don't have cart items
@@ -123,6 +182,8 @@ export const reconcilePaypalTransactionsForMonth = async (
         const itemQty = parseInt(item.itemQuantity);
 
         if (isRefund) {
+          // If there's no item name, use unknown
+          item.itemName = item.itemName || UNKNOWN;
           if (item.itemName in refundItemTotals) {
             refundItemTotals[item.itemName]["total"] += transAmt;
             refundItemTotals[item.itemName]["qty"] += 1;
@@ -156,11 +217,17 @@ export const reconcilePaypalTransactionsForMonth = async (
   itemTotals[SHIPPING]["total"] = shippingTotal;
 
   displaySummary({
+    dateRange: {
+      start: startDate,
+      end: endDate,
+    },
+    balance: await getStartAndEndDateBalance(startDate, endDate),
     transTotal,
     feesTotal,
     refundsTotal,
     withdrawalTotal,
     shippingTotal,
+    spendingTotal,
     itemsValue: Object.keys(itemTotals).reduce(
       (acc, key) => acc + itemTotals[key]["total"],
       0,

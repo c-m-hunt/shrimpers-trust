@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { Buffer } from "node:buffer";
-import logger from "../utils/index.ts";
+import { logger } from "../utils/index.ts";
 import { getCache, setCache } from "./cache.ts";
 
 export const base64Encode = (data: string): string => {

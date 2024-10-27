@@ -1,16 +1,51 @@
 import { PayPal } from "./index.ts";
-import logger from "../utils/index.ts";
+import logger from "../utils/logger.ts";
+import { CURRENCY } from "./consts.ts";
+import { transformKeysToCamelCase } from "../utils/index.ts";
+
+type AccountBalance = {
+  currency: string;
+  primary: boolean;
+  totalBalance: {
+    currencyCode: string;
+    value: string;
+  };
+  availableBalance: {
+    currencyCode: string;
+    value: string;
+  };
+  withheldBalance: {
+    currencyCode: string;
+    value: string;
+  };
+};
+
+type AccountInfo = {
+  balances: AccountBalance[];
+  accountId: string;
+  asOfTime: string;
+  lastRefreshTime: string;
+};
 
 export class Balances extends PayPal {
-  get = async () => {
-    return await this.request(
-      "/reporting/balances",
+  get = async (date?: Date): Promise<AccountInfo> => {
+    let url = "/reporting/balances";
+    if (date) {
+      const query = new URLSearchParams({
+        as_of_time: date.toISOString(),
+        currency_code: CURRENCY,
+      }).toString();
+      url = `${url}?${query}`;
+    }
+    const resp = await this.request(
+      url,
       "GET",
       null,
       null,
       null,
-      false,
+      true,
     );
+    return transformKeysToCamelCase(resp) as AccountInfo;
   };
 }
 

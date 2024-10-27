@@ -5,6 +5,8 @@ if (!PAYPAL_CLIENT_ID || !PAYPAL_SECRET) {
   throw new Error("PayPal credentials not found");
 }
 
+export const CURRENCY = "GBP";
+
 export const CATEGORIES: { [key: string]: string } = {
   "Travel Tickets": "Travel",
   "Social Inclusion Donation": "Social Inclusion",

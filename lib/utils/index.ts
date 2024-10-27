@@ -1,22 +1,6 @@
-import process from "node:process";
-import winston from "winston";
+import logger from "./logger.ts";
 
-const options: winston.LoggerOptions = {
-  transports: [
-    new winston.transports.Console({
-      level: process.env.NODE_ENV === "production" ? "error" : "info",
-    }),
-    new winston.transports.File({ filename: "debug.log", level: "debug" }),
-  ],
-};
-
-const logger = winston.createLogger(options);
-
-if (process.env.NODE_ENV !== "production") {
-  logger.debug("Logging initialized at debug level");
-}
-
-export default logger;
+export { logger };
 
 function toCamelCase(snakeStr: string): string {
   return snakeStr.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
@@ -67,4 +51,12 @@ export const getStartAndEndDates = (month: number, year: number) => {
   }
   const endDate = createDateFromMonth(endMonth.toString(), endYear.toString());
   return { startDate, endDate };
+};
+
+export const areNumbersEqual = (
+  num1: number,
+  num2: number,
+  epsilon: number = 0.001,
+): boolean => {
+  return Math.abs(num1 - num2) < epsilon;
 };

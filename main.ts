@@ -1,10 +1,7 @@
 import { Command } from "https://deno.land/x/cliffy@v1.0.0-rc.4/command/mod.ts";
 
-import { reconcilePaypalTransactionsForMonth } from "./lib/paypal/reconciliation.ts";
-import logger, {
-  createDateFromMonth,
-  getStartAndEndDates,
-} from "./lib/utils/index.ts";
+import { reconcilePaypalTransactionsForMonth } from "./treasurer/reconciliation.ts";
+import { getStartAndEndDates, logger } from "./lib/utils/index.ts";
 
 await new Command()
   .name("st")
@@ -16,7 +13,7 @@ await new Command()
   .action(async (_options, ...args) => {
     const { startDate, endDate } = getStartAndEndDates(args[0], args[1]);
     logger.info(
-      `Reconciling PayPal transactions for ${startDate.toISOString()} to ${endDate.toISOString()}`,
+      `Reconciling PayPal transactions for ${startDate.toDateString()} to ${endDate.toDateString()}`,
     );
 
     await reconcilePaypalTransactionsForMonth(startDate, endDate);
