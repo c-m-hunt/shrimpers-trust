@@ -96,13 +96,15 @@ export const reconcilePaypalTransactionsForMonth = async (
   ];
 
   for (const tran of trans) {
-    logger.debug(tran.transactionInfo.transactionId);
+    // Ignore pending transactions
     if (tran.transactionInfo.transactionStatus === "P") {
       logger.debug(
         `Pending transaction: ${tran.transactionInfo.transactionId}`,
       );
       continue;
     }
+
+    // Ignore denied transactions
     if (tran.transactionInfo.transactionStatus === "D") {
       logger.debug(
         `Denied transaction: ${tran.transactionInfo.transactionId}`,
@@ -110,6 +112,7 @@ export const reconcilePaypalTransactionsForMonth = async (
       continue;
     }
 
+    // Ignore transactions that are not in the list of known types
     if (
       !allKnownTransTypes.includes(tran.transactionInfo.transactionEventCode)
     ) {
@@ -151,16 +154,18 @@ export const reconcilePaypalTransactionsForMonth = async (
       );
     }
 
+    // Shipping is a separate line item
     const shippingAmt = parseFloat(tran.transactionInfo.shippingAmount?.value);
     if (!isNaN(shippingAmt)) {
       shippingTotal += shippingAmt;
     }
 
+    // Add refunds to the total
     if (isRefund) {
       refundsTotal += transAmt;
     }
 
-    // Refunds are negative
+    // Purchases are negative transactions and not refunds
     if (transAmt < 0 && !isRefund) {
       isRefund = true;
       spendingTotal += transAmt;
@@ -174,6 +179,7 @@ export const reconcilePaypalTransactionsForMonth = async (
     // Things like card payments don't have cart items
     if (Object.keys(tran.cartInfo).length === 0) {
       itemTotals[UNKNOWN]["total"] += transAmt;
+      logger.warn(`No cart items: ${tran.transactionInfo.transactionId}`);
     }
 
     if (isIterable(tran.cartInfo.itemDetails)) {

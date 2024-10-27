@@ -7,6 +7,8 @@ if (!PAYPAL_CLIENT_ID || !PAYPAL_SECRET) {
 
 export const CURRENCY = "GBP";
 
+export const DEFAULT_PAGE_SIZE = 500;
+
 export const CATEGORIES: { [key: string]: string } = {
   "Travel Tickets": "Travel",
   "Social Inclusion Donation": "Social Inclusion",

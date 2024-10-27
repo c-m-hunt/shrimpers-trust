@@ -2,6 +2,7 @@ import { PayPal } from "./index.ts";
 
 import { Transaction as TransactionType } from "./transactionTypes.ts";
 import { logger, transformKeysToCamelCase } from "../utils/index.ts";
+import { DEFAULT_PAGE_SIZE } from "./consts.ts";
 
 export type TransactionSearchCriteria = {
   start_date: string;
@@ -24,7 +25,7 @@ export class Transaction extends PayPal {
   search = async (
     searchCritera: TransactionSearchCriteria,
   ): Promise<TransactionType[]> => {
-    const pageSize = 50;
+    const pageSize = DEFAULT_PAGE_SIZE;
     let page = 1;
     let transactions: TransactionType[] = [];
 
@@ -39,6 +40,9 @@ export class Transaction extends PayPal {
         "GET",
       ) as TransactionSearchResponse;
       transactions = transactions.concat(resp.transaction_details);
+      if (resp.total_pages === undefined || resp.total_pages === 0) {
+        throw Error("Total pages not found in response");
+      }
       if (resp.total_pages === page) {
         break;
       }
