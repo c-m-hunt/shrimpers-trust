@@ -8,4 +8,3 @@ logger.info(
 );
 
 await reconcilePaypalTransactionsForMonth(startDate, endDate);
-

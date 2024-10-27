@@ -14,6 +14,7 @@ const SANDBOX_BASE_URL = "https://api.sandbox.paypal.com";
 type RequestMethod = "GET" | "POST" | "DELETE";
 interface RequestOptions {
   method: RequestMethod;
+  // deno-lint-ignore no-explicit-any
   headers: any;
   body?: string;
 }
@@ -54,6 +55,7 @@ export class PayPal {
       options,
     );
     if (response.status === 200) {
+      // deno-lint-ignore no-explicit-any
       const responseObject: any = await response.json();
       this.accessToken = responseObject["access_token"];
     }

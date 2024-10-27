@@ -8,7 +8,6 @@ const total = colors.bold.brightCyan;
 const error = colors.bold.red;
 const success = colors.bold.green;
 const warn = colors.bold.yellow;
-const info = colors.bold.blue;
 
 export type ReportBalances = {
   startBalance: number;
@@ -115,7 +114,7 @@ export const displaySummary = (summary: SummaryData) => {
           ),
         ),
       ],
-    ]).padding(9);
+    ]).padding(7);
   console.log(balanceTable.toString());
   console.log("----------------------------------------");
   const table = new Table()
@@ -138,9 +137,15 @@ export const displaySummary = (summary: SummaryData) => {
       [],
       ["Item values", formatMoney(summary.itemsValue)],
       [
-        "Items value minus refunds minus spending",
+        "Items value minus refunds",
         formatMoney(
-          summary.itemsValue + summary.refundsTotal + summary.spendingTotal,
+          summary.itemsValue + summary.refundsTotal,
+        ),
+      ],
+      [
+        "Items value minus refunds minus fees",
+        formatMoney(
+          summary.itemsValue + summary.refundsTotal + summary.feesTotal,
         ),
       ],
     ])
@@ -159,6 +164,9 @@ const getCategory = (item: string): string => {
         break;
       }
     }
+  }
+  if (!category) {
+    console.log(warn(`No category found for ${item}`));
   }
   return category || "";
 };

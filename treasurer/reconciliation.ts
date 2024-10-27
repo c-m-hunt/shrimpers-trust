@@ -66,6 +66,7 @@ export const reconcilePaypalTransactionsForMonth = async (
 
   const UNKNOWN = "unknown";
   const SHIPPING = "shipping";
+  const FEES = "fees";
   const summaryTemplate: ItemSummary = {
     total: 0,
     qty: 0,
@@ -74,9 +75,11 @@ export const reconcilePaypalTransactionsForMonth = async (
   const itemTotals: { [key: string]: ItemSummary } = {};
   itemTotals[UNKNOWN] = { ...summaryTemplate };
   itemTotals[SHIPPING] = { ...summaryTemplate };
+  itemTotals[FEES] = { ...summaryTemplate };
   const refundItemTotals: { [key: string]: ItemSummary } = {};
   refundItemTotals[UNKNOWN] = { ...summaryTemplate };
   refundItemTotals[SHIPPING] = { ...summaryTemplate };
+  refundItemTotals[FEES] = { ...summaryTemplate };
 
   // Event codes https://developer.paypal.com/docs/transaction-search/transaction-event-codes/
   const normalTransType = ["T0005", "T0006"];
@@ -179,7 +182,9 @@ export const reconcilePaypalTransactionsForMonth = async (
     // Things like card payments don't have cart items
     if (Object.keys(tran.cartInfo).length === 0) {
       itemTotals[UNKNOWN]["total"] += transAmt;
-      logger.warn(`No cart items: ${tran.transactionInfo.transactionId}`);
+      logger.warn(
+        `No cart items: ${tran.transactionInfo.transactionId} ${transAmt}`,
+      );
     }
 
     if (isIterable(tran.cartInfo.itemDetails)) {
@@ -221,6 +226,7 @@ export const reconcilePaypalTransactionsForMonth = async (
   }
 
   itemTotals[SHIPPING]["total"] = shippingTotal;
+  refundItemTotals[FEES]["total"] = feesTotal;
 
   displaySummary({
     dateRange: {
@@ -242,11 +248,11 @@ export const reconcilePaypalTransactionsForMonth = async (
   });
   generateCSV(
     itemTotals,
-    `items-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+    `in-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
   generateCSV(
     refundItemTotals,
-    `refunds-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+    `out-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
   generateCSV(
     mergeItemsAndRefunds(itemTotals, refundItemTotals),

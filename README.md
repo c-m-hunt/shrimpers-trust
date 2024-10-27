@@ -21,3 +21,9 @@ mkdir -p output
 ```
 deno run --allow-all --env-file main.ts actsum 9 2024
 ```
+
+## Compiling
+
+```
+deno compile --allow-all --unstable --output=st main.ts
+```
