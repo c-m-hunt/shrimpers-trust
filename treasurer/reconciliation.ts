@@ -82,7 +82,7 @@ export const reconcilePaypalTransactionsForMonth = async (
   refundItemTotals[FEES] = { ...summaryTemplate };
 
   // Event codes https://developer.paypal.com/docs/transaction-search/transaction-event-codes/
-  const normalTransType = ["T0005", "T0006"];
+  const normalTransType = ["T0003", "T0005", "T0006", "T0007"];
   const cardTransType = ["T0001"];
   const feeTransType = ["T0106"]; // Chargeback and chargeback processing fee
   const virtualTerminalTransType = ["T0012"];

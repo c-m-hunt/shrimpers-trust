@@ -18,12 +18,18 @@ mkdir -p output
 
 ## Running
 
+### Treasurer
+
+#### Get PayPal account summary
+
+Get the PayPal account summary from September, 2024
 ```
-deno run --allow-all --env-file main.ts actsum 9 2024
+deno run --allow-all --env-file main.ts treasurer as 9 2024
 ```
 
 ## Compiling
 
 ```
-deno compile --allow-all --unstable --output=st main.ts
+deno compile --allow-all --env-file --output=st main.ts
+mv st /usr/local/bin
 ```

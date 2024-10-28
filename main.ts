@@ -3,12 +3,14 @@ import { Command } from "https://deno.land/x/cliffy@v1.0.0-rc.4/command/mod.ts";
 import { reconcilePaypalTransactionsForMonth } from "./treasurer/reconciliation.ts";
 import { getStartAndEndDates, logger } from "./lib/utils/index.ts";
 
-await new Command()
-  .name("st")
-  .version("0.1.0")
-  .description("Shrimpers Trust tooling")
+const treasurerCmd = await new Command()
+  .description("Treasurer tooling")
   //----------------------------------------------------------------
-  .command("actsum", "Account summary for a month. Takes in month and year")
+  .command(
+    "account-summary",
+    "Account summary for a month. Takes in month and year",
+  )
+  .alias("as")
   .arguments("<month:number> <year:number>")
   .action(async (_options, ...args) => {
     const { startDate, endDate } = getStartAndEndDates(args[0], args[1]);
@@ -17,6 +19,14 @@ await new Command()
     );
 
     await reconcilePaypalTransactionsForMonth(startDate, endDate);
-  })
+  });
+//----------------------------------------------------------------
+
+await new Command()
+  .name("st")
+  .version("0.1.0")
+  .description("Shrimpers Trust tooling")
+  //----------------------------------------------------------------
+  .command("treasurer", treasurerCmd)
   //----------------------------------------------------------------
   .parse(Deno.args);
