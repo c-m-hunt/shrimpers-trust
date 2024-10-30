@@ -4,6 +4,7 @@ import { logger } from "../lib/utils/index.ts";
 import { PAYPAL_CLIENT_ID, PAYPAL_SECRET } from "../lib/paypal/consts.ts";
 import {
   displaySummary,
+  displayTravelSummary,
   generateCSV,
   type ItemSummary,
   type ReportBalances,
@@ -246,6 +247,9 @@ export const reconcilePaypalTransactionsForMonth = async (
     ),
     transactionCount: trans.length,
   });
+
+  displayTravelSummary(mergeItemsAndRefunds(itemTotals, refundItemTotals));
+
   generateCSV(
     itemTotals,
     `in-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
