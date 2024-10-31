@@ -170,3 +170,35 @@ const getCategory = (item: string): string => {
   }
   return category || "";
 };
+
+
+export const displayTravelSummary = (items: {[key: string]: ItemSummary}) => {
+  const travelItemsStartWith = "Travel Tickets for "
+  const travelItems = Object.keys(items).filter((item) => item.startsWith(travelItemsStartWith));
+
+  const travelSummary: {[key: string]: ItemSummary} = {}
+
+  for (const item of travelItems) {
+
+    const newItem = item.replace(travelItemsStartWith, "").split(" - ").splice(0, 2).join(" - ")
+    if (newItem in travelSummary) {
+      travelSummary[newItem]["total"] += items[item].total
+      travelSummary[newItem]["qty"] += items[item].qty
+    } else {
+      travelSummary[newItem] = {
+        total: items[item].total,
+        qty: items[item].qty,
+      }
+    }
+  }
+
+  console.log("")
+  console.log(header("----------------------------------------"));
+  console.log(header("Travel summary"));
+  console.log(header("----------------------------------------"));
+  const travelTable = new Table()
+    .body(Object.keys(travelSummary).map((item) => [item, formatMoney(travelSummary[item].total)]))
+    .padding(5);
+  console.log(travelTable.toString());
+
+}
