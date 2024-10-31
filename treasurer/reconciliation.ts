@@ -3,6 +3,7 @@ import { isIterable } from "../lib/utils/index.ts";
 import { logger } from "../lib/utils/index.ts";
 import { PAYPAL_CLIENT_ID, PAYPAL_SECRET } from "../lib/paypal/consts.ts";
 import {
+  displayDonationsSummary,
   displaySummary,
   displayTravelSummary,
   generateCSV,
@@ -152,7 +153,7 @@ export const reconcilePaypalTransactionsForMonth = async (
     const feeAmt = parseFloat(tran.transactionInfo?.feeAmount?.value);
     if (!isNaN(feeAmt)) {
       feesTotal += feeAmt;
-    } else {
+    } else if (!isRefund) {
       logger.debug(
         `Fee amount not a number: ${tran.transactionInfo.transactionId}`,
       );
@@ -189,7 +190,16 @@ export const reconcilePaypalTransactionsForMonth = async (
     }
 
     if (isIterable(tran.cartInfo.itemDetails)) {
+      let itemNumber = 0;
       for (const item of tran.cartInfo.itemDetails) {
+        itemNumber += 1;
+        if (itemNumber > 1 && isRefund) {
+          logger.debug(
+            `Refund with ID ${tran.transactionInfo.transactionId} has multiple items`,
+          );
+          break;
+        }
+
         const itemAmt = parseFloat(item.totalItemAmount?.value);
         const itemQty = parseInt(item.itemQuantity);
 
@@ -248,7 +258,11 @@ export const reconcilePaypalTransactionsForMonth = async (
     transactionCount: trans.length,
   });
 
-  displayTravelSummary(mergeItemsAndRefunds(itemTotals, refundItemTotals));
+  const mergedItems = mergeItemsAndRefunds(itemTotals, refundItemTotals);
+
+  displayTravelSummary(mergedItems);
+
+  displayDonationsSummary(mergedItems);
 
   generateCSV(
     itemTotals,
@@ -259,7 +273,7 @@ export const reconcilePaypalTransactionsForMonth = async (
     `out-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
   generateCSV(
-    mergeItemsAndRefunds(itemTotals, refundItemTotals),
+    mergedItems,
     `total-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
 };
@@ -268,7 +282,7 @@ const mergeItemsAndRefunds = (
   items: { [key: string]: ItemSummary },
   refunds: { [key: string]: ItemSummary },
 ): { [key: string]: ItemSummary } => {
-  const merged = { ...items };
+  const merged = structuredClone(items);
   for (const key of Object.keys(refunds)) {
     if (key in merged) {
       merged[key]["total"] += refunds[key]["total"];

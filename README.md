@@ -16,20 +16,21 @@ mkdir -p cache
 mkdir -p output
 ```
 
-## Running
+## Compiling
+
+```
+deno compile --allow-all --env-file --output=st main.ts
+mv st /usr/local/bin
+```
+
+## Usage
 
 ### Treasurer
 
 #### Get PayPal account summary
 
 Get the PayPal account summary from September, 2024
+
 ```
 deno run --allow-all --env-file main.ts treasurer as 9 2024
-```
-
-## Compiling
-
-```
-deno compile --allow-all --env-file --output=st main.ts
-mv st /usr/local/bin
 ```

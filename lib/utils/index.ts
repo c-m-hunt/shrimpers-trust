@@ -35,13 +35,28 @@ export const formatMoney = (amount: number): string => {
 export const createDateFromMonth = (month: string, year: string) => {
   const date = new Date();
   date.setFullYear(parseInt(year));
-  date.setMonth(parseInt(month) - 1);
   date.setDate(1);
   date.setHours(0, 0, 0, 0);
+  date.setMonth(parseInt(month) - 1);
   return date;
 };
 
-export const getStartAndEndDates = (month: number, year: number) => {
+type StartAndEndDate = {
+  startDate: Date;
+  endDate: Date;
+};
+
+/**
+ * Gets the start and end date of the report. Start date will be the first day of the month provided.
+ * End date will be the first day of the next month. If the next month is in the future, it will be today.
+ * @param month Month
+ * @param year Year
+ * @returns Object returning start and end dates
+ */
+export const getStartAndEndDates = (
+  month: number,
+  year: number,
+): StartAndEndDate => {
   const startDate = createDateFromMonth(month.toString(), year.toString());
   let endMonth = month + 1;
   let endYear = year;
@@ -49,7 +64,12 @@ export const getStartAndEndDates = (month: number, year: number) => {
     endMonth = 1;
     endYear++;
   }
-  const endDate = createDateFromMonth(endMonth.toString(), endYear.toString());
+  let endDate = createDateFromMonth(endMonth.toString(), endYear.toString());
+  // If end date is greater than today, set it to today
+  if (endDate > new Date()) {
+    endDate = new Date();
+    endDate.setHours(0, 0, 0, 0);
+  }
   return { startDate, endDate };
 };
 
