@@ -1,5 +1,9 @@
 # Shrimpers Trust
 
+## Requirements
+* Deno installed
+* PayPal client ID and secret
+
 ## Set up
 
 Create a `.env` file with the following content:
