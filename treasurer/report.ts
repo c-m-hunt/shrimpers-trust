@@ -27,6 +27,7 @@ type SummaryData = {
   spendingTotal: number;
   transactionCount: number;
   itemsValue: number;
+  pendingValue: number;
 };
 
 export type ItemSummary = {
@@ -77,9 +78,17 @@ export const validateSummary = (summary: SummaryData) => {
   if (
     !areNumbersEqual(balanceDiff, grandTotal)
   ) {
-    console.log(
-      error("Balance difference doesn't match transactions plus fees"),
-    );
+    if (areNumbersEqual(balanceDiff, grandTotal + summary.pendingValue)) {
+      console.log(
+        warn(
+          "Balance difference matches transactions plus fees plus pending",
+        ),
+      );
+    } else {
+      console.log(
+        error("Balance difference doesn't match transactions plus fees"),
+      );
+    }
   } else {
     console.log(success("Balance difference matches transactions plus fees"));
   }
@@ -132,6 +141,7 @@ export const displaySummary = (summary: SummaryData) => {
       ["Shipping", formatMoney(summary.shippingTotal)],
       ["Refunds", formatMoney(summary.refundsTotal)],
       ["Spending", formatMoney(summary.spendingTotal)],
+      ["Pending", formatMoney(summary.pendingValue)],
       [],
       ["Transaction count", summary.transactionCount],
       [],

@@ -14,6 +14,8 @@ export const CATEGORIES: { [key: string]: string } = {
   "Travel Tickets": "Travel",
   "Social Inclusion Donation": "Social Inclusion",
   "Member": "Membership",
+  "Online 1 Year Renewal": "Membership",
+  "Online 3 Year Renewal": "Membership",
   "Junior Blues Membership": "Junior Blues Membership",
   "Additional Postage Cost": "Shipping",
   "shipping": "Shipping",
@@ -40,6 +42,7 @@ export const CATEGORIES: { [key: string]: string } = {
   "Greetings Card": "Merchandise",
   "Shrimpers Trust (SUSCT) Pin Badge": "Merchandise",
   "Lanyard": "Merchandise",
+  "Trolley Key Ring": "Merchandise",
 
   // Junior Blues merchandise
   "Junior Blues Scarf": "Junior Blues Merchandise",

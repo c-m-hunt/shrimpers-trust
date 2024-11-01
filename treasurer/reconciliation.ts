@@ -1,5 +1,5 @@
 import { getTransactionSingleton } from "../lib/paypal/transaction.ts";
-import { isIterable } from "../lib/utils/index.ts";
+import { areNumbersEqual, isIterable } from "../lib/utils/index.ts";
 import { logger } from "../lib/utils/index.ts";
 import { PAYPAL_CLIENT_ID, PAYPAL_SECRET } from "../lib/paypal/consts.ts";
 import {
@@ -82,6 +82,7 @@ export const reconcilePaypalTransactionsForMonth = async (
   refundItemTotals[UNKNOWN] = { ...summaryTemplate };
   refundItemTotals[SHIPPING] = { ...summaryTemplate };
   refundItemTotals[FEES] = { ...summaryTemplate };
+  let pendingTrans: { [key: string]: number } = {};
 
   // Event codes https://developer.paypal.com/docs/transaction-search/transaction-event-codes/
   const normalTransType = ["T0003", "T0005", "T0006", "T0007"];
@@ -100,22 +101,36 @@ export const reconcilePaypalTransactionsForMonth = async (
     ...withdrawalTransType,
   ];
 
+  let prevBalance: number | null = null;
+
   for (const tran of trans) {
+    const transAmt = parseFloat(tran.transactionInfo.transactionAmount.value);
+    const feeAmt = parseFloat(tran.transactionInfo?.feeAmount?.value) || 0;
+    const currBalance = parseFloat(tran.transactionInfo?.endingBalance?.value);
+
     // Ignore pending transactions
     if (tran.transactionInfo.transactionStatus === "P") {
-      logger.debug(
-        `Pending transaction: ${tran.transactionInfo.transactionId}`,
+      pendingTrans[tran.transactionInfo.transactionId] = transAmt;
+      logger.error(
+        `Pending transaction: ${tran.transactionInfo.transactionId} - ${tran.transactionInfo.transactionAmount.value}`,
       );
+      prevBalance = currBalance;
       continue;
     }
 
     // Ignore denied transactions
     if (tran.transactionInfo.transactionStatus === "D") {
-      logger.debug(
+      if (tran.transactionInfo.transactionId in pendingTrans) {
+        delete pendingTrans[tran.transactionInfo.transactionId];
+      }
+      logger.error(
         `Denied transaction: ${tran.transactionInfo.transactionId}`,
       );
+      prevBalance = currBalance;
       continue;
     }
+
+    // console.debug(`${tran.transactionInfo.transactionStatus}`)
 
     // Ignore transactions that are not in the list of known types
     if (
@@ -127,13 +142,23 @@ export const reconcilePaypalTransactionsForMonth = async (
       continue;
     }
 
+    // Check if the balance is correct
+    if (
+      prevBalance &&
+      !areNumbersEqual(prevBalance + transAmt + feeAmt, currBalance)
+    ) {
+      logger.error(
+        `Balance mismatch: ${tran.transactionInfo.transactionId} ${prevBalance} + ${transAmt} + ${feeAmt} != ${currBalance}`,
+      );
+    }
+
+    prevBalance = currBalance;
+
     // Count withdrawals and move on
     if (
       withdrawalTransType.includes(tran.transactionInfo.transactionEventCode)
     ) {
-      withdrawalTotal += parseFloat(
-        tran.transactionInfo.transactionAmount.value,
-      );
+      withdrawalTotal += transAmt;
       continue;
     }
 
@@ -142,7 +167,6 @@ export const reconcilePaypalTransactionsForMonth = async (
       tran.transactionInfo.transactionEventCode,
     );
 
-    const transAmt = parseFloat(tran.transactionInfo.transactionAmount.value);
     if (!isNaN(transAmt)) {
       transTotal += transAmt;
     } else {
@@ -150,14 +174,7 @@ export const reconcilePaypalTransactionsForMonth = async (
         `Transaction amount not a number: ${tran.transactionInfo.transactionId}`,
       );
     }
-    const feeAmt = parseFloat(tran.transactionInfo?.feeAmount?.value);
-    if (!isNaN(feeAmt)) {
-      feesTotal += feeAmt;
-    } else if (!isRefund) {
-      logger.debug(
-        `Fee amount not a number: ${tran.transactionInfo.transactionId}`,
-      );
-    }
+    feesTotal += feeAmt;
 
     // Shipping is a separate line item
     const shippingAmt = parseFloat(tran.transactionInfo.shippingAmount?.value);
@@ -256,6 +273,10 @@ export const reconcilePaypalTransactionsForMonth = async (
       0,
     ),
     transactionCount: trans.length,
+    pendingValue: Object.values(pendingTrans).reduce(
+      (acc, val) => acc + val,
+      0,
+    ),
   });
 
   const mergedItems = mergeItemsAndRefunds(itemTotals, refundItemTotals);
