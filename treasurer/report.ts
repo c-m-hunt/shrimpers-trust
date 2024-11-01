@@ -42,7 +42,7 @@ export const generateCSV = (
   title: string,
 ): void => {
   const items = Object.keys(data).sort();
-  const lines = [];
+  const lines = ["Item,Category,Value,Count"];
   for (const item of items) {
     lines.push(
       `${item},${getCategory(item)}, ${data[item]["total"]}, ${
