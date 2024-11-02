@@ -1,8 +1,9 @@
 # Shrimpers Trust
 
 ## Requirements
-* Deno installed
-* PayPal client ID and secret
+
+- Deno installed
+- PayPal client ID and secret
 
 ## Set up
 
