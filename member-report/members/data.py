@@ -29,7 +29,7 @@ def load_members(file_path: str) -> List[Member]:
                 postcode=data[6],
                 date_joined=None,
                 years_of_membership=None,
-                lifetime_member=None,
+                life_member=False,
                 date_of_birth=None,
                 renewal_date=None,
                 length_of_membership=None,
@@ -46,9 +46,9 @@ def load_members(file_path: str) -> List[Member]:
                 member.years_of_membership = int(data[9])
             except ValueError:
                 if data[9] == 'LIFE':
-                    member.lifetime_member = True
+                    member.life_member = True
                 else:
-                    member.lifetime_member = False
+                    member.life_member = False
             
             try:
                 member.date_of_birth = datetime.strptime(data[10], '%d/%m/%Y')

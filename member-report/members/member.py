@@ -15,7 +15,7 @@ class Member:
     date_joined: datetime | None
     years_of_membership: int | None
     length_of_membership: int | None
-    lifetime_member: bool | None
+    life_member: bool
     date_of_birth: datetime | None
     age: int | None
     gender: str | None

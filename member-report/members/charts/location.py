@@ -16,11 +16,11 @@ def plot_country_distribution(ax: Axes, members: list[Member]):
     ax.invert_yaxis()
     ax.bar_label(ax.containers[0])
 
-def plot_southend_postcode_distribution(ax: Axes, members: list[Member]):
+def plot_southend_postcode_distribution(ax: Axes, members: list[Member], hue: str = "gender"):
     df_members = pd.DataFrame.from_records([m.__dict__ for m in members])
     df_members["postcode_part"] = df_members["postcode"].str.split(" ").str[0]
     postcodes = df_members[df_members["postcode_part"].str.startswith("SS")].sort_values("postcode_part")
-    sns.histplot(postcodes, x="postcode_part", edgecolor='skyblue', color='skyblue', multiple="stack", hue="gender", ax=ax)
+    sns.histplot(postcodes, x="postcode_part", edgecolor='skyblue', color='skyblue', multiple="stack", hue=hue, ax=ax)
     ax.set_title('Postcode Distribution of Southend-on-Sea Members')
     ax.set_ylabel('Number of Members')
     ax.set_xlabel('Postcode')

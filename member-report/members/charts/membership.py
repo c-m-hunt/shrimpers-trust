@@ -35,10 +35,10 @@ def plot_length_of_membership_distribution(ax: Axes, members: list[Member]):
     ax.grid(axis='y', linestyle='--', alpha=0.7)
 
 def plot_pie_of_life_members(ax: Axes, members: list[Member]):
-    lifetime_members = [member for member in members if member.lifetime_member]
-    num_lifetime_members = len(lifetime_members)
-    num_non_lifetime_members = len(members) - num_lifetime_members
-    ax.pie([num_lifetime_members, num_non_lifetime_members], labels=['Life Members', 'Non-Life Members'],
+    life_members = [member for member in members if member.life_member]
+    num_life_members = len(life_members)
+    num_non_life_members = len(members) - num_life_members
+    ax.pie([num_life_members, num_non_life_members], labels=['Life Members', 'Non-Life Members'],
            autopct='%1.1f%%', startangle=90)
     ax.set_title('Proportion of Life Members')
 
