@@ -11,6 +11,7 @@ seaborn = "^0.13.2"
 pandas = "^2.2.3"
 gmplot = "^1.4.1"
 cache-decorator = "^2.2.0"
+ruff = "^0.7.3"
 
 
 [tool.poetry.group.dev.dependencies]
