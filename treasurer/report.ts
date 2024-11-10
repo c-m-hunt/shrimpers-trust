@@ -37,6 +37,13 @@ export type ItemSummary = {
 
 const currentDir = Deno.realPathSync(Deno.cwd());
 const OUTPUT_PATH = `${currentDir}/output`;
+
+try {
+  Deno.mkdirSync(OUTPUT_PATH);
+} catch (_err) {
+  // Directory already exists
+}
+
 export const generateCSV = (
   data: { [key: string]: ItemSummary },
   title: string,
