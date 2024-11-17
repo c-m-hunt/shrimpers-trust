@@ -14,6 +14,7 @@ export const CATEGORIES: { [key: string]: string } = {
   "Travel Tickets": "Travel",
   "Social Inclusion Donation": "Social Inclusion",
   "Member": "Membership",
+  "1 Year OAP/Student/Disabled": "Membership",
   "Online 1 Year Renewal": "Membership",
   "Online 3 Year Renewal": "Membership",
   "Junior Blues Membership": "Junior Blues Membership",
@@ -46,12 +47,15 @@ export const CATEGORIES: { [key: string]: string } = {
   "Shrimpers Trust (SUSCT) Pin Badge": "Merchandise",
   "Lanyard": "Merchandise",
   "Trolley Key Ring": "Merchandise",
+  "Go West At Night": "Merchandise",
+  "The Big Christmas Quiz - 2024": "Merchandise",
 
   // Junior Blues merchandise
   "Junior Blues Scarf": "Junior Blues Merchandise",
   "Junior Blues Pop Socket": "Junior Blues Merchandise",
   "Junior Blues Meet The Players Day - 2024": "Junior Blues Merchandise",
   "Junior Blues Pin Badge": "Junior Blues Merchandise",
+  "Junior Blues Christmas Party 2024": "Junior Blues Merchandise",
 
   // Events
   "An Evening With 'Red Card' Roy McDonough": "Red Card Roy McDonough",

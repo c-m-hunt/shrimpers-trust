@@ -7,6 +7,12 @@
 
 ## Set up
 
+Creates directories and files needed for the project:
+
+```
+deno task setup
+```
+
 Create a `.env` file with the following content:
 
 ```
@@ -14,18 +20,17 @@ PAYPAL_CLIENT_ID=xxx
 PAYPAL_SECRET=yyy
 ```
 
-Set up the following directories:
-
-```
-mkdir -p cache
-mkdir -p output
-```
-
 ## Compiling
 
 ```
 deno compile --allow-all --env-file --output=st main.ts
 mv st /usr/local/bin
+```
+
+## Clean up
+
+```
+deno task clean
 ```
 
 ## Usage

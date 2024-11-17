@@ -11,6 +11,11 @@ import {
   type ReportBalances,
 } from "./report.ts";
 import { getBalancesSingleton } from "../lib/paypal/balances.ts";
+import {
+  allKnownTransTypes,
+  refundTransType,
+  withdrawalTransType,
+} from "./consts.ts";
 
 const getStartAndEndDateBalance = async (
   startDate: Date,
@@ -82,24 +87,7 @@ export const reconcilePaypalTransactionsForMonth = async (
   refundItemTotals[UNKNOWN] = { ...summaryTemplate };
   refundItemTotals[SHIPPING] = { ...summaryTemplate };
   refundItemTotals[FEES] = { ...summaryTemplate };
-  let pendingTrans: { [key: string]: number } = {};
-
-  // Event codes https://developer.paypal.com/docs/transaction-search/transaction-event-codes/
-  const normalTransType = ["T0003", "T0005", "T0006", "T0007"];
-  const cardTransType = ["T0001"];
-  const feeTransType = ["T0106"]; // Chargeback and chargeback processing fee
-  const virtualTerminalTransType = ["T0012"];
-  const refundTransType = ["T1107", "T1201"]; // Refund and chargeback
-  const withdrawalTransType = ["T0403"];
-
-  const allKnownTransTypes = [
-    ...normalTransType,
-    ...virtualTerminalTransType,
-    ...refundTransType,
-    ...feeTransType,
-    ...cardTransType,
-    ...withdrawalTransType,
-  ];
+  const pendingTrans: { [key: string]: number } = {};
 
   let prevBalance: number | null = null;
 
@@ -123,14 +111,12 @@ export const reconcilePaypalTransactionsForMonth = async (
       if (tran.transactionInfo.transactionId in pendingTrans) {
         delete pendingTrans[tran.transactionInfo.transactionId];
       }
-      logger.error(
+      logger.warn(
         `Denied transaction: ${tran.transactionInfo.transactionId}`,
       );
       prevBalance = currBalance;
       continue;
     }
-
-    // console.debug(`${tran.transactionInfo.transactionStatus}`)
 
     // Ignore transactions that are not in the list of known types
     if (
