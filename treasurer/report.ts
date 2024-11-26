@@ -2,6 +2,7 @@ import { areNumbersEqual, formatMoney } from "../lib/utils/index.ts";
 import { Table } from "https://deno.land/x/cliffy@v1.0.0-rc.4/table/mod.ts";
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts";
 import { CATEGORIES } from "../lib/paypal/consts.ts";
+import { OUTPUT_PATH } from "./consts.ts";
 
 const header = colors.bold.brightWhite;
 const total = colors.bold.brightCyan;
@@ -34,9 +35,6 @@ export type ItemSummary = {
   total: number;
   qty: number;
 };
-
-const currentDir = Deno.realPathSync(Deno.cwd());
-const OUTPUT_PATH = `${currentDir}/output`;
 
 try {
   Deno.mkdirSync(OUTPUT_PATH);
