@@ -1,8 +1,7 @@
 import { areNumbersEqual, formatMoney } from "../lib/utils/index.ts";
 import { Table } from "https://deno.land/x/cliffy@v1.0.0-rc.4/table/mod.ts";
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts";
-import { CATEGORIES } from "../lib/paypal/consts.ts";
-import { OUTPUT_PATH } from "./consts.ts";
+import { CATEGORIES, OUTPUT_PATH } from "./consts.ts";
 import { CardSummary, ItemSummary, SummaryData } from "./types.ts";
 
 const header = colors.bold.brightWhite;
