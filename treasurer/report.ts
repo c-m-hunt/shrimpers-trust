@@ -7,6 +7,7 @@ import { CardSummary, ItemSummary, SummaryData } from "./types.ts";
 
 const header = colors.bold.brightWhite;
 const total = colors.bold.brightCyan;
+const card = colors.bold.brightMagenta;
 const error = colors.bold.red;
 const success = colors.bold.green;
 const warn = colors.bold.yellow;
@@ -23,13 +24,14 @@ export const generateCSV = (
   append: boolean = false,
 ): void => {
   const items = Object.keys(data).sort();
-  const lines = append ? ["Item,Category,Value,Count"] : [];
+  const lines = !append ? ["Item,Category,Value,Count"] : [];
   for (const item of items) {
     const category = data[item].category || getCategory(item);
     lines.push(
       `${item},${category}, ${data[item]["total"]}, ${data[item]["qty"]}`,
     );
   }
+  lines.push("");
   Deno.writeFileSync(
     `${OUTPUT_PATH}/${title}.csv`,
     new TextEncoder().encode(lines.join("\n")),
@@ -126,6 +128,7 @@ export const displaySummary = (summary: SummaryData) => {
       [],
       ["Shipping", formatMoney(summary.shippingTotal)],
       ["Refunds", formatMoney(summary.refundsTotal)],
+      [card("Card purchases"), card(formatMoney(summary.cardTotal))],
       ["Spending", formatMoney(summary.spendingTotal)],
       ["Pending", formatMoney(summary.pendingValue)],
       [],
@@ -139,7 +142,7 @@ export const displaySummary = (summary: SummaryData) => {
         ),
       ],
       [
-        "Items value minus refunds minus fees",
+        "Items value minus refunds and fees",
         formatMoney(
           summary.itemsValue + summary.refundsTotal + summary.feesTotal,
         ),
@@ -148,6 +151,29 @@ export const displaySummary = (summary: SummaryData) => {
     .padding(6);
   console.log(table.toString());
   console.log("----------------------------------------\n");
+  console.log(header("----------------------------------------"));
+  console.log(header("Monthly total"));
+  console.log(header("----------------------------------------"));
+  console.log(
+    `PayPal total:                  ${
+      formatMoney(summary.itemsValue + summary.refundsTotal + summary.feesTotal)
+    }`,
+  );
+  console.log(
+    `Zettle total:                  ${formatMoney(summary.cardTotal)}`,
+  );
+  console.log(
+    success(
+      `Total:                         ${
+        formatMoney(
+          summary.itemsValue + summary.refundsTotal + summary.feesTotal +
+            summary.cardTotal,
+        )
+      }`,
+    ),
+  );
+  console.log("----------------------------------------");
+  console.log("");
   validateSummary(summary);
 };
 
@@ -239,9 +265,11 @@ export const displayCardSummary = (summary: CardSummary) => {
     `Fees                                ${formatMoney(summary.totalFees)}`,
   );
   console.log(
-    `Net                                 ${
-      formatMoney(summary.totalAmount - summary.totalFees)
-    }`,
+    card(
+      `Net card purchase total             ${
+        formatMoney(summary.totalAmount + summary.totalFees)
+      }`,
+    ),
   );
   console.log("----------------------------------------");
 };

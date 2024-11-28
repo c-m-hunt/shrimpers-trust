@@ -44,7 +44,7 @@ export const reconcileZettlePurchases = async (
       totalAmount += itemValue;
     }
   }
-  totalFees = totalFees / 100;
+  totalFees = -1 * totalFees / 100;
   displayCardSummary({
     totalTransactions,
     totalAmount,
@@ -55,7 +55,9 @@ export const reconcileZettlePurchases = async (
     productCategories,
   });
 
-  const itemSummary: { [key: string]: ItemSummary } = {};
+  const itemSummary: { [key: string]: ItemSummary } = {
+    "Zettle fees": { total: totalFees, qty: 1 },
+  };
   for (const key in productTotals) {
     itemSummary[productNames[key]] = {
       total: productTotals[key],
