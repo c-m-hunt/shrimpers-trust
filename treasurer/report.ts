@@ -1,8 +1,7 @@
 import { areNumbersEqual, formatMoney } from "../lib/utils/index.ts";
 import { Table } from "https://deno.land/x/cliffy@v1.0.0-rc.4/table/mod.ts";
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts";
-import { CATEGORIES } from "../lib/paypal/consts.ts";
-import { OUTPUT_PATH } from "./consts.ts";
+import { CATEGORIES, OUTPUT_PATH } from "./consts.ts";
 import { CardSummary, ItemSummary, SummaryData } from "./types.ts";
 
 const header = colors.bold.brightWhite;
@@ -24,11 +23,17 @@ export const generateCSV = (
   append: boolean = false,
 ): void => {
   const items = Object.keys(data).sort();
-  const lines = !append ? ["Item,Category,Value,Count"] : [];
+  const lines = !append ? ["Item,Category,Subcategory,Value,Count"] : [];
   for (const item of items) {
-    const category = data[item].category || getCategory(item);
+    let category = getCategory(item);
+    if (category.length === 0) {
+      category = data[item].category ? [data[item].category] : [];
+    }
+    category = category.concat(Array(2 - category.length).fill("")).slice(0, 2);
     lines.push(
-      `${item},${category}, ${data[item]["total"]}, ${data[item]["qty"]}`,
+      `${item},${category.join(",")}, ${data[item]["total"]}, ${
+        data[item]["qty"]
+      }`,
     );
   }
   lines.push("");
@@ -177,7 +182,7 @@ export const displaySummary = (summary: SummaryData) => {
   validateSummary(summary);
 };
 
-const getCategory = (item: string): string => {
+const getCategory = (item: string): string[] => {
   let category = CATEGORIES[item];
   if (!category) {
     for (const key in CATEGORIES) {
@@ -190,7 +195,7 @@ const getCategory = (item: string): string => {
   if (!category) {
     console.log(warn(`No category found for ${item}`));
   }
-  return category || "";
+  return category || [];
 };
 
 export const displayTravelSummary = (items: { [key: string]: ItemSummary }) => {

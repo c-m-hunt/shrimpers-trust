@@ -64,16 +64,16 @@ export class Zettle {
     _body: object | string | null = null,
     expectJson = true,
   ) => {
-    if (!this.accessToken) {
-      await this.authenticate();
-    }
-
     // Cache key is MD5 hash of the URL
     const cacheKey = new TextEncoder().encode(url);
     const hash = await crypto.subtle.digest("SHA-256", cacheKey);
     const cachedData = getCache(Buffer.from(hash).toString("hex"));
     if (cachedData) {
       return cachedData;
+    }
+
+    if (!this.accessToken) {
+      await this.authenticate();
     }
 
     headers = headers || {
