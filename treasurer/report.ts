@@ -3,38 +3,13 @@ import { Table } from "https://deno.land/x/cliffy@v1.0.0-rc.4/table/mod.ts";
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts";
 import { CATEGORIES } from "../lib/paypal/consts.ts";
 import { OUTPUT_PATH } from "./consts.ts";
+import { CardSummary, ItemSummary, SummaryData } from "./types.ts";
 
 const header = colors.bold.brightWhite;
 const total = colors.bold.brightCyan;
 const error = colors.bold.red;
 const success = colors.bold.green;
 const warn = colors.bold.yellow;
-
-export type ReportBalances = {
-  startBalance: number;
-  endBalance: number;
-};
-type SummaryData = {
-  dateRange: {
-    start: Date;
-    end: Date;
-  };
-  balance: ReportBalances;
-  transTotal: number;
-  feesTotal: number;
-  refundsTotal: number;
-  shippingTotal: number;
-  withdrawalTotal: number;
-  spendingTotal: number;
-  transactionCount: number;
-  itemsValue: number;
-  pendingValue: number;
-};
-
-export type ItemSummary = {
-  total: number;
-  qty: number;
-};
 
 try {
   Deno.mkdirSync(OUTPUT_PATH);
@@ -45,19 +20,20 @@ try {
 export const generateCSV = (
   data: { [key: string]: ItemSummary },
   title: string,
+  append: boolean = false,
 ): void => {
   const items = Object.keys(data).sort();
-  const lines = ["Item,Category,Value,Count"];
+  const lines = append ? ["Item,Category,Value,Count"] : [];
   for (const item of items) {
+    const category = data[item].category || getCategory(item);
     lines.push(
-      `${item},${getCategory(item)}, ${data[item]["total"]}, ${
-        data[item]["qty"]
-      }`,
+      `${item},${category}, ${data[item]["total"]}, ${data[item]["qty"]}`,
     );
   }
   Deno.writeFileSync(
     `${OUTPUT_PATH}/${title}.csv`,
     new TextEncoder().encode(lines.join("\n")),
+    { append },
   );
 };
 
@@ -68,12 +44,17 @@ export const validateSummary = (summary: SummaryData) => {
   if (
     !areNumbersEqual(
       summary.transTotal,
-      summary.itemsValue + summary.refundsTotal + summary.spendingTotal,
+      summary.itemsValue + summary.refundsTotal + summary.spendingTotal +
+        summary.cardTotal,
     )
   ) {
-    console.log(error("Total doesn't match items value plus refunds"));
+    console.log(
+      error("Total doesn't match items value plus refunds and card purchases"),
+    );
   } else {
-    console.log(success("Total matches items value plus refunds"));
+    console.log(
+      success("Total matches items value plus refunds and card purchases"),
+    );
   }
 
   const balanceDiff = summary.balance.endBalance - summary.balance.startBalance;
@@ -241,4 +222,26 @@ export const displayDonationsSummary = (
     )
     .padding(5);
   console.log(donationsTable.toString());
+};
+
+export const displayCardSummary = (summary: CardSummary) => {
+  console.log("");
+  console.log(header("----------------------------------------"));
+  console.log(header("Zettle summary"));
+  console.log(header("----------------------------------------"));
+  console.log(
+    `Total Transactions                  ${summary.totalTransactions}`,
+  );
+  console.log(
+    `Total                               ${formatMoney(summary.totalAmount)}`,
+  );
+  console.log(
+    `Fees                                ${formatMoney(summary.totalFees)}`,
+  );
+  console.log(
+    `Net                                 ${
+      formatMoney(summary.totalAmount - summary.totalFees)
+    }`,
+  );
+  console.log("----------------------------------------");
 };

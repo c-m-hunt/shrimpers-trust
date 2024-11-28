@@ -7,8 +7,6 @@ import {
   displaySummary,
   displayTravelSummary,
   generateCSV,
-  type ItemSummary,
-  type ReportBalances,
 } from "./report.ts";
 import { getBalancesSingleton } from "../lib/paypal/balances.ts";
 import {
@@ -16,6 +14,7 @@ import {
   refundTransType,
   withdrawalTransType,
 } from "./consts.ts";
+import { ItemSummary, ReportBalances } from "./types.ts";
 
 const getStartAndEndDatePaypalBalance = async (
   startDate: Date,
@@ -70,6 +69,7 @@ export const reconcilePaypalTransactionsForMonth = async (
   let refundsTotal = 0;
   let shippingTotal = 0;
   let spendingTotal = 0;
+  let cardTotal = 0;
 
   const UNKNOWN = "unknown";
   const SHIPPING = "shipping";
@@ -186,10 +186,15 @@ export const reconcilePaypalTransactionsForMonth = async (
 
     // Things like card payments don't have cart items
     if (Object.keys(tran.cartInfo).length === 0) {
-      itemTotals[UNKNOWN]["total"] += transAmt;
-      logger.warn(
-        `No cart items: ${tran.transactionInfo.transactionId} ${transAmt}`,
-      );
+      if (tran.payerInfo.payerName.alternateFullName === "PP Zettle") {
+        cardTotal += transAmt;
+      } else {
+        console.log(tran.payerInfo);
+        itemTotals[UNKNOWN]["total"] += transAmt;
+        logger.warn(
+          `No cart items: ${tran.transactionInfo.transactionId} ${transAmt}`,
+        );
+      }
     }
 
     if (isIterable(tran.cartInfo.itemDetails)) {
@@ -254,6 +259,7 @@ export const reconcilePaypalTransactionsForMonth = async (
     withdrawalTotal,
     shippingTotal,
     spendingTotal,
+    cardTotal,
     itemsValue: Object.keys(itemTotals).reduce(
       (acc, key) => acc + itemTotals[key]["total"],
       0,
@@ -273,15 +279,15 @@ export const reconcilePaypalTransactionsForMonth = async (
 
   generateCSV(
     itemTotals,
-    `in-paypal-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+    `in-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
   generateCSV(
     refundItemTotals,
-    `out-paypal-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+    `out-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
   generateCSV(
     mergedItems,
-    `total-payal-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+    `total-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
 };
 

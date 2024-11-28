@@ -15,7 +15,7 @@ type PurchasesResponse = {
   linkUrls?: string[];
 };
 
-// https://developer.paypal.com/docs/api/transaction-search/v1/
+// https://developer.zettle.com/docs/api/purchase/user-guides/fetch-purchases/fetch-a-list-of-purchases
 export class Purchase extends Zettle {
   getPurchases = async (
     filter: ProductFilter,
