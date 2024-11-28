@@ -10,7 +10,8 @@ export const CURRENCY = "GBP";
 export const DEFAULT_PAGE_SIZE = 500;
 
 export const CATEGORIES: { [key: string]: string } = {
-  "fees": "PayPal Fees",
+  "fees": "Banking",
+  "Zettle fees": "Banking",
   "Travel Tickets": "Travel",
   "Social Inclusion Donation": "Social Inclusion",
   "Member": "Membership",

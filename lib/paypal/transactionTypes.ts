@@ -29,11 +29,11 @@ type PayerName = {
 };
 
 type PayerInfo = {
-  accountId: string;
-  addressStatus: string;
-  payerStatus: string;
+  accountId?: string;
+  addressStatus?: string;
+  payerStatus?: string;
   payerName: PayerName;
-  countryCode: string;
+  countryCode?: string;
 };
 
 type ShippingInfo = {

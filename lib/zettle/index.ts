@@ -8,9 +8,6 @@ export const base64Encode = (data: string): string => {
   return buf.toString("base64");
 };
 
-const BASE_URL = "https://api-m.paypal.com";
-const SANDBOX_BASE_URL = "https://api.sandbox.paypal.com";
-
 type RequestMethod = "GET" | "POST" | "DELETE";
 interface RequestOptions {
   method: RequestMethod;
@@ -19,45 +16,43 @@ interface RequestOptions {
   body?: string;
 }
 
-export class PayPal {
-  baseUrl: string;
+export class Zettle {
   accessToken: string | null = null;
   clientID: string;
   secret: string;
-  version: string;
   constructor(
     clientId: string,
     secret: string,
-    sandbox: boolean = false,
-    version: string = "v2",
   ) {
     this.clientID = clientId;
     this.secret = secret;
-    this.baseUrl = sandbox ? SANDBOX_BASE_URL : BASE_URL;
-    this.version = version;
   }
 
   authenticate = async () => {
     const headers = {
-      "Accept": "application/json",
-      "Accept-Language": "en_GB",
-      Authorization: `Basic ${base64Encode(`${this.clientID}:${this.secret}`)}`,
+      "Content-Type": "application/x-www-form-urlencoded",
     };
 
     const options: RequestOptions = {
       method: "POST",
       headers,
-      body: "grant_type=client_credentials",
+      body:
+        `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&client_id=${this.clientID}&assertion=${this.secret}`,
     };
 
     const response = await fetch(
-      `${this.baseUrl}/v1/oauth2/token`,
+      `https://oauth.zettle.com/token`,
       options,
     );
     if (response.status === 200) {
       // deno-lint-ignore no-explicit-any
       const responseObject: any = await response.json();
       this.accessToken = responseObject["access_token"];
+      logger.info(`Authenticated with Zettle.`);
+    } else {
+      logger.error(
+        `Failed to authenticate with Zettle. Response: ${response.status}`,
+      );
     }
   };
 
@@ -69,6 +64,10 @@ export class PayPal {
     _body: object | string | null = null,
     expectJson = true,
   ) => {
+    if (!this.accessToken) {
+      await this.authenticate();
+    }
+
     // Cache key is MD5 hash of the URL
     const cacheKey = new TextEncoder().encode(url);
     const hash = await crypto.subtle.digest("SHA-256", cacheKey);
@@ -78,7 +77,6 @@ export class PayPal {
     }
 
     headers = headers || {
-      "Content-Type": "application/json",
       "Authorization": `Bearer ${this.accessToken}`,
     };
 
@@ -91,10 +89,10 @@ export class PayPal {
       options.body = JSON.stringify(data);
     }
 
-    logger.info(`Getting data from ${this.baseUrl}/${this.version}${url}`);
+    logger.info(`Getting data from ${url}`);
 
     const response = await fetch(
-      `${this.baseUrl}/${this.version}${url}`,
+      url,
       options,
     );
 

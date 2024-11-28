@@ -2,6 +2,7 @@ import { Command } from "https://deno.land/x/cliffy@v1.0.0-rc.4/command/mod.ts";
 
 import { reconcilePaypalTransactionsForMonth } from "./treasurer/reconciliation.ts";
 import { getStartAndEndDates, logger } from "./lib/utils/index.ts";
+import { reconcileZettlePurchases } from "./treasurer/reconcileCardPurchases.ts";
 
 const treasurerCmd = await new Command()
   .description("Treasurer tooling")
@@ -19,6 +20,7 @@ const treasurerCmd = await new Command()
     );
 
     await reconcilePaypalTransactionsForMonth(startDate, endDate);
+    await reconcileZettlePurchases(startDate, endDate);
   });
 //----------------------------------------------------------------
 
