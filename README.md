@@ -4,6 +4,7 @@
 
 - Deno installed
 - PayPal client ID and secret
+- Zettle client ID and secret
 
 ## Set up
 
@@ -18,6 +19,9 @@ Create a `.env` file with the following content:
 ```
 PAYPAL_CLIENT_ID=xxx
 PAYPAL_SECRET=yyy
+
+ZETTLE_CLIENT_ID=zzz
+ZETTLE_SECRET=123
 ```
 
 ## Compiling
