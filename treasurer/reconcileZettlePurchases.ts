@@ -24,8 +24,8 @@ export const reconcileZettlePurchases = async (
   const productCategories: { [key: string]: string } = {};
 
   for (const purch of purchases) {
-    console.log(`${purch.timestamp},${purch.amount / 100}`);
-    totalFees += purch.payments[0].amount * (1 - ZETTLE_FEE) / 100;
+    const transFee = Math.round(purch.payments[0].amount * ZETTLE_FEE);
+    totalFees += transFee;
     for (const item of purch.products) {
       const itemValue = item.grossValue / 100;
       const id = item.productUuid || item.name;
@@ -42,16 +42,15 @@ export const reconcileZettlePurchases = async (
       totalAmount += itemValue;
     }
   }
-
+  totalFees = totalFees / 100;
   console.log("-------------------------------------");
   console.log(`Start Date: ${startDate.toDateString()}`);
   console.log(`End Date: ${endDate.toDateString()}`);
   console.log("-------------------------------------");
   console.log(`Total Transactions: ${purchases.length}`);
   console.log(`Total: ${formatMoney(totalAmount)}`);
-  console.log(`Fees: ${formatMoney(totalAmount * ZETTLE_FEE)}`);
-  console.log(`Fees (Net): ${formatMoney(totalFees)}`);
-  console.log(`Net: ${formatMoney(totalAmount * (1 - ZETTLE_FEE))}`);
+  console.log(`Fees: ${formatMoney(totalFees)}`);
+  console.log(`Net: ${formatMoney(totalAmount - totalFees)}`);
   console.log("-------------------------------------");
   for (const key in productTotals) {
     console.log(
