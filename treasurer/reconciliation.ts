@@ -17,7 +17,7 @@ import {
   withdrawalTransType,
 } from "./consts.ts";
 
-const getStartAndEndDateBalance = async (
+const getStartAndEndDatePaypalBalance = async (
   startDate: Date,
   endDate: Date,
 ): Promise<ReportBalances> => {
@@ -247,7 +247,7 @@ export const reconcilePaypalTransactionsForMonth = async (
       start: startDate,
       end: endDate,
     },
-    balance: await getStartAndEndDateBalance(startDate, endDate),
+    balance: await getStartAndEndDatePaypalBalance(startDate, endDate),
     transTotal,
     feesTotal,
     refundsTotal,
@@ -273,15 +273,15 @@ export const reconcilePaypalTransactionsForMonth = async (
 
   generateCSV(
     itemTotals,
-    `in-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+    `in-paypal-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
   generateCSV(
     refundItemTotals,
-    `out-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+    `out-paypal-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
   generateCSV(
     mergedItems,
-    `total-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+    `total-payal-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
 };
 
