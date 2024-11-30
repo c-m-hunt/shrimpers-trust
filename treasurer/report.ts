@@ -3,6 +3,7 @@ import { Table } from "https://deno.land/x/cliffy@v1.0.0-rc.4/table/mod.ts";
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.4/ansi/colors.ts";
 import { CATEGORIES, OUTPUT_PATH } from "./consts.ts";
 import { CardSummary, ItemSummary, SummaryData } from "./types.ts";
+import moment from "npm:moment";
 
 const header = colors.bold.brightWhite;
 const total = colors.bold.brightCyan;
@@ -17,13 +18,20 @@ try {
   // Directory already exists
 }
 
+type PaymentSource = "PayPal" | "Zettle";
+
 export const generateCSV = (
+  source: PaymentSource,
+  date: Date,
   data: { [key: string]: ItemSummary },
   title: string,
   append: boolean = false,
 ): void => {
   const items = Object.keys(data).sort();
-  const lines = !append ? ["Item,Category,Subcategory,Value,Count"] : [];
+  const lines = !append
+    ? ["Date,Source,Item,Value,Category,Subcategory,Count"]
+    : [];
+  const formattedDate = moment(date).format("DD-MM-YYYY");
   for (const item of items) {
     let category = getCategory(item);
     if (category.length === 0) {
@@ -31,9 +39,9 @@ export const generateCSV = (
     }
     category = category.concat(Array(2 - category.length).fill("")).slice(0, 2);
     lines.push(
-      `${item},${category.join(",")}, ${data[item]["total"]}, ${
-        data[item]["qty"]
-      }`,
+      `${formattedDate},${source},${item},${data[item]["total"]},${
+        category.join(",")
+      },${data[item]["qty"]}`,
     );
   }
   lines.push("");
@@ -182,6 +190,7 @@ export const displaySummary = (summary: SummaryData) => {
   validateSummary(summary);
 };
 
+const travelItemsStartWith = "Travel Tickets for ";
 const getCategory = (item: string): string[] => {
   let category = CATEGORIES[item];
   if (!category) {
@@ -192,14 +201,23 @@ const getCategory = (item: string): string[] => {
       }
     }
   }
+  if (item.startsWith(travelItemsStartWith)) {
+    category = ["Travel", getTravelSubcategory(item)];
+  }
   if (!category) {
     console.log(warn(`No category found for ${item}`));
   }
   return category || [];
 };
 
+export const getTravelSubcategory = (item: string): string => {
+  return item.replace(travelItemsStartWith, "").split(" - ").splice(
+    0,
+    2,
+  ).join(" - ");
+};
+
 export const displayTravelSummary = (items: { [key: string]: ItemSummary }) => {
-  const travelItemsStartWith = "Travel Tickets for ";
   const travelItems = Object.keys(items).filter((item) =>
     item.startsWith(travelItemsStartWith)
   );
@@ -207,10 +225,7 @@ export const displayTravelSummary = (items: { [key: string]: ItemSummary }) => {
   const travelSummary: { [key: string]: ItemSummary } = {};
 
   for (const item of travelItems) {
-    const newItem = item.replace(travelItemsStartWith, "").split(" - ").splice(
-      0,
-      2,
-    ).join(" - ");
+    const newItem = getTravelSubcategory(item);
     if (newItem in travelSummary) {
       travelSummary[newItem]["total"] += items[item].total;
       travelSummary[newItem]["qty"] += items[item].qty;
