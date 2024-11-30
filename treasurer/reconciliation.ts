@@ -1,7 +1,13 @@
 import { getTransactionSingleton } from "../lib/paypal/transaction.ts";
 import { areNumbersEqual, isIterable } from "../lib/utils/index.ts";
 import { logger } from "../lib/utils/index.ts";
-import { PAYPAL_CLIENT_ID, PAYPAL_SECRET } from "../lib/paypal/consts.ts";
+import {
+  allKnownTransTypes,
+  PAYPAL_CLIENT_ID,
+  PAYPAL_SECRET,
+  refundTransType,
+  withdrawalTransType,
+} from "../lib/paypal/consts.ts";
 import {
   displayDonationsSummary,
   displaySummary,
@@ -9,11 +15,7 @@ import {
   generateCSV,
 } from "./report.ts";
 import { getBalancesSingleton } from "../lib/paypal/balances.ts";
-import {
-  allKnownTransTypes,
-  refundTransType,
-  withdrawalTransType,
-} from "./consts.ts";
+
 import { ItemSummary, ReportBalances } from "./types.ts";
 
 const getStartAndEndDatePaypalBalance = async (
@@ -278,14 +280,20 @@ export const reconcilePaypalTransactionsForMonth = async (
   displayDonationsSummary(mergedItems);
 
   generateCSV(
+    "PayPal",
+    endDate,
     itemTotals,
     `in-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
   generateCSV(
+    "PayPal",
+    endDate,
     refundItemTotals,
     `out-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );
   generateCSV(
+    "PayPal",
+    endDate,
     mergedItems,
     `total-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
   );

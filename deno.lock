@@ -5,6 +5,8 @@
     "jsr:@std/internal@^1.0.4": "1.0.4",
     "npm:@types/node@*": "22.5.4",
     "npm:create-next-app@latest": "15.0.3",
+    "npm:moment@*": "2.30.1",
+    "npm:moment@2.29.1": "2.29.1",
     "npm:moment@^2.30.1": "2.30.1",
     "npm:node-fetch@^3.3.2": "3.3.2",
     "npm:winston@^3.17.0": "3.17.0"
@@ -124,6 +126,9 @@
         "safe-stable-stringify",
         "triple-beam"
       ]
+    },
+    "moment@2.29.1": {
+      "integrity": "sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ=="
     },
     "moment@2.30.1": {
       "integrity": "sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how=="

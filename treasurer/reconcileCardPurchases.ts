@@ -38,7 +38,7 @@ export const reconcileZettlePurchases = async (
       } else {
         productTotals[id] = itemValue;
         productNames[id] = item.name;
-        productCategories[id] = item.category?.name || "Uncategorized";
+        productCategories[id] = item.category?.name || "";
         productCount[id] = count;
       }
       totalAmount += itemValue;
@@ -67,6 +67,8 @@ export const reconcileZettlePurchases = async (
   }
 
   generateCSV(
+    "Zettle",
+    endDate,
     itemSummary,
     `total-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
     true,
