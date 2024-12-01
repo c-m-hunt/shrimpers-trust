@@ -31,7 +31,7 @@ export const generateCSV = (
   const lines = !append
     ? ["Date,Source,Item,Value,Category,Subcategory,Count"]
     : [];
-  const formattedDate = moment(date).format("DD-MM-YYYY");
+  const formattedDate = moment(date).subtract(1, "days").format("DD-MM-YYYY");
   for (const item of items) {
     let category = getCategory(item);
     if (category.length === 0) {
@@ -76,6 +76,7 @@ export const validateSummary = (summary: SummaryData) => {
 
   const grandTotal = summary.transTotal + summary.feesTotal +
     summary.withdrawalTotal;
+
   if (
     !areNumbersEqual(balanceDiff, grandTotal)
   ) {
@@ -86,8 +87,12 @@ export const validateSummary = (summary: SummaryData) => {
         ),
       );
     } else {
+      const diff = balanceDiff - (grandTotal + summary.pendingValue);
       console.log(
-        error("Balance difference doesn't match transactions plus fees"),
+        error(
+          "Balance difference doesn't match transactions plus fees: " +
+            formatMoney(diff),
+        ),
       );
     }
   } else {

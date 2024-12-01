@@ -3,6 +3,7 @@ import { areNumbersEqual, isIterable } from "../lib/utils/index.ts";
 import { logger } from "../lib/utils/index.ts";
 import {
   allKnownTransTypes,
+  feeTransType,
   PAYPAL_CLIENT_ID,
   PAYPAL_SECRET,
   refundTransType,
@@ -76,6 +77,7 @@ export const reconcilePaypalTransactionsForMonth = async (
   const UNKNOWN = "unknown";
   const SHIPPING = "shipping";
   const FEES = "fees";
+  const WITHDRAWALS = "withdrawals";
   const summaryTemplate: ItemSummary = {
     total: 0,
     qty: 0,
@@ -272,6 +274,8 @@ export const reconcilePaypalTransactionsForMonth = async (
       0,
     ),
   });
+
+  refundItemTotals[WITHDRAWALS] = { total: withdrawalTotal, qty: 1 };
 
   const mergedItems = mergeItemsAndRefunds(itemTotals, refundItemTotals);
 

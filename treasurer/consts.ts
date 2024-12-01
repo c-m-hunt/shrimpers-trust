@@ -3,6 +3,7 @@ export const OUTPUT_PATH = `${currentDir}/output`;
 
 export const CATEGORIES: { [key: string]: string[] } = {
   "fees": ["Banking", "PayPal"],
+  "withdrawal": ["Banking", "Transfer"],
   "Zettle fees": ["Banking", "Zettle"],
   "Travel Tickets": ["Travel"],
   "Social Inclusion Donation": ["Social Inclusion"],
@@ -10,12 +11,12 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "1 Year OAP/Student/Disabled": ["Membership"],
   "Online 1 Year Renewal": ["Membership"],
   "Online 3 Year Renewal": ["Membership"],
-  "Junior Blues Membership": ["Membership", "Junior Blues"],
+  "Junior Blues Membership": ["Junior Blues", "Membership"],
   "2 Year OAP/Student/Disabled": ["Membership"],
   "Online 2 Year Renewal": ["Membership"],
   "Life": ["Membership"],
   "3 Year Adult Membership - Email": ["Membership"],
-  "Junior Blues - Membership": ["Membership", "Junior Blues"],
+  "Junior Blues - Membership": ["Junior Blues", "Membership"],
 
   "Additional Postage Cost": ["Shipping", "PayPal"],
   "shipping": ["Shipping", "PayPal"],
@@ -23,7 +24,6 @@ export const CATEGORIES: { [key: string]: string[] } = {
 
   // Donations
   "Online Donation": ["Donation", "Online"],
-  "Xmas Donation": ["Donation", "Xmas"],
 
   // Merchandise
   "Dereliction and Decline": ["Merchandise"],
@@ -56,18 +56,19 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Keith Bird Print - Record Attendance": ["Merchandise", "Keith Bird"], // Zettle
   "Keith Bird Print - Spirit of North Bank": ["Merchandise", "Keith Bird"], // Zettle
   "Beautiful Grounds": ["Merchandise", "Books"],
-  "Christmas Draw 2024": ["Merchandise", "Christmas Draw"], // Zettle
+  "Christmas Draw 2024": ["Fundraising", "Christmas Draw"], // Zettle
+  "Xmas Donation": ["Fundraising", "Christmas Draw"],
 
   // Junior Blues merchandise
-  "Junior Blues Scarf": ["Merchandise", "Junior Blues"],
-  "Junior Blues Pop Socket": ["Merchandise", "Junior Blues"],
-  "Junior Blues Pin Badge": ["Merchandise", "Junior Blues"],
-  "Battle Cards": ["Merchandise", "Junior Blues"], // Zettle
-  "Autograph Book": ["Merchandise", "Junior Blues"], // Zettle
-  "Junior Blues - Badge": ["Merchandise", "Junior Blues"], // Zettle
-  "Car Sticker": ["Merchandise", "Junior Blues"], // Zettle
-  "Lunch Box": ["Merchandise", "Junior Blues"], // Zettle
-  "Pen": ["Merchandise", "Junior Blues"], // Zettle
+  "Junior Blues Scarf": ["Junior Blues", "Merchandise"],
+  "Junior Blues Pop Socket": ["Junior Blues", "Merchandise"],
+  "Junior Blues Pin Badge": ["Junior Blues", "Merchandise"],
+  "Battle Cards": ["Junior Blues", "Merchandise"], // Zettle
+  "Autograph Book": ["Junior Blues", "Merchandise"], // Zettle
+  "Junior Blues - Badge": ["Junior Blues", "Merchandise"], // Zettle
+  "Car Sticker": ["Junior Blues", "Merchandise"], // Zettle
+  "Lunch Box": ["Junior Blues", "Merchandise"], // Zettle
+  "Pen": ["Junior Blues", "Merchandise"], // Zettle
 
   // Junior Blues events
   "Junior Blues Meet The Players Day - 2024": [
