@@ -60,7 +60,7 @@ export const validateSummary = (summary: SummaryData) => {
     !areNumbersEqual(
       summary.transTotal,
       summary.itemsValue + summary.refundsTotal + summary.spendingTotal +
-        summary.cardTotal,
+        summary.cardTotal + summary.chargebackTotal,
     )
   ) {
     console.log(

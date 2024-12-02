@@ -47,8 +47,6 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Lanyard": ["Merchandise"],
   "Trolley Key Ring": ["Merchandise"],
   "Go West At Night": ["Merchandise"],
-  "The Big Christmas Quiz - 2024": ["Merchandise", "Christmas Quiz"],
-  "Christmas Quiz 2024": ["Merchandise", "Christmas Quiz"], // Zettle
   "Limited Edition 2015 Play-Off Winners Pin Badge": ["Merchandise"],
   "A Snowy Night In January": ["Merchandise", "Keith Bird"],
   "Spirit Of The North Bank": ["Merchandise", "Keith Bird"],
@@ -58,6 +56,8 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Beautiful Grounds": ["Merchandise", "Books"],
   "Christmas Draw 2024": ["Fundraising", "Christmas Draw"], // Zettle
   "Xmas Donation": ["Fundraising", "Christmas Draw"],
+  "The Big Christmas Quiz - 2024": ["Fundraising", "Christmas Quiz"],
+  "Christmas Quiz 2024": ["Fundraising", "Christmas Quiz"], // Zettle
 
   // Junior Blues merchandise
   "Junior Blues Scarf": ["Junior Blues", "Merchandise"],

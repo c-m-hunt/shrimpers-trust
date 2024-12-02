@@ -10,6 +10,7 @@ export type SummaryData = {
   balance: ReportBalances;
   transTotal: number;
   feesTotal: number;
+  chargebackTotal: number;
   refundsTotal: number;
   shippingTotal: number;
   withdrawalTotal: number;

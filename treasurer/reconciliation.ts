@@ -68,6 +68,7 @@ export const reconcilePaypalTransactionsForMonth = async (
 
   let transTotal = 0;
   let feesTotal = 0;
+  let chargebackTotal = 0;
   let withdrawalTotal = 0;
   let refundsTotal = 0;
   let shippingTotal = 0;
@@ -177,6 +178,14 @@ export const reconcilePaypalTransactionsForMonth = async (
       refundsTotal += transAmt;
     }
 
+    if (feeTransType.includes(tran.transactionInfo.transactionEventCode)) {
+      chargebackTotal += transAmt;
+      logger.warn(
+        `Fee/Chargeback: ${tran.transactionInfo.transactionId} ${transAmt}`,
+      );
+      continue;
+    }
+
     // Purchases are negative transactions and not refunds
     if (transAmt < 0 && !isRefund) {
       isRefund = true;
@@ -249,7 +258,7 @@ export const reconcilePaypalTransactionsForMonth = async (
   }
 
   itemTotals[SHIPPING]["total"] = shippingTotal;
-  refundItemTotals[FEES]["total"] = feesTotal;
+  refundItemTotals[FEES]["total"] = feesTotal + chargebackTotal;
 
   displaySummary({
     dateRange: {
@@ -259,6 +268,7 @@ export const reconcilePaypalTransactionsForMonth = async (
     balance: await getStartAndEndDatePaypalBalance(startDate, endDate),
     transTotal,
     feesTotal,
+    chargebackTotal,
     refundsTotal,
     withdrawalTotal,
     shippingTotal,
