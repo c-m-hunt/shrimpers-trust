@@ -1,5 +1,2 @@
-.env
-debug.log
-cache/*.json
-output
-.vscode
+**/.env
+**/.DS_Store

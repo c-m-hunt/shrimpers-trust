@@ -1,0 +1,5 @@
+.env
+debug.log
+cache/*.json
+output
+.vscode
