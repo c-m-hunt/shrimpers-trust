@@ -1,69 +1,98 @@
 import AWS from "npm:aws-sdk";
 
-const fromEmail = Deno.env.get("FROM_EMAIL") || ""
-const ReplyToAddress = Deno.env.get("REPLY_TO_ADDRESS") || ""
+const fromEmail = Deno.env.get("FROM_EMAIL") || "";
+const replyToAddress = Deno.env.get("REPLY_TO_EMAIL") || "";
 
 if (!fromEmail) {
-    throw new Error("FROM_EMAIL environment variable not set")
+  throw new Error("FROM_EMAIL environment variable not set");
 }
 
-if (!ReplyToAddress) {
-    throw new Error("REPLY_TO_ADDRESS environment variable not set")
+if (!replyToAddress) {
+  throw new Error("REPLY_TO_ADDRESS environment variable not set");
 }
 
-export const sendPasswordResetEmail = async (email: string, name: string, username:string, password: string) => {
-    // Set the region
-    AWS.config.update({ region: "eu-west-1" });
-    
-    // Create sendEmail params
-    const params = {
-      Destination: {
-        /* required */
-        CcAddresses: [
-        ],
-        ToAddresses: [
-          "chris.hunt1977@gmail.com",
-        ],
-      },
-      Message: {
-        /* required */
-        Body: {
-          /* required */
-          Html: {
-            Charset: "UTF-8",
-            Data: generateHTMLMessage(name, username, password),
-          },
-          Text: {
-            Charset: "UTF-8",
-            Data: generateTextMessage(name, username, password),
-          },
-        },
-        Subject: {
-          Charset: "UTF-8",
-          Data: "Shrimpers Trust Password Reset",
-        },
-      },
-      Source: fromEmail ,
-      ReplyToAddresses: [
-        "info@shrimperstrust.co.uk",
+
+type sendPasswordResetEmailResponse = {
+  messageId: string;
+  htmlMessage: string;
+  textMessage: string;
+}
+
+export const sendPasswordResetEmail = async (
+  email: string,
+  name: string,
+  username: string,
+  password: string,
+): Promise<sendPasswordResetEmailResponse> => {
+
+  if (!email) {
+    throw new Error("Email address is required");
+  }
+  if (!name) {
+    throw new Error("Name is required");
+  }
+  if (!username) {
+    throw new Error("Username is required");
+  }
+  if (!password) {
+    throw new Error("Password is required");
+  }
+
+  const htmlMessage = generateHTMLMessage(name, username, password);
+  const textMessage = generateTextMessage(name, username, password);
+
+  // Set the region
+  AWS.config.update({ region: "eu-west-1" });
+
+  // Create sendEmail params
+  const params = {
+    Destination: {
+      /* required */
+      CcAddresses: [],
+      ToAddresses: [
+        "chris.hunt1977@gmail.com",
       ],
-    };
-    
-    // Create the promise and SES service object
-    try {
-        const data = await new AWS.SES({ apiVersion: "2010-12-01" })
-        .sendEmail(params)
-        .promise();
-      
-      console.log(data.MessageId);
-    } catch (err) {
-        console.error(err);
-    }
-}
+    },
+    Message: {
+      /* required */
+      Body: {
+        /* required */
+        Html: {
+          Charset: "UTF-8",
+          Data: htmlMessage,
+        },
+        Text: {
+          Charset: "UTF-8",
+          Data: textMessage,
+        },
+      },
+      Subject: {
+        Charset: "UTF-8",
+        Data: "Shrimpers Trust Password Reset",
+      },
+    },
+    Source: fromEmail,
+    ReplyToAddresses: [
+      replyToAddress,
+    ],
+  };
 
+  // Create the promise and SES service object
 
-const generateHTMLMessage = (name: string, username: string, password: string) => {
-    return `
+  const data = await new AWS.SES({ apiVersion: "2010-12-01" })
+    .sendEmail(params)
+    .promise();
+
+  console.log(data.MessageId);
+  return { messageId: data.MessageId, htmlMessage, textMessage };
+};
+
+const generateHTMLMessage = (
+  name: string,
+  username: string,
+  password: string,
+) => {
+  return `
     <!DOCTYPE html>
 <html>
 <head>
@@ -96,11 +125,14 @@ const generateHTMLMessage = (name: string, username: string, password: string) =
 </body>
 </html>
 `;
-}
+};
 
-
-const generateTextMessage = (name: string, username: string, password: string) => {
-    return `
+const generateTextMessage = (
+  name: string,
+  username: string,
+  password: string,
+) => {
+  return `
     Good evening ${name},
 
     Thank you for contacting us.
@@ -111,4 +143,4 @@ const generateTextMessage = (name: string, username: string, password: string) =
     Many thanks,
     Jon-Paul
 `;
-}
+};
