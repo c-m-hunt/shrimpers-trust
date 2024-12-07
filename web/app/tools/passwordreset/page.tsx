@@ -35,13 +35,12 @@ const PasswordReset = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // const validationErrors = validateForm();
-    // if (Object.keys(validationErrors).length > 0) {
-    //     setErrors(validationErrors);
-    //     return;
-    // }
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
     try {
-      setRenderedEmail("Test");
       const response = await fetch(`/api/tools/passwordreset`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -49,15 +48,8 @@ const PasswordReset = () => {
       });
 
       const data = await response.json();
-      console.log(data);
-      console.log(Object.keys(data).includes("htmlMessage"));
-      console.log(Object.keys(data));
-      setRenderedEmail("Testing");
-
       if (response.ok) {
-        if (Object.keys(data).includes("textMessage")) {
-          setRenderedEmail(data.textMessage);
-        }
+        setRenderedEmail(data.data.textMessage);
       } else {
         console.error("Error:", data.error);
       }
@@ -154,7 +146,7 @@ const PasswordReset = () => {
           {renderedEmail
             ? (
               <textarea
-                className="mt-4 w-ful p-2 border border-gray-300 rounded-md"
+                className="mt-4 w-full h-80 p-2 border border-gray-300 rounded-md"
                 value={renderedEmail}
                 readOnly
               >
