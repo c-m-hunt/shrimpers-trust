@@ -1,0 +1,114 @@
+import AWS from "npm:aws-sdk";
+
+const fromEmail = Deno.env.get("FROM_EMAIL") || ""
+const ReplyToAddress = Deno.env.get("REPLY_TO_ADDRESS") || ""
+
+if (!fromEmail) {
+    throw new Error("FROM_EMAIL environment variable not set")
+}
+
+if (!ReplyToAddress) {
+    throw new Error("REPLY_TO_ADDRESS environment variable not set")
+}
+
+export const sendPasswordResetEmail = async (email: string, name: string, username:string, password: string) => {
+    // Set the region
+    AWS.config.update({ region: "eu-west-1" });
+    
+    // Create sendEmail params
+    const params = {
+      Destination: {
+        /* required */
+        CcAddresses: [
+        ],
+        ToAddresses: [
+          "chris.hunt1977@gmail.com",
+        ],
+      },
+      Message: {
+        /* required */
+        Body: {
+          /* required */
+          Html: {
+            Charset: "UTF-8",
+            Data: generateHTMLMessage(name, username, password),
+          },
+          Text: {
+            Charset: "UTF-8",
+            Data: generateTextMessage(name, username, password),
+          },
+        },
+        Subject: {
+          Charset: "UTF-8",
+          Data: "Shrimpers Trust Password Reset",
+        },
+      },
+      Source: fromEmail ,
+      ReplyToAddresses: [
+        "info@shrimperstrust.co.uk",
+      ],
+    };
+    
+    // Create the promise and SES service object
+    try {
+        const data = await new AWS.SES({ apiVersion: "2010-12-01" })
+        .sendEmail(params)
+        .promise();
+      
+      console.log(data.MessageId);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
+const generateHTMLMessage = (name: string, username: string, password: string) => {
+    return `
+    <!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+    .credentials {
+      background-color: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 15px 0;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <p>Good evening ${name},</p>
+
+  <p>Thank you for contacting us.</p>
+
+  <div class="credentials">
+    Username: ${username}<br>
+    Password: ${password}
+  </div>
+
+  <p>Many thanks,</p>
+  <p>Jon-Paul</p>
+</body>
+</html>
+`;
+}
+
+
+const generateTextMessage = (name: string, username: string, password: string) => {
+    return `
+    Good evening ${name},
+
+    Thank you for contacting us.
+
+    Username: ${username}
+    Password: ${password}
+
+    Many thanks,
+    Jon-Paul
+`;
+}
