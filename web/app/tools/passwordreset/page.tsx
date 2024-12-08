@@ -13,6 +13,7 @@ const PasswordReset = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [renderedEmail, setRenderedEmail] = useState<string | null>(null);
   const [responseError, setResponseError] = useState<string | null>(null);
+  const [responseSuccess, setResponseSuccess] = useState<string | null>(null);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,6 +53,7 @@ const PasswordReset = () => {
       const data = await response.json();
       if (response.ok) {
         setRenderedEmail(data.data.textMessage);
+        setResponseSuccess("Email rendered successfully.");
       } else {
         setResponseError(`An error occurred. ${data.error}`);
       }
@@ -139,8 +141,8 @@ const PasswordReset = () => {
               Submit
             </button>
           </form>
-          {responseError && <p className="mt-4 text-red-500">{responseError}
-          </p>}
+          {responseError && <p className="mt-4 text-red-500">{responseError}</p>}
+          {responseSuccess && <p className="mt-4 text-green-500">{responseSuccess}</p>}
         </div>
 
         {/* Second Column: Rendered Email */}
