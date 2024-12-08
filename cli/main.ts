@@ -3,6 +3,7 @@ import { Command } from "https://deno.land/x/cliffy@v1.0.0-rc.4/command/mod.ts";
 import { reconcilePaypalTransactionsForMonth } from "./treasurer/reconciliation.ts";
 import { getStartAndEndDates, logger } from "./lib/utils/index.ts";
 import { reconcileZettlePurchases } from "./treasurer/reconcileCardPurchases.ts";
+import { setupApi } from "./lib/api/app.ts";
 
 const treasurerCmd = await new Command()
   .description("Treasurer tooling")
@@ -24,11 +25,23 @@ const treasurerCmd = await new Command()
   });
 //----------------------------------------------------------------
 
+const apiCmd = await new Command()
+  .description("API tooling")
+  //----------------------------------------------------------------
+  .command("start", "Start the API")
+  .alias("s")
+  .action(() => {
+    logger.info("Starting API");
+    setupApi();
+  });
+//----------------------------------------------------------------
+
 await new Command()
   .name("st")
   .version("0.1.0")
   .description("Shrimpers Trust tooling")
   //----------------------------------------------------------------
   .command("treasurer", treasurerCmd)
+  .command("api", apiCmd)
   //----------------------------------------------------------------
   .parse(Deno.args);

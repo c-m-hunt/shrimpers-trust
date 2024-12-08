@@ -1,0 +1,10 @@
+services:
+  app:
+    image: shrimpers-trust-tools:latest # Replace with your actual image
+    container_name: shrimpers-trust-tools
+    ports:
+      - "3001:3001" # Map container port 8080 to host port 8080
+    env_file:
+      # Reference an external .env file for additional variables
+      - .env.local
+    restart: always # Ensure the container restarts on failure
