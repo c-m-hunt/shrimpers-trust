@@ -1,14 +1,17 @@
+import React from "react";
 import type { Metadata } from "next";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import localFont from "next/font/local";
-import Navbar from "./components/navbar";
+import Navbar from "./components/navbar.tsx";
 import "./globals.css";
 
+// @ts-ignore Deno doesn't like localFont
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+// @ts-ignore Deno doesn't like localFont
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",

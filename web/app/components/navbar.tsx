@@ -1,7 +1,9 @@
 "use client";
 import React from "react";
-import Link from "next/link";
+import NextLink from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
+
+const Link = NextLink.default;
 
 export default function Navbar() {
   const { user, error, isLoading } = useUser();

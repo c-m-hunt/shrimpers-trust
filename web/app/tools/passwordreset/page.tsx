@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import { useState } from "react";
 
@@ -12,7 +12,8 @@ const PasswordReset = () => {
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [renderedEmail, setRenderedEmail] = useState<string | null>(null);
-
+  const [responseError, setResponseError] = useState<string | null>(null);
+  // @ts-ignore Deno doesn't like HTMLFormElement
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -32,8 +33,10 @@ const PasswordReset = () => {
     return newErrors;
   };
 
+  // @ts-ignore Deno doesn't like HTMLFormElement
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setResponseError(null);
 
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
@@ -51,10 +54,11 @@ const PasswordReset = () => {
       if (response.ok) {
         setRenderedEmail(data.data.textMessage);
       } else {
-        console.error("Error:", data.error);
+        setResponseError(`An error occurred. ${data.error}`);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      setResponseError(`An error occurred. ${error}`);
     }
   };
 
@@ -136,6 +140,8 @@ const PasswordReset = () => {
               Submit
             </button>
           </form>
+          {responseError && <p className="mt-4 text-red-500">{responseError}
+          </p>}
         </div>
 
         {/* Second Column: Rendered Email */}
