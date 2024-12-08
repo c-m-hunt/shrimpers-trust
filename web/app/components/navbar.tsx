@@ -16,9 +16,7 @@ export default function Navbar() {
           <Link href="/" className="text-white font-bold mr-4">
             Shrimpers Trust Tools
           </Link>
-          <div className="text-white">
-            {user ? user.name : "Not logged in"}
-          </div>
+          <div className="text-white">{user ? user.name : "Not logged in"}</div>
         </div>
         <ul className="flex ml-auto space-x-4">
           <li>

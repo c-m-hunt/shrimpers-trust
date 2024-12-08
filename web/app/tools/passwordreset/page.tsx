@@ -14,7 +14,7 @@ const PasswordReset = () => {
   const [renderedEmail, setRenderedEmail] = useState<string | null>(null);
   const [responseError, setResponseError] = useState<string | null>(null);
   const [responseSuccess, setResponseSuccess] = useState<string | null>(null);
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -141,8 +141,12 @@ const PasswordReset = () => {
               Submit
             </button>
           </form>
-          {responseError && <p className="mt-4 text-red-500">{responseError}</p>}
-          {responseSuccess && <p className="mt-4 text-green-500">{responseSuccess}</p>}
+          {responseError && (
+            <p className="mt-4 text-red-500">{responseError}</p>
+          )}
+          {responseSuccess && (
+            <p className="mt-4 text-green-500">{responseSuccess}</p>
+          )}
         </div>
 
         {/* Second Column: Rendered Email */}
@@ -150,20 +154,17 @@ const PasswordReset = () => {
           <h2 className="text-lg font-semibold text-gray-800">
             Rendered Email
           </h2>
-          {renderedEmail
-            ? (
-              <textarea
-                className="mt-4 w-full h-80 p-2 border border-gray-300 rounded-md"
-                value={renderedEmail}
-                readOnly
-              >
-              </textarea>
-            )
-            : (
-              <p className="mt-4 text-gray-500">
-                No email rendered yet. Submit the form to see it here.
-              </p>
-            )}
+          {renderedEmail ? (
+            <textarea
+              className="mt-4 w-full h-80 p-2 border border-gray-300 rounded-md"
+              value={renderedEmail}
+              readOnly
+            ></textarea>
+          ) : (
+            <p className="mt-4 text-gray-500">
+              No email rendered yet. Submit the form to see it here.
+            </p>
+          )}
         </div>
       </div>
     </div>
