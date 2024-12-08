@@ -11,12 +11,11 @@ if (!replyToAddress) {
   throw new Error("REPLY_TO_ADDRESS environment variable not set");
 }
 
-
 type sendPasswordResetEmailResponse = {
   messageId: string;
   htmlMessage: string;
   textMessage: string;
-}
+};
 
 export const sendPasswordResetEmail = async (
   email: string,
@@ -24,7 +23,6 @@ export const sendPasswordResetEmail = async (
   username: string,
   password: string,
 ): Promise<sendPasswordResetEmailResponse> => {
-
   if (!email) {
     throw new Error("Email address is required");
   }
