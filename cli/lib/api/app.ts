@@ -15,10 +15,15 @@ export const setupApi = () => {
     const { email, name, username, password } = req.body;
     console.log(`Sending password reset email to ${email}`);
     try {
-      const resp = await sendPasswordResetEmail(email, name, username, password);
+      const resp = await sendPasswordResetEmail(
+        email,
+        name,
+        username,
+        password,
+      );
       res.send(resp);
     } catch (e) {
-      res.status(500).send({"error": e});
+      res.status(500).send({ "error": e });
     }
   });
 
