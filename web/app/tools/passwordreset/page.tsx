@@ -13,7 +13,7 @@ const PasswordReset = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [renderedEmail, setRenderedEmail] = useState<string | null>(null);
   const [responseError, setResponseError] = useState<string | null>(null);
-  // @ts-ignore Deno doesn't like HTMLFormElement
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -33,7 +33,6 @@ const PasswordReset = () => {
     return newErrors;
   };
 
-  // @ts-ignore Deno doesn't like HTMLFormElement
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setResponseError(null);
