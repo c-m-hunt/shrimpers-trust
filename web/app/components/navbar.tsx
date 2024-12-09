@@ -32,17 +32,17 @@ export default function Navbar() {
                 </Link>
               </li>
               <li>
-                <Link href="/api/auth/logout" className="text-white">
+                <a href="/api/auth/logout" className="text-white">
                   Logout
-                </Link>
+                </a>
               </li>
             </>
           )}
           {!user && (
             <li>
-              <Link href="/api/auth/login" className="text-white">
+              <a href="/api/auth/login" className="text-white">
                 Login
-              </Link>
+              </a>
             </li>
           )}
         </ul>
