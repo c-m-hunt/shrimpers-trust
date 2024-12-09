@@ -1,5 +1,6 @@
 import AWS from "npm:aws-sdk";
 
+const awsRegion = Deno.env.get("AWS_REGION") || "eu-west-1";
 const fromEmail = Deno.env.get("FROM_EMAIL") || "";
 const replyToAddress = Deno.env.get("REPLY_TO_EMAIL") || "";
 
@@ -40,7 +41,7 @@ export const sendPasswordResetEmail = async (
   const textMessage = generateTextMessage(name, username, password);
 
   // Set the region
-  AWS.config.update({ region: "eu-west-1" });
+  AWS.config.update({ region: awsRegion });
 
   // Create sendEmail params
   const params = {
@@ -48,7 +49,7 @@ export const sendPasswordResetEmail = async (
       /* required */
       CcAddresses: [],
       ToAddresses: [
-        "chris.hunt1977@gmail.com",
+        email,
       ],
     },
     Message: {
