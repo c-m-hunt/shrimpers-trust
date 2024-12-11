@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=builder /app/app .
 
 # Expose the necessary port (adjust as needed)
-EXPOSE 8080
+EXPOSE 3000
 
 # Run the application
 CMD ["./app"]
