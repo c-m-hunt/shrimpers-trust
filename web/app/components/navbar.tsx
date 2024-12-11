@@ -1,13 +1,45 @@
 "use client";
 import React from "react";
-import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import Link from "next/link";
 
-export default function Navbar() {
+type Route = {
+  href: string;
+  text: string;
+  requiresAuth: boolean;
+  external?: boolean;
+};
+
+export default function NavbarTop() {
   const { user, error, isLoading } = useUser();
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
+
+  const routes: { [key: string]: Route } = {
+    home: {
+      href: "/",
+      text: "Home",
+      requiresAuth: false,
+    },
+    passwordReset: {
+      href: "/tools/passwordreset",
+      text: "Password Reset",
+      requiresAuth: true,
+    },
+    login: {
+      href: "/api/auth/login",
+      text: "Login",
+      requiresAuth: false,
+      external: true,
+    },
+    logout: {
+      href: "/api/auth/logout",
+      text: "Logout",
+      requiresAuth: true,
+      external: true,
+    },
+  };
 
   return (
     <nav className="bg-gray-800 p-4">
