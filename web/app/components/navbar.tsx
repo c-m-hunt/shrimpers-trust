@@ -189,7 +189,7 @@ export default function TopNavbar() {
             <NavList user={user} />
           </div>
         )}
-        {!user && (
+        {!user && !userIsLoading && (
           <div className="hidden gap-2 lg:flex">
             <a href="/api/auth/login">
               <Button
@@ -236,7 +236,7 @@ export default function TopNavbar() {
       </div>
       <Collapse open={openNav}>
         <NavList user={user} />
-        {(!user && !userIsLoading) && (
+        {!user && !userIsLoading && (
           <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
             <a href="/api/auth/login">
               <Button
