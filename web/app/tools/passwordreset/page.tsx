@@ -2,6 +2,15 @@
 import React from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import { useState } from "react";
+import { Card, Input, Button, Typography } from "@material-tailwind/react";
+import { variant } from "@material-tailwind/react/types/components/typography";
+import { color } from "@material-tailwind/react/types/components/alert";
+
+const unusedProps = {
+  placeholder: undefined,
+  onPointerEnterCapture: undefined,
+  onPointerLeaveCapture: undefined,
+};
 
 const PasswordReset = () => {
   const [formData, setFormData] = useState({
@@ -37,7 +46,6 @@ const PasswordReset = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setResponseError(null);
-
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -62,112 +70,149 @@ const PasswordReset = () => {
       setResponseError(`An error occurred. ${error}`);
     }
   };
-
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      {/* Page Title */}
-      <h1 className="text-3xl font-bold text-center text-blue-600 mb-8">
-        Password Reset Email
-      </h1>
-
-      <div className="flex gap-8">
-        {/* First Column: Form */}
-        <div className="flex-1 bg-white shadow-md rounded-lg p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
+    <div className="flex">
+      <div className="flex-1 min-h-screen p-6">
+        <Card color="transparent" shadow={false} {...unusedProps}>
+          <Text variant="h4" color="blue-gray">
+            Password Reset Email
+          </Text>
+          <Text color="gray" className="mt-1 font-normal">
+            This form will send a password reset email to the provided email
+          </Text>
+          <form
+            className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+            onSubmit={handleSubmit}
+          >
+            <div className="mb-1 flex flex-col gap-6">
+              <Text variant="h6" color="blue-gray" className="-mb-3">
                 Name
-              </label>
-              <input
-                type="text"
+              </Text>
+              <Input
+                size="lg"
+                {...unusedProps}
+                placeholder="Person's name"
+                className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                crossOrigin={undefined}
                 name="name"
-                value={formData.name}
                 onChange={handleChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name}</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <input
-                type="email"
+              <ErrorMsg error={errors.name} />
+              <Text variant="h6" color="blue-gray" className="-mb-3">
+                Email address
+              </Text>
+              <Input
+                size="lg"
+                {...unusedProps}
+                placeholder="name@mail.com"
+                className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                crossOrigin={undefined}
                 name="email"
-                value={formData.email}
                 onChange={handleChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               />
-              {errors.email && (
-                <p className="text-sm text-red-500">{errors.email}</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <ErrorMsg error={errors.email} />
+              {/* ------------------------------------ */}
+              <Text variant="h6" color="blue-gray" className="-mb-3">
                 Username
-              </label>
-              <input
+              </Text>
+              <Input
                 type="text"
+                size="lg"
+                {...unusedProps}
+                placeholder="Username"
+                className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                crossOrigin={undefined}
                 name="username"
-                value={formData.username}
                 onChange={handleChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               />
-              {errors.username && (
-                <p className="text-sm text-red-500">{errors.username}</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <ErrorMsg error={errors.username} />
+              {/* ------------------------------------ */}
+              <Text variant="h6" color="blue-gray" className="-mb-3">
                 Password
-              </label>
-              <input
-                type="password"
+              </Text>
+              <Input
+                type="text"
+                size="lg"
+                {...unusedProps}
+                placeholder="New password"
+                className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                crossOrigin={undefined}
                 name="password"
-                value={formData.password}
                 onChange={handleChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               />
-              {errors.password && (
-                <p className="text-sm text-red-500">{errors.password}</p>
-              )}
+              <ErrorMsg error={errors.password} />
+              {/* ------------------------------------ */}
             </div>
-            <button
-              type="submit"
-              className="w-full py-2 px-4 bg-blue-500 text-white font-medium rounded-md hover:bg-blue-600"
-            >
-              Submit
-            </button>
+            <Button className="mt-6" fullWidth {...unusedProps} type="submit">
+              Send reminder
+            </Button>
+            {responseError && (
+              <p className="mt-4 text-red-500">{responseError}</p>
+            )}
+            {responseSuccess && (
+              <p className="mt-4 text-green-500">{responseSuccess}</p>
+            )}
           </form>
-          {responseError && (
-            <p className="mt-4 text-red-500">{responseError}</p>
-          )}
-          {responseSuccess && (
-            <p className="mt-4 text-green-500">{responseSuccess}</p>
-          )}
-        </div>
-
-        {/* Second Column: Rendered Email */}
-        <div className="flex-1 bg-gray-50 shadow-md rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-gray-800">
-            Rendered Email
-          </h2>
-          {renderedEmail ? (
-            <textarea
-              className="mt-4 w-full h-80 p-2 border border-gray-300 rounded-md"
-              value={renderedEmail}
-              readOnly
-            ></textarea>
-          ) : (
-            <p className="mt-4 text-gray-500">
-              No email rendered yet. Submit the form to see it here.
-            </p>
-          )}
-        </div>
+        </Card>
+      </div>
+      {/* Second Column: Rendered Email */}
+      <div className="flex-1 bg-gray-50 shadow-md rounded-lg p-6">
+        <h2 className="text-lg font-semibold text-gray-800">Rendered Email</h2>
+        {renderedEmail ? (
+          <textarea
+            className="mt-4 w-full h-80 p-2 border border-gray-300 rounded-md"
+            value={renderedEmail}
+            readOnly
+          ></textarea>
+        ) : (
+          <p className="mt-4 text-gray-500">
+            No email rendered yet. Submit the form to see it here.
+          </p>
+        )}
       </div>
     </div>
+  );
+};
+
+const ErrorMsg = ({ error }: { error: string }) => {
+  if (!error) return null;
+  if (error === "") return null;
+  return (
+    <Text variant="h6" color="red" className="-mb-3">
+      {error}
+    </Text>
+  );
+};
+
+type TextProps = {
+  variant?: variant;
+  color?: color;
+  className?: string;
+  children: React.ReactNode;
+};
+
+const Text = (props: TextProps) => {
+  return (
+    <Typography
+      variant={props.variant}
+      color={props.color}
+      className={props.className}
+      {...unusedProps}
+    >
+      {props.children}
+    </Typography>
   );
 };
 
