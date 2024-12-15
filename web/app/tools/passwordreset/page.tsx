@@ -71,8 +71,8 @@ const PasswordReset = () => {
     }
   };
   return (
-    <div className="flex">
-      <div className="flex-1 min-h-screen p-6">
+    <div className="flex flex-col lg:flex-row ">
+      <div className="p-6">
         <Card color="transparent" shadow={false} {...unusedProps}>
           <Text variant="h4" color="blue-gray">
             Password Reset Email
@@ -168,7 +168,7 @@ const PasswordReset = () => {
         </Card>
       </div>
       {/* Second Column: Rendered Email */}
-      <div className="flex-1 bg-gray-50 shadow-md rounded-lg p-6">
+      <div className="bg-gray-50 p-6">
         <h2 className="text-lg font-semibold text-gray-800">Rendered Email</h2>
         {renderedEmail ? (
           <textarea
