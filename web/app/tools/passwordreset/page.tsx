@@ -71,7 +71,7 @@ const PasswordReset = () => {
     }
   };
   return (
-    <div className="flex flex-col lg:flex-row ">
+    <div className="flex flex-col lg:flex-row justify-center">
       <div className="p-6">
         <Card color="transparent" shadow={false} {...unusedProps}>
           <Text variant="h4" color="blue-gray">
