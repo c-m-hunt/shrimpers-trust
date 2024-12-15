@@ -131,25 +131,27 @@ function NavList({ user }: { user: UserProfile | undefined }) {
       onPointerLeaveCapture={undefined}
     >
       {user && (
-        <Typography
-          as="div"
-          variant="small"
-          className="font-medium"
-          placeholder={undefined}
-          onPointerEnterCapture={undefined}
-          onPointerLeaveCapture={undefined}
-        >
-          <ListItem
-            className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900"
+        <React.Fragment>
+          <Typography
+            as="div"
+            variant="small"
+            className="font-medium"
             placeholder={undefined}
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}
           >
-            Logged in as {user.name}
-          </ListItem>
-        </Typography>
+            <ListItem
+              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900"
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
+              Logged in as {user.name}
+            </ListItem>
+          </Typography>
+          <NavListMenu />
+        </React.Fragment>
       )}
-      <NavListMenu />
     </List>
   );
 }
@@ -173,17 +175,19 @@ export default function TopNavbar() {
       onPointerLeaveCapture={undefined}
     >
       <div className="flex items-center justify-between text-blue-gray-900">
-        <Typography
-          as="a"
-          href="#"
-          variant="h6"
-          className="mr-4 cursor-pointer py-1.5 lg:ml-2"
-          placeholder={undefined}
-          onPointerEnterCapture={undefined}
-          onPointerLeaveCapture={undefined}
-        >
-          Shrimers Trust Tools
-        </Typography>
+        <Link href="/">
+          <Typography
+            as="a"
+            href="#"
+            variant="h6"
+            className="mr-4 cursor-pointer py-1.5 lg:ml-2"
+            placeholder={undefined}
+            onPointerEnterCapture={undefined}
+            onPointerLeaveCapture={undefined}
+          >
+            Shrimers Trust Tools
+          </Typography>
+        </Link>
         {user && (
           <div className="hidden lg:block">
             <NavList user={user} />
