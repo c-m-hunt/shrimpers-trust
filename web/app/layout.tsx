@@ -34,7 +34,7 @@ export default function RootLayout({
         >
           <Navbar />
           <div className="w-full justify-items-center">
-            <div className="max-w-screen-xl  ">{children}</div>
+            <div className="max-w-screen-xl w-full">{children}</div>
           </div>
         </body>
       </UserProvider>
