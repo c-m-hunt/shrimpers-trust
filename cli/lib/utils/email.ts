@@ -110,7 +110,7 @@ const generateHTMLMessage = (
   </style>
 </head>
 <body>
-  <p>Good evening ${name},</p>
+  <p>Hello ${name}!</p>
 
   <p>Thank you for contacting us.</p>
 
