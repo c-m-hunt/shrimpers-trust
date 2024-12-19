@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "npm:express";
+import express, { Request, Response } from "npm:express";
 import { sendPasswordResetEmail } from "../utils/email.ts";
 import cors from "npm:cors";
 const apiPort = Deno.env.get("API_PORT") || "3000";
