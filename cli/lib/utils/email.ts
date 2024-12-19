@@ -132,7 +132,7 @@ const generateTextMessage = (
   password: string,
 ) => {
   return `
-    Good evening ${name},
+    Hello ${name}!
 
     Thank you for contacting us.
 
