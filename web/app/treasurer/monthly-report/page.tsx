@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
-import { Card, Input, Button, Typography } from "@material-tailwind/react";
+import { Button, Card, Input, Typography } from "@material-tailwind/react";
 
 const MonthlyReport = () => {
   const [month, setMonth] = useState("");
@@ -24,10 +24,14 @@ const MonthlyReport = () => {
     setError(null);
 
     try {
-      const paypalResponse = await fetch(`/api/treasurer/paypal/${month}/${year}`);
+      const paypalResponse = await fetch(
+        `/api/treasurer/paypal/${month}/${year}`,
+      );
       const paypalData = await paypalResponse.json();
 
-      const zettleResponse = await fetch(`/api/treasurer/zettle/${month}/${year}`);
+      const zettleResponse = await fetch(
+        `/api/treasurer/zettle/${month}/${year}`,
+      );
       const zettleData = await zettleResponse.json();
 
       setReportData({ paypal: paypalData, zettle: zettleData });
@@ -47,7 +51,10 @@ const MonthlyReport = () => {
         <Typography color="gray" className="mt-1 font-normal">
           Select the month and year to generate the report.
         </Typography>
-        <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96" onSubmit={handleSubmit}>
+        <form
+          className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+          onSubmit={handleSubmit}
+        >
           <div className="mb-4 flex flex-col gap-6">
             <Input
               size="lg"
@@ -67,7 +74,9 @@ const MonthlyReport = () => {
           <Button className="mt-6" fullWidth type="submit" disabled={loading}>
             {loading ? "Generating Report..." : "Create Report"}
           </Button>
-          {error && <Typography color="red" className="mt-4">{error}</Typography>}
+          {error && (
+            <Typography color="red" className="mt-4">{error}</Typography>
+          )}
         </form>
       </Card>
       {reportData && (

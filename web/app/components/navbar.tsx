@@ -1,68 +1,65 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { UserProfile, useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 
 import {
-  Navbar,
-  Collapse,
-  Typography,
   Button,
+  Collapse,
   IconButton,
   List,
   ListItem,
   Menu,
   MenuHandler,
-  MenuList,
   MenuItem,
+  MenuList,
+  Navbar,
+  Typography,
 } from "@material-tailwind/react";
 import {
-  ChevronDownIcon,
   Bars3Icon,
+  ChevronDownIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 
+const defaultProps = {
+  placeholder: undefined,
+  onPointerEnterCapture: undefined,
+  onPointerLeaveCapture: undefined,
+};
+
 function NavListMenu() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [openNestedMenu, setopenNestedMenu] = React.useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
+  const [isTreasurerMenuOpen, setIsTreasurerMenuOpen] = useState(false);
+  const [openNestedMenu, setopenNestedMenu] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <React.Fragment>
       <Menu
-        open={isMenuOpen}
-        handler={setIsMenuOpen}
+        open={isToolsMenuOpen}
+        handler={setIsToolsMenuOpen}
         placement="bottom"
         allowHover={true}
       >
-        <MenuHandler>
+        <MenuHandler className="hidden lg:block">
           <Typography
             as="div"
             variant="small"
             className="font-medium"
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
+            {...defaultProps}
           >
             <ListItem
               className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900"
-              selected={isMenuOpen || isMobileMenuOpen}
+              selected={isToolsMenuOpen || isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
-              placeholder={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
+              {...defaultProps}
             >
               Tools
               <ChevronDownIcon
                 strokeWidth={2.5}
                 className={`hidden h-3 w-3 transition-transform lg:block ${
-                  isMenuOpen ? "rotate-180" : ""
-                }`}
-              />
-              <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`block h-3 w-3 transition-transform lg:hidden ${
-                  isMobileMenuOpen ? "rotate-180" : ""
+                  isToolsMenuOpen ? "rotate-180" : ""
                 }`}
               />
             </ListItem>
@@ -70,9 +67,7 @@ function NavListMenu() {
         </MenuHandler>
         <MenuList
           className="hidden rounded-xl lg:block"
-          placeholder={undefined}
-          onPointerEnterCapture={undefined}
-          onPointerLeaveCapture={undefined}
+          {...defaultProps}
         >
           <Menu
             placement="right-start"
@@ -84,9 +79,7 @@ function NavListMenu() {
             <MenuHandler className="flex items-center justify-between">
               <Link href="/tools/passwordreset">
                 <MenuItem
-                  placeholder={undefined}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
+                  {...defaultProps}
                 >
                   Reset Password Email
                 </MenuItem>
@@ -96,39 +89,29 @@ function NavListMenu() {
         </MenuList>
       </Menu>
       <Menu
-        open={isMenuOpen}
-        handler={setIsMenuOpen}
+        open={isTreasurerMenuOpen}
+        handler={setIsTreasurerMenuOpen}
         placement="bottom"
         allowHover={true}
       >
-        <MenuHandler>
+        <MenuHandler className="hidden lg:block">
           <Typography
             as="div"
             variant="small"
             className="font-medium"
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
+            {...defaultProps}
           >
             <ListItem
               className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900"
-              selected={isMenuOpen || isMobileMenuOpen}
+              selected={isTreasurerMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
-              placeholder={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
+              {...defaultProps}
             >
               Treasurer
               <ChevronDownIcon
                 strokeWidth={2.5}
                 className={`hidden h-3 w-3 transition-transform lg:block ${
-                  isMenuOpen ? "rotate-180" : ""
-                }`}
-              />
-              <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`block h-3 w-3 transition-transform lg:hidden ${
-                  isMobileMenuOpen ? "rotate-180" : ""
+                  isTreasurerMenuOpen ? "rotate-180" : ""
                 }`}
               />
             </ListItem>
@@ -136,9 +119,7 @@ function NavListMenu() {
         </MenuHandler>
         <MenuList
           className="hidden rounded-xl lg:block"
-          placeholder={undefined}
-          onPointerEnterCapture={undefined}
-          onPointerLeaveCapture={undefined}
+          {...defaultProps}
         >
           <Menu
             placement="right-start"
@@ -150,9 +131,7 @@ function NavListMenu() {
             <MenuHandler className="flex items-center justify-between">
               <Link href="/treasurer/monthly-report">
                 <MenuItem
-                  placeholder={undefined}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
+                  {...defaultProps}
                 >
                   Monthly Report
                 </MenuItem>
@@ -162,46 +141,49 @@ function NavListMenu() {
         </MenuList>
       </Menu>
       <div className="block lg:hidden">
-        <Collapse open={isMobileMenuOpen}>
-          <Menu
-            placement="bottom"
-            allowHover
-            offset={6}
-            open={openNestedMenu}
-            handler={setopenNestedMenu}
+        <Menu
+          placement="bottom"
+          allowHover
+          offset={6}
+          open={openNestedMenu}
+          handler={setopenNestedMenu}
+        >
+          <MenuItem
+            {...defaultProps}
           >
-            <MenuHandler className="flex items-center justify-between">
-              <Link href="/tools/passwordreset">
-                <MenuItem
-                  placeholder={undefined}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                >
-                  Password Reset Email
-                </MenuItem>
-              </Link>
-            </MenuHandler>
-          </Menu>
-          <Menu
-            placement="bottom"
-            allowHover
-            offset={6}
-            open={openNestedMenu}
-            handler={setopenNestedMenu}
+            Tools
+          </MenuItem>
+          <MenuHandler className="flex items-center justify-between">
+            <Link href="/tools/passwordreset">
+              <MenuItem
+                {...defaultProps}
+                className="ml-5"
+              >
+                Password Reset Email
+              </MenuItem>
+            </Link>
+          </MenuHandler>
+        </Menu>
+        <Menu
+          placement="bottom"
+          allowHover
+          offset={6}
+          open={openNestedMenu}
+          handler={setopenNestedMenu}
+        >
+          <MenuItem
+            {...defaultProps}
           >
-            <MenuHandler className="flex items-center justify-between">
-              <Link href="/treasurer/monthly-report">
-                <MenuItem
-                  placeholder={undefined}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                >
-                  Monthly Report
-                </MenuItem>
-              </Link>
-            </MenuHandler>
-          </Menu>
-        </Collapse>
+            Treasurer
+          </MenuItem>
+          <MenuHandler className="flex items-center justify-between">
+            <Link href="/treasurer/monthly-report">
+              <MenuItem {...defaultProps} className="ml-5">
+                Monthly Report
+              </MenuItem>
+            </Link>
+          </MenuHandler>
+        </Menu>
       </div>
     </React.Fragment>
   );
@@ -211,9 +193,7 @@ function NavList({ user }: { user: UserProfile | undefined }) {
   return (
     <List
       className="mb-6 mt-4 p-0 lg:mb-0 lg:mt-0 lg:flex-row lg:p-1"
-      placeholder={undefined}
-      onPointerEnterCapture={undefined}
-      onPointerLeaveCapture={undefined}
+      {...defaultProps}
     >
       {user && (
         <React.Fragment>
@@ -221,15 +201,11 @@ function NavList({ user }: { user: UserProfile | undefined }) {
             as="div"
             variant="small"
             className="font-medium"
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
+            {...defaultProps}
           >
             <ListItem
               className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900"
-              placeholder={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
+              {...defaultProps}
             >
               Logged in as {user.name}
             </ListItem>
@@ -255,9 +231,7 @@ export default function TopNavbar() {
   return (
     <Navbar
       className="mx-auto max-w-screen-xl px-4 py-2"
-      placeholder={undefined}
-      onPointerEnterCapture={undefined}
-      onPointerLeaveCapture={undefined}
+      {...defaultProps}
     >
       <div className="flex items-center justify-between text-blue-gray-900">
         <Link href="/">
@@ -266,9 +240,7 @@ export default function TopNavbar() {
             href="#"
             variant="h6"
             className="mr-4 cursor-pointer py-1.5 lg:ml-2"
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
+            {...defaultProps}
           >
             Shrimers Trust Tools
           </Typography>
@@ -284,9 +256,7 @@ export default function TopNavbar() {
               <Button
                 variant="outlined"
                 size="sm"
-                placeholder={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
+                {...defaultProps}
               >
                 Log In
               </Button>
@@ -299,9 +269,7 @@ export default function TopNavbar() {
               <Button
                 variant="outlined"
                 size="sm"
-                placeholder={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
+                {...defaultProps}
               >
                 Log Out
               </Button>
@@ -312,15 +280,11 @@ export default function TopNavbar() {
           variant="text"
           className="lg:hidden"
           onClick={() => setOpenNav(!openNav)}
-          placeholder={undefined}
-          onPointerEnterCapture={undefined}
-          onPointerLeaveCapture={undefined}
+          {...defaultProps}
         >
-          {openNav ? (
-            <XMarkIcon className="h-6 w-6" strokeWidth={2} />
-          ) : (
-            <Bars3Icon className="h-6 w-6" strokeWidth={2} />
-          )}
+          {openNav
+            ? <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+            : <Bars3Icon className="h-6 w-6" strokeWidth={2} />}
         </IconButton>
       </div>
       <Collapse open={openNav}>
@@ -332,9 +296,7 @@ export default function TopNavbar() {
                 variant="outlined"
                 size="sm"
                 fullWidth
-                placeholder={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
+                {...defaultProps}
               >
                 Log In
               </Button>
@@ -348,9 +310,7 @@ export default function TopNavbar() {
                 variant="outlined"
                 size="sm"
                 fullWidth
-                placeholder={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
+                {...defaultProps}
               >
                 Log Out
               </Button>
