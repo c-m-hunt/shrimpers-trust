@@ -17,7 +17,12 @@ import {
 } from "./report.ts";
 import { getBalancesSingleton } from "../lib/paypal/balances.ts";
 
-import { ItemSummary, ReportBalances } from "./types.ts";
+import {
+  ItemSummary,
+  ItemSummaryMap,
+  ReportBalances,
+  SummaryData,
+} from "./types.ts";
 
 const getStartAndEndDatePaypalBalance = async (
   startDate: Date,
@@ -51,10 +56,21 @@ const getStartAndEndDatePaypalBalance = async (
   return { startBalance, endBalance };
 };
 
-export const reconcilePaypalTransactionsForMonth = async (
+export const reconcileAndDisplayPaypalTransactionsForMonth = async (
   startDate: Date,
   endDate: Date,
 ) => {
+  const reconciledData = await reconcilePaypalTransactionsForMonth(
+    startDate,
+    endDate,
+  );
+  displayReconciliationSummary(reconciledData);
+};
+
+export const reconcilePaypalTransactionsForMonth = async (
+  startDate: Date,
+  endDate: Date,
+): Promise<SummaryData> => {
   const transClient = await getTransactionSingleton(
     PAYPAL_CLIENT_ID,
     PAYPAL_SECRET,
@@ -84,11 +100,11 @@ export const reconcilePaypalTransactionsForMonth = async (
     qty: 0,
   };
 
-  const itemTotals: { [key: string]: ItemSummary } = {};
+  const itemTotals: ItemSummaryMap = {};
   itemTotals[UNKNOWN] = { ...summaryTemplate };
   itemTotals[SHIPPING] = { ...summaryTemplate };
   itemTotals[FEES] = { ...summaryTemplate };
-  const refundItemTotals: { [key: string]: ItemSummary } = {};
+  const refundItemTotals: ItemSummaryMap = {};
   refundItemTotals[UNKNOWN] = { ...summaryTemplate };
   refundItemTotals[SHIPPING] = { ...summaryTemplate };
   refundItemTotals[FEES] = { ...summaryTemplate };
@@ -260,7 +276,9 @@ export const reconcilePaypalTransactionsForMonth = async (
   itemTotals[SHIPPING]["total"] = shippingTotal;
   refundItemTotals[FEES]["total"] = feesTotal + chargebackTotal;
 
-  displaySummary({
+  refundItemTotals[WITHDRAWALS] = { total: withdrawalTotal, qty: 1 };
+
+  return {
     dateRange: {
       start: startDate,
       end: endDate,
@@ -283,11 +301,19 @@ export const reconcilePaypalTransactionsForMonth = async (
       (acc, val) => acc + val,
       0,
     ),
-  });
+    itemTotals,
+    refundItemTotals,
+  };
+};
 
-  refundItemTotals[WITHDRAWALS] = { total: withdrawalTotal, qty: 1 };
-
+const displayReconciliationSummary = (
+  summary: SummaryData,
+) => {
+  const { itemTotals, refundItemTotals } = summary;
+  const { start: startDate, end: endDate } = summary.dateRange;
   const mergedItems = mergeItemsAndRefunds(itemTotals, refundItemTotals);
+
+  displaySummary(summary);
 
   displayTravelSummary(mergedItems);
 

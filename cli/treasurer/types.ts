@@ -2,6 +2,10 @@ export type ReportBalances = {
   startBalance: number;
   endBalance: number;
 };
+
+export type ItemSummaryMap = {
+  [key: string]: ItemSummary;
+};
 export type SummaryData = {
   dateRange: {
     start: Date;
@@ -19,6 +23,8 @@ export type SummaryData = {
   transactionCount: number;
   itemsValue: number;
   pendingValue: number;
+  itemTotals: ItemSummaryMap;
+  refundItemTotals: ItemSummaryMap;
 };
 
 export type ItemSummary = {
