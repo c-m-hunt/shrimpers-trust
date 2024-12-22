@@ -3,13 +3,21 @@ import React, { useState } from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import { Button, Card, Input, Typography } from "@material-tailwind/react";
 import BalanceTable from "./components";
+import { CardSummary, SummaryData } from "@/src/types/finance";
+import { ResponseData } from "@/app/api/finance/report/[type]/[month]/[year]/route";
+import { annoyingDefaultProps as defaultProps } from "@/src/utils";
+
+type ReportData = {
+  paypal?: SummaryData;
+  zettle?: CardSummary;
+};
 
 const MonthlyReport = () => {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
-  const [reportData, setReportData] = useState(null);
+  const [reportData, setReportData] = useState<null | ReportData>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<null | string>(null);
 
   const handleMonthChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -32,14 +40,17 @@ const MonthlyReport = () => {
       const paypalResponse = await fetch(
         `/api/finance/report/paypal/${month}/${year}`,
       );
-      const paypalData = await paypalResponse.json();
+      const paypalData: ResponseData = await paypalResponse.json();
 
       const zettleResponse = await fetch(
         `/api/finance/report/zettle/${month}/${year}`,
       );
-      const zettleData = await zettleResponse.json();
+      const zettleData: ResponseData = await zettleResponse.json();
 
-      setReportData({ paypal: paypalData, zettle: zettleData });
+      setReportData({
+        paypal: paypalData.paypal?.data,
+        zettle: zettleData.zettle?.data,
+      });
     } catch (error) {
       setError("An error occurred while fetching the report data.");
     } finally {
@@ -49,11 +60,22 @@ const MonthlyReport = () => {
 
   return (
     <div className="p-6">
-      <Card color="transparent" shadow={false}>
-        <Typography variant="h4" color="blue-gray">
+      <Card
+        color="transparent"
+        {...defaultProps}
+      >
+        <Typography
+          variant="h4"
+          color="blue-gray"
+          {...defaultProps}
+        >
           Monthly Report
         </Typography>
-        <Typography color="gray" className="mt-1 font-normal">
+        <Typography
+          color="gray"
+          className="mt-1 font-normal"
+          {...defaultProps}
+        >
           Select the month and year to generate the report.
         </Typography>
         <form
@@ -67,6 +89,9 @@ const MonthlyReport = () => {
               value={month}
               onChange={handleMonthChange}
               required
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+              crossOrigin={undefined}
             />
             <Input
               size="lg"
@@ -74,13 +99,26 @@ const MonthlyReport = () => {
               value={year}
               onChange={handleYearChange}
               required
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+              crossOrigin={undefined}
             />
           </div>
-          <Button className="mt-6" fullWidth type="submit" disabled={loading}>
+          <Button
+            className="mt-6"
+            fullWidth
+            type="submit"
+            disabled={loading}
+            {...defaultProps}
+          >
             {loading ? "Generating Report..." : "Create Report"}
           </Button>
           {error && (
-            <Typography color="red" className="mt-4">
+            <Typography
+              color="red"
+              className="mt-4"
+              {...defaultProps}
+            >
               {error}
             </Typography>
           )}
@@ -88,12 +126,14 @@ const MonthlyReport = () => {
       </Card>
       {reportData && (
         <div className="mt-8">
-          <Typography variant="h5" color="blue-gray">
+          <Typography
+            variant="h5"
+            color="blue-gray"
+            {...defaultProps}
+          >
             Report Data
           </Typography>
-          {reportData.paypal && (
-            <BalanceTable summary={reportData.paypal.data} />
-          )}
+          {reportData.paypal && <BalanceTable summary={reportData.paypal} />}
 
           <pre className="mt-4 p-4 bg-gray-100 rounded-md">
             {JSON.stringify(reportData, null, 2)}

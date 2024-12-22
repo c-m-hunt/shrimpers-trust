@@ -22,11 +22,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 
-const defaultProps = {
-  placeholder: undefined,
-  onPointerEnterCapture: undefined,
-  onPointerLeaveCapture: undefined,
-};
+import { annoyingDefaultProps as defaultProps } from "@/src/utils";
 
 function NavListMenu() {
   const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);

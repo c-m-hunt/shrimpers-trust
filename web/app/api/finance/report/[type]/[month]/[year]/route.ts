@@ -2,7 +2,7 @@ import { apiHost } from "@/app/api/consts";
 import { hasRole, roles } from "@/src/roles";
 import { CardSummary, SummaryData } from "@/src/types/finance";
 
-type ResponseData = {
+export type ResponseData = {
   paypal?: { data: SummaryData };
   zettle?: { data: CardSummary };
 };
