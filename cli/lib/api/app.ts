@@ -1,7 +1,6 @@
-import express, { Request, Response } from "npm:express";
-import { sendPasswordResetEmail } from "../utils/email.ts";
+import express from "npm:express";
 import cors from "npm:cors";
-import { clearCache } from "../cache/index.ts";
+import toolsRouter from "./tools.ts";
 const apiPort = Deno.env.get("API_PORT") || "3000";
 
 export const setupApi = () => {
@@ -11,31 +10,7 @@ export const setupApi = () => {
 
   app.use(cors());
   app.use(express.json());
-
-  app.post("/tools/passwordreset", async (req: Request, res: Response) => {
-    const { email, name, username, password } = req.body;
-    console.log(`Sending password reset email to ${email}`);
-    try {
-      const resp = await sendPasswordResetEmail(
-        email,
-        name,
-        username,
-        password,
-      );
-      res.send(resp);
-    } catch (e) {
-      res.status(500).send({ "error": e });
-    }
-  });
-
-  app.post("/tools/clearcache", async (_req: Request, res: Response) => {
-    try {
-      await clearCache();
-      res.send({ message: "Cache cleared successfully" });
-    } catch (e) {
-      res.status(500).send({ error: e });
-    }
-  });
+  app.use("/tools", toolsRouter);
 
   app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);

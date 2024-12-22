@@ -1,7 +1,7 @@
 import { Command } from "https://deno.land/x/cliffy@v1.0.0-rc.4/command/mod.ts";
 import { reconcileAndDisplayPaypalTransactionsForMonth } from "./treasurer/reconciliation.ts";
 import { getStartAndEndDates, logger } from "./lib/utils/index.ts";
-import { reconcileZettlePurchases } from "./treasurer/reconcileCardPurchases.ts";
+import { reconcileAndDisplayZettleTransactionsForMonth } from "./treasurer/reconcileCardPurchases.ts";
 import { setupApi } from "./lib/api/app.ts";
 import { clearCache } from "./lib/cache/index.ts"; // Pba49
 
@@ -20,7 +20,7 @@ const treasurerCmd = await new Command()
     );
 
     await reconcileAndDisplayPaypalTransactionsForMonth(startDate, endDate);
-    await reconcileZettlePurchases(startDate, endDate);
+    await reconcileAndDisplayZettleTransactionsForMonth(startDate, endDate);
   });
 
 const apiCmd = await new Command()

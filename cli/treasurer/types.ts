@@ -41,4 +41,5 @@ export type CardSummary = {
   productCount: { [key: string]: number };
   productNames: { [key: string]: string };
   productCategories: { [key: string]: string };
+  itemSummary: { [key: string]: ItemSummary };
 };

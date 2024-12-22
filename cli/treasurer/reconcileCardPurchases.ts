@@ -5,12 +5,27 @@ import {
 } from "../lib/zettle/consts.ts";
 import { Purchase } from "../lib/zettle/purchase.ts";
 import { displayCardSummary, generateCSV } from "./report.ts";
-import { ItemSummary } from "./types.ts";
+import { CardSummary, ItemSummary } from "./types.ts";
+
+export const reconcileAndDisplayZettleTransactionsForMonth = async (
+  startDate: Date,
+  endDate: Date,
+): Promise<void> => {
+  const cardSummary = await reconcileZettlePurchases(startDate, endDate);
+  displayCardSummary(cardSummary);
+  generateCSV(
+    "Zettle",
+    endDate,
+    cardSummary.itemSummary,
+    `total-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+    true,
+  );
+};
 
 export const reconcileZettlePurchases = async (
   startDate: Date,
   endDate: Date,
-): Promise<void> => {
+): Promise<CardSummary> => {
   const zPurch = new Purchase(ZETTLE_CLIENT_ID, ZETTLE_SECRET);
 
   const purchases = await zPurch.getPurchases({
@@ -45,16 +60,6 @@ export const reconcileZettlePurchases = async (
     }
   }
   totalFees = -1 * totalFees / 100;
-  displayCardSummary({
-    totalTransactions,
-    totalAmount,
-    totalFees,
-    productTotals,
-    productCount,
-    productNames,
-    productCategories,
-  });
-
   const itemSummary: { [key: string]: ItemSummary } = {
     "Zettle fees": { total: totalFees, qty: 1 },
   };
@@ -65,12 +70,14 @@ export const reconcileZettlePurchases = async (
       category: productCategories[key],
     };
   }
-
-  generateCSV(
-    "Zettle",
-    endDate,
+  return {
+    totalTransactions,
+    totalAmount,
+    totalFees,
+    productTotals,
+    productCount,
+    productNames,
+    productCategories,
     itemSummary,
-    `total-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
-    true,
-  );
+  };
 };
