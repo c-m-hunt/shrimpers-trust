@@ -15,7 +15,7 @@ export const cardTransType = ["T0001"];
 export const feeTransType = ["T0106"]; // Chargeback and chargeback processing fee
 export const virtualTerminalTransType = ["T0012"];
 export const refundTransType = ["T1107", "T1201"]; // Refund and chargeback
-export const withdrawalTransType = ["T0403"];
+export const withdrawalTransType = ["T0400", "T0403"];
 
 export const allKnownTransTypes = [
   ...normalTransType,
