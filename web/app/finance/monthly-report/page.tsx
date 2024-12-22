@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import { Button, Card, Input, Typography } from "@material-tailwind/react";
+import BalanceTable from "./components";
 
 const MonthlyReport = () => {
   const [month, setMonth] = useState("");
@@ -10,27 +11,31 @@ const MonthlyReport = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleMonthChange = (e) => {
+  const handleMonthChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setMonth(e.target.value);
   };
 
-  const handleYearChange = (e) => {
+  const handleYearChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setYear(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
       const paypalResponse = await fetch(
-        `/api/treasurer/paypal/${month}/${year}`,
+        `/api/finance/report/paypal/${month}/${year}`,
       );
       const paypalData = await paypalResponse.json();
 
       const zettleResponse = await fetch(
-        `/api/treasurer/zettle/${month}/${year}`,
+        `/api/finance/report/zettle/${month}/${year}`,
       );
       const zettleData = await zettleResponse.json();
 
@@ -75,7 +80,9 @@ const MonthlyReport = () => {
             {loading ? "Generating Report..." : "Create Report"}
           </Button>
           {error && (
-            <Typography color="red" className="mt-4">{error}</Typography>
+            <Typography color="red" className="mt-4">
+              {error}
+            </Typography>
           )}
         </form>
       </Card>
@@ -84,6 +91,10 @@ const MonthlyReport = () => {
           <Typography variant="h5" color="blue-gray">
             Report Data
           </Typography>
+          {reportData.paypal && (
+            <BalanceTable summary={reportData.paypal.data} />
+          )}
+
           <pre className="mt-4 p-4 bg-gray-100 rounded-md">
             {JSON.stringify(reportData, null, 2)}
           </pre>

@@ -3,9 +3,9 @@ import { reconcileZettlePurchases } from "../../treasurer/reconcileCardPurchases
 import { reconcilePaypalTransactionsForMonth } from "../../treasurer/reconciliation.ts";
 import { getStartAndEndDates } from "../utils/index.ts";
 
-const treasurerRouter = express.Router();
+const financeRouter = express.Router();
 
-treasurerRouter.get(
+financeRouter.get(
   "/paypal/:month/:year",
   async (req: Request, res: Response) => {
     const { month, year } = req.params;
@@ -22,7 +22,7 @@ treasurerRouter.get(
   },
 );
 
-treasurerRouter.get(
+financeRouter.get(
   "/zettle/:month/:year",
   async (req: Request, res: Response) => {
     const { month, year } = req.params;
@@ -36,4 +36,4 @@ treasurerRouter.get(
   },
 );
 
-export { treasurerRouter };
+export { financeRouter };

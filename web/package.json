@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "next lint",
-    "format": "yarn prettier . --write"
+    "format": "yarn prettier . --write",
+    "updateTypes": "cp ../cli/treasurer/types.ts ./src/types/finance.ts"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.5.0",

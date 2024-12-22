@@ -30,7 +30,7 @@ const defaultProps = {
 
 function NavListMenu() {
   const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
-  const [isTreasurerMenuOpen, setIsTreasurerMenuOpen] = useState(false);
+  const [isFinanceMenuOpen, setIsFinanceMenuOpen] = useState(false);
   const [openNestedMenu, setopenNestedMenu] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -65,10 +65,7 @@ function NavListMenu() {
             </ListItem>
           </Typography>
         </MenuHandler>
-        <MenuList
-          className="hidden rounded-xl lg:block"
-          {...defaultProps}
-        >
+        <MenuList className="hidden rounded-xl lg:block" {...defaultProps}>
           <Menu
             placement="right-start"
             allowHover
@@ -78,19 +75,15 @@ function NavListMenu() {
           >
             <MenuHandler className="flex items-center justify-between">
               <Link href="/tools/passwordreset">
-                <MenuItem
-                  {...defaultProps}
-                >
-                  Reset Password Email
-                </MenuItem>
+                <MenuItem {...defaultProps}>Reset Password Email</MenuItem>
               </Link>
             </MenuHandler>
           </Menu>
         </MenuList>
       </Menu>
       <Menu
-        open={isTreasurerMenuOpen}
-        handler={setIsTreasurerMenuOpen}
+        open={isFinanceMenuOpen}
+        handler={setIsFinanceMenuOpen}
         placement="bottom"
         allowHover={true}
       >
@@ -103,24 +96,21 @@ function NavListMenu() {
           >
             <ListItem
               className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900"
-              selected={isTreasurerMenuOpen}
+              selected={isFinanceMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
               {...defaultProps}
             >
-              Treasurer
+              Finance
               <ChevronDownIcon
                 strokeWidth={2.5}
                 className={`hidden h-3 w-3 transition-transform lg:block ${
-                  isTreasurerMenuOpen ? "rotate-180" : ""
+                  isFinanceMenuOpen ? "rotate-180" : ""
                 }`}
               />
             </ListItem>
           </Typography>
         </MenuHandler>
-        <MenuList
-          className="hidden rounded-xl lg:block"
-          {...defaultProps}
-        >
+        <MenuList className="hidden rounded-xl lg:block" {...defaultProps}>
           <Menu
             placement="right-start"
             allowHover
@@ -129,12 +119,8 @@ function NavListMenu() {
             handler={setopenNestedMenu}
           >
             <MenuHandler className="flex items-center justify-between">
-              <Link href="/treasurer/monthly-report">
-                <MenuItem
-                  {...defaultProps}
-                >
-                  Monthly Report
-                </MenuItem>
+              <Link href="/finance/monthly-report">
+                <MenuItem {...defaultProps}>Monthly Report</MenuItem>
               </Link>
             </MenuHandler>
           </Menu>
@@ -148,17 +134,10 @@ function NavListMenu() {
           open={openNestedMenu}
           handler={setopenNestedMenu}
         >
-          <MenuItem
-            {...defaultProps}
-          >
-            Tools
-          </MenuItem>
+          <MenuItem {...defaultProps}>Tools</MenuItem>
           <MenuHandler className="flex items-center justify-between">
             <Link href="/tools/passwordreset">
-              <MenuItem
-                {...defaultProps}
-                className="ml-5"
-              >
+              <MenuItem {...defaultProps} className="ml-5">
                 Password Reset Email
               </MenuItem>
             </Link>
@@ -171,13 +150,9 @@ function NavListMenu() {
           open={openNestedMenu}
           handler={setopenNestedMenu}
         >
-          <MenuItem
-            {...defaultProps}
-          >
-            Treasurer
-          </MenuItem>
+          <MenuItem {...defaultProps}>Finance</MenuItem>
           <MenuHandler className="flex items-center justify-between">
-            <Link href="/treasurer/monthly-report">
+            <Link href="/finance/monthly-report">
               <MenuItem {...defaultProps} className="ml-5">
                 Monthly Report
               </MenuItem>
@@ -229,10 +204,7 @@ export default function TopNavbar() {
   }, []);
 
   return (
-    <Navbar
-      className="mx-auto max-w-screen-xl px-4 py-2"
-      {...defaultProps}
-    >
+    <Navbar className="mx-auto max-w-screen-xl px-4 py-2" {...defaultProps}>
       <div className="flex items-center justify-between text-blue-gray-900">
         <Link href="/">
           <Typography
@@ -253,11 +225,7 @@ export default function TopNavbar() {
         {!user && !userIsLoading && (
           <div className="hidden gap-2 lg:flex">
             <a href="/api/auth/login">
-              <Button
-                variant="outlined"
-                size="sm"
-                {...defaultProps}
-              >
+              <Button variant="outlined" size="sm" {...defaultProps}>
                 Log In
               </Button>
             </a>
@@ -266,11 +234,7 @@ export default function TopNavbar() {
         {user && (
           <div className="hidden gap-2 lg:flex">
             <a href="/api/auth/logout">
-              <Button
-                variant="outlined"
-                size="sm"
-                {...defaultProps}
-              >
+              <Button variant="outlined" size="sm" {...defaultProps}>
                 Log Out
               </Button>
             </a>
@@ -279,7 +243,8 @@ export default function TopNavbar() {
         <IconButton
           variant="text"
           className="lg:hidden"
-          onClick={() => setOpenNav(!openNav)}
+          onClick={() =>
+            setOpenNav(!openNav)}
           {...defaultProps}
         >
           {openNav
@@ -292,12 +257,7 @@ export default function TopNavbar() {
         {!user && !userIsLoading && (
           <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
             <a href="/api/auth/login">
-              <Button
-                variant="outlined"
-                size="sm"
-                fullWidth
-                {...defaultProps}
-              >
+              <Button variant="outlined" size="sm" fullWidth {...defaultProps}>
                 Log In
               </Button>
             </a>
@@ -306,12 +266,7 @@ export default function TopNavbar() {
         {user && (
           <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
             <a href="/api/auth/logout">
-              <Button
-                variant="outlined"
-                size="sm"
-                fullWidth
-                {...defaultProps}
-              >
+              <Button variant="outlined" size="sm" fullWidth {...defaultProps}>
                 Log Out
               </Button>
             </a>
