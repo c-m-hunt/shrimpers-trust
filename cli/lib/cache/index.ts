@@ -1,6 +1,7 @@
-// Current path
 const currentDir = Deno.realPathSync(Deno.cwd());
 const CACHE_PATH = `${currentDir}/cache`;
+const OUTPUT_PATH = `${currentDir}/output`;
+const DEBUG_LOG_PATH = `${currentDir}/debug.log`;
 
 // Make sure the cache directory exists
 try {
@@ -24,4 +25,17 @@ export const setCache = (key: string, data: object): void => {
     `${CACHE_PATH}/${key}.json`,
     new TextEncoder().encode(JSON.stringify(data)),
   );
+};
+
+export const clearCache = async (): Promise<void> => {
+  try {
+    await Deno.remove(CACHE_PATH, { recursive: true });
+    await Deno.remove(OUTPUT_PATH, { recursive: true });
+    await Deno.remove(DEBUG_LOG_PATH);
+    console.log(
+      "Cache, output directories, and debug.log file deleted successfully.",
+    );
+  } catch (error) {
+    console.error("Error clearing cache:", error);
+  }
 };

@@ -1,6 +1,7 @@
 import express, { Request, Response } from "npm:express";
 import { sendPasswordResetEmail } from "../utils/email.ts";
 import cors from "npm:cors";
+import { clearCache } from "../cache/index.ts";
 const apiPort = Deno.env.get("API_PORT") || "3000";
 
 export const setupApi = () => {
@@ -24,6 +25,15 @@ export const setupApi = () => {
       res.send(resp);
     } catch (e) {
       res.status(500).send({ "error": e });
+    }
+  });
+
+  app.post("/tools/clearcache", async (_req: Request, res: Response) => {
+    try {
+      await clearCache();
+      res.send({ message: "Cache cleared successfully" });
+    } catch (e) {
+      res.status(500).send({ error: e });
     }
   });
 
