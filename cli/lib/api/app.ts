@@ -1,7 +1,7 @@
 import express, { Request, Response } from "npm:express";
 import { sendPasswordResetEmail } from "../utils/email.ts";
 import cors from "npm:cors";
-import { clearCache } from "../cache/index.ts"; // Pa796
+import { clearCache } from "../cache/index.ts";
 const apiPort = Deno.env.get("API_PORT") || "3000";
 
 export const setupApi = () => {
@@ -28,14 +28,14 @@ export const setupApi = () => {
     }
   });
 
-  app.post("/tools/clearcache", async (_req: Request, res: Response) => { // P43c9
+  app.post("/tools/clearcache", async (_req: Request, res: Response) => {
     try {
-      await clearCache(); // P43c9
-      res.send({ message: "Cache cleared successfully" }); // P43c9
+      await clearCache();
+      res.send({ message: "Cache cleared successfully" });
     } catch (e) {
-      res.status(500).send({ error: e.message }); // P43c9
+      res.status(500).send({ error: e });
     }
-  }); // P43c9
+  });
 
   app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);

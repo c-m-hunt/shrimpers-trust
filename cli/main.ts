@@ -30,9 +30,11 @@ const apiCmd = await new Command()
   .action(() => {
     logger.info("Starting API");
     setupApi();
-  })
-  .command("clearcache", "Clear the cache")
-  .alias("cc")
+  });
+
+const cacheCmd = await new Command()
+  .description("Cache tooling")
+  .command("clear", "Clear the cache")
   .action(async () => {
     logger.info("Clearing cache");
     await clearCache();
@@ -45,4 +47,5 @@ await new Command()
   .description("Shrimpers Trust tooling")
   .command("treasurer", treasurerCmd)
   .command("api", apiCmd)
+  .command("cache", cacheCmd)
   .parse(Deno.args);

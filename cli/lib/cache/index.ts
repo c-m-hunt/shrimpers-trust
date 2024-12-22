@@ -32,7 +32,9 @@ export const clearCache = async (): Promise<void> => {
     await Deno.remove(CACHE_PATH, { recursive: true });
     await Deno.remove(OUTPUT_PATH, { recursive: true });
     await Deno.remove(DEBUG_LOG_PATH);
-    console.log("Cache, output directories, and debug.log file deleted successfully.");
+    console.log(
+      "Cache, output directories, and debug.log file deleted successfully.",
+    );
   } catch (error) {
     console.error("Error clearing cache:", error);
   }
