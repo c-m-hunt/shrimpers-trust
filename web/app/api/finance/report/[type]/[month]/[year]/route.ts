@@ -3,8 +3,7 @@ import { hasRole, roles } from "@/src/roles";
 import { CardSummary, SummaryData } from "@/src/types/finance";
 
 export type ResponseData = {
-  paypal?: { data: SummaryData };
-  zettle?: { data: CardSummary };
+  data: SummaryData | CardSummary;
 };
 
 export const GET = async function passwordreset(

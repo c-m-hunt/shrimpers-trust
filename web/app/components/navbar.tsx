@@ -239,13 +239,14 @@ export default function TopNavbar() {
         <IconButton
           variant="text"
           className="lg:hidden"
-          onClick={() =>
-            setOpenNav(!openNav)}
+          onClick={() => setOpenNav(!openNav)}
           {...defaultProps}
         >
-          {openNav
-            ? <XMarkIcon className="h-6 w-6" strokeWidth={2} />
-            : <Bars3Icon className="h-6 w-6" strokeWidth={2} />}
+          {openNav ? (
+            <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+          ) : (
+            <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+          )}
         </IconButton>
       </div>
       <Collapse open={openNav}>

@@ -8,6 +8,7 @@
     "start": "next start -p 3001",
     "lint": "next lint",
     "format": "yarn prettier . --write",
+    "format-watch": "npx onchange \"**/*\" -- npx prettier --write --ignore-unknown {{changed}}",
     "updateTypes": "cp ../cli/treasurer/types.ts ./src/types/finance.ts"
   },
   "dependencies": {

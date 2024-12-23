@@ -170,20 +170,17 @@ const PasswordReset = () => {
       {/* Second Column: Rendered Email */}
       <div className="bg-gray-50 p-6 lg:w-1/2">
         <h2 className="text-lg font-semibold text-gray-800">Rendered Email</h2>
-        {renderedEmail
-          ? (
-            <textarea
-              className="mt-4 w-full h-80 p-2 border border-gray-300 rounded-md"
-              value={renderedEmail}
-              readOnly
-            >
-            </textarea>
-          )
-          : (
-            <p className="mt-4 text-gray-500">
-              No email rendered yet. Submit the form to see it here.
-            </p>
-          )}
+        {renderedEmail ? (
+          <textarea
+            className="mt-4 w-full h-80 p-2 border border-gray-300 rounded-md"
+            value={renderedEmail}
+            readOnly
+          ></textarea>
+        ) : (
+          <p className="mt-4 text-gray-500">
+            No email rendered yet. Submit the form to see it here.
+          </p>
+        )}
       </div>
     </div>
   );
