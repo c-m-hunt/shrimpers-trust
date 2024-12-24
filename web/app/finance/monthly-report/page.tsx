@@ -55,7 +55,7 @@ const MonthlyReport = () => {
         zettle: zettleData.data as CardSummary,
       });
     } catch (error) {
-      setError("An error occurred while fetching the report data.");
+      setError(`An error occurred while fetching the report data. ${error}`);
     } finally {
       setLoading(false);
     }
@@ -130,11 +130,11 @@ const MonthlyReport = () => {
           {reportData.paypal && (
             <>
               <BalanceTable summary={reportData.paypal} />
-              <hr/>
+              <hr />
               <SummaryTable summary={reportData.paypal} />
-              <hr/>
+              <hr />
               <ValidationSummary summary={reportData.paypal} />
-              <hr/>
+              <hr />
               <TravelSummary summary={reportData.paypal} />
             </>
           )}

@@ -22,10 +22,16 @@ const BalanceTable = ({ summary }: Props) => {
         </tr>
         <tr>
           <th className="text-left">Balance</th>
-          <td className="text-right">{formatMoney(summary.balance.startBalance)}</td>
-          <td className="text-right">{formatMoney(summary.balance.endBalance)}</td>
+          <td className="text-right">
+            {formatMoney(summary.balance.startBalance)}
+          </td>
+          <td className="text-right">
+            {formatMoney(summary.balance.endBalance)}
+          </td>
           <td className="font-bold text-right">
-            {formatMoney(summary.balance.endBalance - summary.balance.startBalance)}
+            {formatMoney(
+              summary.balance.endBalance - summary.balance.startBalance,
+            )}
           </td>
         </tr>
       </tbody>

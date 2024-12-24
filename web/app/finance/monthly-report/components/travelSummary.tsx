@@ -1,6 +1,6 @@
 import { ItemSummary, SummaryData } from "@/src/types/finance";
-import { annoyingDefaultProps, formatDate, formatMoney } from "@/src/utils";
-import { Button, Card, Input, Typography } from "@material-tailwind/react";
+import { annoyingDefaultProps, formatMoney } from "@/src/utils";
+import { Typography } from "@material-tailwind/react";
 
 type Props = { summary: SummaryData };
 
@@ -33,7 +33,7 @@ const TravelSummary = ({ summary }: Props) => {
       <table className="w-full mt-8 table-auto">
         <tbody>
           {Object.keys(travelSummary).map((item) => (
-            <tr>
+            <tr key={item}>
               <td>{item}</td>
               <td className="text-right">
                 {formatMoney(travelSummary[item].total)}
