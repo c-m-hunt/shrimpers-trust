@@ -8,18 +8,25 @@ const BalanceTable = ({ summary }: Props) => {
     <table className="w-full mt-8">
       <thead>
         <tr>
-          <th className="text-left">Start Balance</th>
-          <th className="text-left">End Balance</th>
+          <th></th>
+          <th className="text-right">Start Balance</th>
+          <th className="text-right">End Balance</th>
+          <th className="text-right">Difference</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>{formatDate(summary.dateRange.start)}</td>
-          <td>{formatDate(summary.dateRange.end)}</td>
+          <th className="text-left">Dates</th>
+          <td className="text-right">{formatDate(summary.dateRange.start)}</td>
+          <td className="text-right">{formatDate(summary.dateRange.end)}</td>
         </tr>
         <tr>
-          <td>{formatMoney(summary.balance.startBalance)}</td>
-          <td>{formatMoney(summary.balance.endBalance)}</td>
+          <th className="text-left">Balance</th>
+          <td className="text-right">{formatMoney(summary.balance.startBalance)}</td>
+          <td className="text-right">{formatMoney(summary.balance.endBalance)}</td>
+          <td className="font-bold text-right">
+            {formatMoney(summary.balance.endBalance - summary.balance.startBalance)}
+          </td>
         </tr>
       </tbody>
     </table>

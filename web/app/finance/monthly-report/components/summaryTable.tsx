@@ -1,10 +1,15 @@
 import { SummaryData } from "@/src/types/finance";
-import { formatDate, formatMoney } from "@/src/utils";
+import { annoyingDefaultProps, formatDate, formatMoney } from "@/src/utils";
+import { Typography } from "@material-tailwind/react";
 
 type Props = { summary: SummaryData };
 
 const SummaryTable = ({ summary }: Props) => {
   return (
+    <>
+    <Typography variant="h6" className="mt-8" {...annoyingDefaultProps}>
+      Summary
+    </Typography>
     <table className="w-full mt-8 table-auto">
       <tbody>
         <tr>
@@ -55,6 +60,7 @@ const SummaryTable = ({ summary }: Props) => {
         </tr>
       </tbody>
     </table>
+    </>
   );
 };
 

@@ -9,22 +9,16 @@ const SummaryTable = ({ summary }: Props) => {
   return (
     <>
       {validationSummary.invalidMsgs.length > 0 && (
-        <div className="bg-red-50 p-2">
-          <ul>
-            {validationSummary.invalidMsgs.map((msg, i) => (
-              <li key={i}>{msg}</li>
-            ))}
-          </ul>
-        </div>
+        <ValidationSummary
+          msgs={validationSummary.invalidMsgs}
+          successOrError="error"
+        />
       )}
       {validationSummary.validMsgs.length > 0 && (
-        <div className="bg-green-50 p-2">
-          <ul>
-            {validationSummary.validMsgs.map((msg, i) => (
-              <li key={i}>{msg}</li>
-            ))}
-          </ul>
-        </div>
+        <ValidationSummary
+          msgs={validationSummary.validMsgs}
+          successOrError="success"
+        />
       )}
     </>
   );
@@ -34,6 +28,30 @@ type ValidationSummary = {
   isValid: boolean;
   validMsgs: string[];
   invalidMsgs: string[];
+};
+
+type ValidationSummaryProps = {
+  msgs: string[];
+  successOrError: "success" | "error";
+};
+
+const ValidationSummary: React.FC<ValidationSummaryProps> = ({
+  msgs,
+  successOrError,
+}) => {
+  const color = successOrError === "success" ? "green" : "red";
+  const borderColor = successOrError === "success" ? "teal" : "pink";
+  return (
+    <div
+      className={`bg-${color}-50 p-2 rounded-md border-2 border-${borderColor}-500`}
+    >
+      <ul>
+        {msgs.map((msg, i) => (
+          <li key={i}>{msg}</li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 const validateSummary = (summary: SummaryData): ValidationSummary => {

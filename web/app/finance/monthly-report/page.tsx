@@ -8,6 +8,7 @@ import { ResponseData } from "@/app/api/finance/report/[type]/[month]/[year]/rou
 import { annoyingDefaultProps as defaultProps } from "@/src/utils";
 import SummaryTable from "./components/summaryTable";
 import ValidationSummary from "./components/validationSummary";
+import TravelSummary from "./components/travelSummary";
 
 type ReportData = {
   paypal: SummaryData;
@@ -129,8 +130,12 @@ const MonthlyReport = () => {
           {reportData.paypal && (
             <>
               <BalanceTable summary={reportData.paypal} />
+              <hr/>
               <SummaryTable summary={reportData.paypal} />
+              <hr/>
               <ValidationSummary summary={reportData.paypal} />
+              <hr/>
+              <TravelSummary summary={reportData.paypal} />
             </>
           )}
 
