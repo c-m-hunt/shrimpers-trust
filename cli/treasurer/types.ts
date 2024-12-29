@@ -6,6 +6,14 @@ export type ReportBalances = {
 export type ItemSummaryMap = {
   [key: string]: ItemSummary;
 };
+
+export type MessageType = "debug" | "info" | "warn" | "error";
+
+export type AccountMessage = {
+  transactionId: string;
+  message: string;
+  type: MessageType;
+};
 export type SummaryData = {
   dateRange: {
     start: Date;
@@ -25,6 +33,7 @@ export type SummaryData = {
   pendingValue: number;
   itemTotals: ItemSummaryMap;
   refundItemTotals: ItemSummaryMap;
+  messages: AccountMessage[];
 };
 
 export type ItemSummary = {
