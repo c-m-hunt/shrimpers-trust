@@ -1,5 +1,10 @@
 import { SummaryData } from "@/src/types/finance";
-import { areNumbersEqual, formatMoney } from "@/src/utils";
+import {
+  annoyingDefaultProps,
+  areNumbersEqual,
+  formatMoney,
+} from "@/src/utils";
+import { Typography } from "@material-tailwind/react";
 
 type Props = { summary: SummaryData };
 
@@ -8,6 +13,9 @@ const SummaryTable = ({ summary }: Props) => {
 
   return (
     <>
+      <Typography variant="h6" className="mt-8" {...annoyingDefaultProps}>
+        Validation Summary
+      </Typography>
       {validationSummary.invalidMsgs.length > 0 && (
         <ValidationSummary
           msgs={validationSummary.invalidMsgs}
@@ -40,10 +48,10 @@ const ValidationSummary: React.FC<ValidationSummaryProps> = ({
   successOrError,
 }) => {
   const color = successOrError === "success" ? "green" : "red";
-  const borderColor = successOrError === "success" ? "teal" : "pink";
+  const borderColor = successOrError === "success" ? "green" : "red";
   return (
     <div
-      className={`bg-${color}-50 p-2 rounded-md border-2 border-${borderColor}-500`}
+      className={`bg-${color}-100 p-2 rounded-md border-2 border-${borderColor}-500`}
     >
       <ul>
         {msgs.map((msg, i) => (

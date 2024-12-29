@@ -9,6 +9,7 @@ import { annoyingDefaultProps as defaultProps } from "@/src/utils";
 import SummaryTable from "./components/summaryTable";
 import ValidationSummary from "./components/validationSummary";
 import TravelSummary from "./components/travelSummary";
+import AccountMessages from "./components/accountMessages";
 
 type ReportData = {
   paypal: SummaryData;
@@ -132,6 +133,8 @@ const MonthlyReport = () => {
               <BalanceTable summary={reportData.paypal} />
               <hr />
               <SummaryTable summary={reportData.paypal} />
+              <hr />
+              <AccountMessages summary={reportData.paypal} />
               <hr />
               <ValidationSummary summary={reportData.paypal} />
               <hr />

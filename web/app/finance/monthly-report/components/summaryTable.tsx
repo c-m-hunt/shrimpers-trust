@@ -10,7 +10,7 @@ const SummaryTable = ({ summary }: Props) => {
       <Typography variant="h6" className="mt-8" {...annoyingDefaultProps}>
         Summary
       </Typography>
-      <table className="w-full mt-8 table-auto">
+      <table className="w-full mt-8 table-auto mt-2">
         <tbody>
           <tr>
             <td>Total</td>

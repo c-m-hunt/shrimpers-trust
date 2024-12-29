@@ -5,7 +5,7 @@ type Props = { summary: SummaryData };
 
 const BalanceTable = ({ summary }: Props) => {
   return (
-    <table className="w-full mt-8">
+    <table className="w-full table-auto mt-2">
       <thead>
         <tr>
           <th></th>
