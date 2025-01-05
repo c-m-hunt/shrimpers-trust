@@ -1,13 +1,12 @@
 import { AccountMessage, SummaryData } from "@/src/types/finance";
-import {
-  annoyingDefaultProps,
-} from "@/src/utils";
+import { annoyingDefaultProps } from "@/src/utils";
 import { Typography } from "@material-tailwind/react";
 
 type Props = { summary: SummaryData };
 
 const AccountMessages = ({ summary }: Props) => {
   const { messages: msgs } = summary;
+  if (!msgs || msgs.length === 0) return;
   return (
     <>
       <Typography variant="h6" className="mt-8" {...annoyingDefaultProps}>

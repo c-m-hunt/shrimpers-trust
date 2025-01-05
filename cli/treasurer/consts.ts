@@ -18,8 +18,8 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "3 Year Adult Membership - Email": ["Membership"],
   "Junior Blues - Membership": ["Junior Blues", "Membership"],
 
-  "Additional Postage Cost": ["Shipping", "PayPal"],
-  "shipping": ["Shipping", "PayPal"],
+  "Additional Postage Cost": ["Expenses", "Shipping"],
+  "shipping": ["Expenses", "Shipping"],
   "unknown": ["Miscellaneous"],
 
   // Donations

@@ -1,7 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
-import { Button, Card, Input, Typography } from "@material-tailwind/react";
+import {
+  Button,
+  Card,
+  Input,
+  Option,
+  Select,
+  Typography,
+} from "@material-tailwind/react";
 import BalanceTable from "./components/balanceTable";
 import { CardSummary, SummaryData } from "@/src/types/finance";
 import { ResponseData } from "@/app/api/finance/report/[type]/[month]/[year]/route";
@@ -19,24 +26,35 @@ type ReportData = {
 const MonthlyReport = () => {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
+  const [disableCreateReportButton, setDisableCreateReportButton] =
+    useState(false);
   const [reportData, setReportData] = useState<null | ReportData>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
 
-  const handleMonthChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setMonth(e.target.value);
+  useEffect(() => {
+    validateForm();
+  }, [month, year]);
+
+  const handleMonthChange = (e: string | undefined) => {
+    setMonth(e || "");
+  };
+  const handleYearChange = (e: string | undefined) => {
+    setYear(e || "");
   };
 
-  const handleYearChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setYear(e.target.value);
+  const validateForm = () => {
+    console.log(month, year);
+    if (month && year) {
+      setDisableCreateReportButton(false);
+    } else {
+      setDisableCreateReportButton(true);
+    }
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    setReportData(null);
     setLoading(true);
     setError(null);
 
@@ -62,11 +80,15 @@ const MonthlyReport = () => {
     }
   };
 
+  const currentYear = new Date().getFullYear();
+  const showYears = 3;
+  const years = Array.from({ length: showYears }, (_, i) => currentYear - i);
+
   return (
     <div className="p-6">
       <Card color="transparent" shadow={false} {...defaultProps}>
         <Typography variant="h4" color="blue-gray" {...defaultProps}>
-          Monthly Report
+          Monthly Finance Report
         </Typography>
         <Typography color="gray" className="mt-1 font-normal" {...defaultProps}>
           Select the month and year to generate the report.
@@ -76,32 +98,43 @@ const MonthlyReport = () => {
           onSubmit={handleSubmit}
         >
           <div className="mb-4 flex flex-col gap-6">
-            <Input
-              size="lg"
-              label="Month"
+            <Select
+              label="Select a month"
+              {...defaultProps}
               value={month}
-              onChange={handleMonthChange}
-              required
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-              crossOrigin={undefined}
-            />
-            <Input
-              size="lg"
-              label="Year"
+              onChange={(e) => handleMonthChange(e)}
+            >
+              <Option value="1">January</Option>
+              <Option value="2">February</Option>
+              <Option value="3">March</Option>
+              <Option value="4">April</Option>
+              <Option value="5">May</Option>
+              <Option value="6">June</Option>
+              <Option value="7">July</Option>
+              <Option value="8">August</Option>
+              <Option value="9">September</Option>
+              <Option value="10">October</Option>
+              <Option value="11">November</Option>
+              <Option value="12">December</Option>
+            </Select>
+            <Select
+              label="Select a year"
+              {...defaultProps}
               value={year}
-              onChange={handleYearChange}
-              required
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-              crossOrigin={undefined}
-            />
+              onChange={(e) => handleYearChange(e)}
+            >
+              {years.map((year) => (
+                <Option key={year} value={year.toString()}>
+                  {year}
+                </Option>
+              ))}
+            </Select>
           </div>
           <Button
             className="mt-6"
             fullWidth
             type="submit"
-            disabled={loading}
+            disabled={loading === false && disableCreateReportButton}
             {...defaultProps}
           >
             {loading ? "Generating Report..." : "Create Report"}
@@ -131,20 +164,12 @@ const MonthlyReport = () => {
           {reportData.paypal && (
             <>
               <BalanceTable summary={reportData.paypal} />
-              <hr />
               <SummaryTable summary={reportData.paypal} />
-              <hr />
               <AccountMessages summary={reportData.paypal} />
-              <hr />
               <ValidationSummary summary={reportData.paypal} />
-              <hr />
               <TravelSummary summary={reportData.paypal} />
             </>
           )}
-
-          <pre className="mt-4 p-4 bg-gray-100 rounded-md">
-            {JSON.stringify(reportData, null, 2)}
-          </pre>
         </div>
       )}
     </div>

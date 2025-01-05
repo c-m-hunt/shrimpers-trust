@@ -12,23 +12,29 @@ const SummaryTable = ({ summary }: Props) => {
   const validationSummary = validateSummary(summary);
 
   return (
-    <>
+    <div className="mb-8">
       <Typography variant="h6" className="mt-8" {...annoyingDefaultProps}>
         Validation Summary
       </Typography>
       {validationSummary.invalidMsgs.length > 0 && (
         <ValidationSummary
           msgs={validationSummary.invalidMsgs}
-          successOrError="error"
+          summaryType="error"
+        />
+      )}
+      {validationSummary.warningMsgs.length > 0 && (
+        <ValidationSummary
+          msgs={validationSummary.warningMsgs}
+          summaryType="warning"
         />
       )}
       {validationSummary.validMsgs.length > 0 && (
         <ValidationSummary
           msgs={validationSummary.validMsgs}
-          successOrError="success"
+          summaryType="success"
         />
       )}
-    </>
+    </div>
   );
 };
 
@@ -36,22 +42,36 @@ type ValidationSummary = {
   isValid: boolean;
   validMsgs: string[];
   invalidMsgs: string[];
+  warningMsgs: string[];
 };
 
 type ValidationSummaryProps = {
   msgs: string[];
-  successOrError: "success" | "error";
+  summaryType: "success" | "error" | "warning";
+};
+
+const messageTypeToColor = (type: string): string => {
+  switch (type) {
+    case "success":
+      return "green";
+    case "error":
+      return "red";
+    case "warning":
+      return "orange";
+    default:
+      return "black";
+  }
 };
 
 const ValidationSummary: React.FC<ValidationSummaryProps> = ({
   msgs,
-  successOrError,
+  summaryType,
 }) => {
-  const color = successOrError === "success" ? "green" : "red";
-  const borderColor = successOrError === "success" ? "green" : "red";
+  const color = messageTypeToColor(summaryType);
+  const borderColor = messageTypeToColor(summaryType);
   return (
     <div
-      className={`bg-${color}-100 p-2 rounded-md border-2 border-${borderColor}-500`}
+      className={`bg-${color}-50 p-2 mb-1 rounded-md border-2 border-${borderColor}-500`}
     >
       <ul>
         {msgs.map((msg, i) => (
@@ -67,6 +87,7 @@ const validateSummary = (summary: SummaryData): ValidationSummary => {
     isValid: true,
     validMsgs: [],
     invalidMsgs: [],
+    warningMsgs: [],
   };
 
   if (
@@ -97,7 +118,7 @@ const validateSummary = (summary: SummaryData): ValidationSummary => {
   if (!areNumbersEqual(balanceDiff, grandTotal)) {
     if (areNumbersEqual(balanceDiff, grandTotal + summary.pendingValue)) {
       validateSummary.isValid = false;
-      validateSummary.invalidMsgs.push(
+      validateSummary.warningMsgs.push(
         "Balance difference matches transactions plus fees plus pending",
       );
     } else {

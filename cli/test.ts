@@ -12,5 +12,9 @@ import { sendPasswordResetEmail } from "./lib/utils/email.ts";
 // await reconcilePaypalTransactionsForMonth(startDate, endDate);
 // await reconcileZettlePurchases(startDate, endDate);
 
-
-await sendPasswordResetEmail("chris.hunt1977@gmail.com", "Chris", "chris.hunt1977", "password");
+await sendPasswordResetEmail(
+  "chris.hunt1977@gmail.com",
+  "Chris",
+  "chris.hunt1977",
+  "password",
+);

@@ -23,12 +23,15 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { annoyingDefaultProps as defaultProps } from "@/src/utils";
+import { roles, userHasRole } from "@/src/roles";
 
 function NavListMenu() {
   const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
   const [isFinanceMenuOpen, setIsFinanceMenuOpen] = useState(false);
   const [openNestedMenu, setopenNestedMenu] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const { user, error, isLoading } = useUser();
 
   return (
     <React.Fragment>
@@ -77,51 +80,53 @@ function NavListMenu() {
           </Menu>
         </MenuList>
       </Menu>
-      <Menu
-        open={isFinanceMenuOpen}
-        handler={setIsFinanceMenuOpen}
-        placement="bottom"
-        allowHover={true}
-      >
-        <MenuHandler className="hidden lg:block">
-          <Typography
-            as="div"
-            variant="small"
-            className="font-medium"
-            {...defaultProps}
-          >
-            <ListItem
-              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900"
-              selected={isFinanceMenuOpen}
-              onClick={() => setIsMobileMenuOpen((cur) => !cur)}
+      {user && userHasRole(user, roles.financeAdmin) && (
+        <Menu
+          open={isFinanceMenuOpen}
+          handler={setIsFinanceMenuOpen}
+          placement="bottom"
+          allowHover={true}
+        >
+          <MenuHandler className="hidden lg:block">
+            <Typography
+              as="div"
+              variant="small"
+              className="font-medium"
               {...defaultProps}
             >
-              Finance
-              <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`hidden h-3 w-3 transition-transform lg:block ${
-                  isFinanceMenuOpen ? "rotate-180" : ""
-                }`}
-              />
-            </ListItem>
-          </Typography>
-        </MenuHandler>
-        <MenuList className="hidden rounded-xl lg:block" {...defaultProps}>
-          <Menu
-            placement="right-start"
-            allowHover
-            offset={15}
-            open={openNestedMenu}
-            handler={setopenNestedMenu}
-          >
-            <MenuHandler className="flex items-center justify-between">
-              <Link href="/finance/monthly-report">
-                <MenuItem {...defaultProps}>Monthly Report</MenuItem>
-              </Link>
-            </MenuHandler>
-          </Menu>
-        </MenuList>
-      </Menu>
+              <ListItem
+                className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900"
+                selected={isFinanceMenuOpen}
+                onClick={() => setIsMobileMenuOpen((cur) => !cur)}
+                {...defaultProps}
+              >
+                Finance
+                <ChevronDownIcon
+                  strokeWidth={2.5}
+                  className={`hidden h-3 w-3 transition-transform lg:block ${
+                    isFinanceMenuOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </ListItem>
+            </Typography>
+          </MenuHandler>
+          <MenuList className="hidden rounded-xl lg:block" {...defaultProps}>
+            <Menu
+              placement="right-start"
+              allowHover
+              offset={15}
+              open={openNestedMenu}
+              handler={setopenNestedMenu}
+            >
+              <MenuHandler className="flex items-center justify-between">
+                <Link href="/finance/monthly-report">
+                  <MenuItem {...defaultProps}>Monthly Report</MenuItem>
+                </Link>
+              </MenuHandler>
+            </Menu>
+          </MenuList>
+        </Menu>
+      )}
       <div className="block lg:hidden">
         <Menu
           placement="bottom"
@@ -139,22 +144,24 @@ function NavListMenu() {
             </Link>
           </MenuHandler>
         </Menu>
-        <Menu
-          placement="bottom"
-          allowHover
-          offset={6}
-          open={openNestedMenu}
-          handler={setopenNestedMenu}
-        >
-          <MenuItem {...defaultProps}>Finance</MenuItem>
-          <MenuHandler className="flex items-center justify-between">
-            <Link href="/finance/monthly-report">
-              <MenuItem {...defaultProps} className="ml-5">
-                Monthly Report
-              </MenuItem>
-            </Link>
-          </MenuHandler>
-        </Menu>
+        {user && userHasRole(user, roles.financeAdmin) && (
+          <Menu
+            placement="bottom"
+            allowHover
+            offset={6}
+            open={openNestedMenu}
+            handler={setopenNestedMenu}
+          >
+            <MenuItem {...defaultProps}>Finance</MenuItem>
+            <MenuHandler className="flex items-center justify-between">
+              <Link href="/finance/monthly-report">
+                <MenuItem {...defaultProps} className="ml-5">
+                  Monthly Report
+                </MenuItem>
+              </Link>
+            </MenuHandler>
+          </Menu>
+        )}
       </div>
     </React.Fragment>
   );
