@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Build the application into a single executable
-RUN deno compile --allow-net --allow-read --allow-env --output app ./main.ts
+RUN deno compile --allow-net --allow-read --allow-env --allow-write --output app ./main.ts
 
 # Stage 2: Minimal Runtime Stage
 FROM debian:bullseye-slim
