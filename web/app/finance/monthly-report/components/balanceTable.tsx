@@ -28,7 +28,7 @@ const BalanceTable = ({ summary }: Props) => {
           <td className="text-right">
             {formatMoney(summary.balance.endBalance)}
           </td>
-          <td className="font-bold text-right">
+          <td className="font-bold text-right text-green-800">
             {formatMoney(
               summary.balance.endBalance - summary.balance.startBalance,
             )}

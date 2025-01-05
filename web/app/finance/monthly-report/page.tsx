@@ -17,6 +17,7 @@ import SummaryTable from "./components/summaryTable";
 import ValidationSummary from "./components/validationSummary";
 import TravelSummary from "./components/travelSummary";
 import AccountMessages from "./components/accountMessages";
+import CardSummaryTable from "./components/cardSummaryTable";
 
 type ReportData = {
   paypal: SummaryData;
@@ -44,7 +45,6 @@ const MonthlyReport = () => {
   };
 
   const validateForm = () => {
-    console.log(month, year);
     if (month && year) {
       setDisableCreateReportButton(false);
     } else {
@@ -59,25 +59,7 @@ const MonthlyReport = () => {
     setError(null);
 
     try {
-      const paypalResponse = await fetch(
-        `/api/finance/report/paypal/${month}/${year}`,
-      );
-      const paypalData: ResponseData = await paypalResponse.json();
-      if (paypalData.error) {
-        throw new Error(paypalData.error);
-      }
-
-      const zettleResponse = await fetch(
-        `/api/finance/report/zettle/${month}/${year}`,
-      );
-      const zettleData: ResponseData = await zettleResponse.json();
-      if (zettleData.error) {
-        throw new Error(zettleData.error);
-      }
-      setReportData({
-        paypal: paypalData.data as SummaryData,
-        zettle: zettleData.data as CardSummary,
-      });
+      setReportData(await getReportData(month, year));
     } catch (error) {
       setError(`An error occurred while fetching the report data. ${error}`);
     } finally {
@@ -170,6 +152,7 @@ const MonthlyReport = () => {
             <>
               <BalanceTable summary={reportData.paypal} />
               <SummaryTable summary={reportData.paypal} />
+              <CardSummaryTable summary={reportData.zettle} />
               <AccountMessages summary={reportData.paypal} />
               <ValidationSummary summary={reportData.paypal} />
               <TravelSummary summary={reportData.paypal} />
@@ -179,6 +162,33 @@ const MonthlyReport = () => {
       )}
     </div>
   );
+};
+
+const getReportData = async (month: string, year: string) => {
+  const [paypalResponse, zettleResponse] = await Promise.all([
+    fetch(`/api/finance/report/paypal/${month}/${year}`),
+    fetch(`/api/finance/report/zettle/${month}/${year}`),
+  ]);
+
+  if (!paypalResponse.ok) {
+    throw new Error("Failed to fetch PayPal data");
+  }
+  const paypalData: ResponseData = await paypalResponse.json();
+  if (paypalData.error) {
+    throw new Error(paypalData.error);
+  }
+
+  if (!zettleResponse.ok) {
+    throw new Error("Failed to fetch Zettle data");
+  }
+  const zettleData: ResponseData = await zettleResponse.json();
+  if (zettleData.error) {
+    throw new Error(zettleData.error);
+  }
+  return {
+    paypal: paypalData.data as SummaryData,
+    zettle: zettleData.data as CardSummary,
+  };
 };
 
 export default withPageAuthRequired(MonthlyReport);

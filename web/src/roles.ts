@@ -11,14 +11,12 @@ type RoleValue = (typeof roles)[keyof typeof roles];
 export const hasRole = async (role: RoleValue) => {
   const session = await getSession();
   if (session && userHasRole(session.user, role)) {
-    console.log(`Authed as ${role}`);
     return Response.json({ user: session.user });
   }
 };
 
 export const userHasRole = (user: Claims, role: RoleValue) => {
   if (user[`${namespace}/roles`].includes(role)) {
-    console.log(`Authed as ${role}`);
     return true;
   }
 };

@@ -27,8 +27,10 @@ const SummaryTable = ({ summary }: Props) => {
             </td>
           </tr>
           <tr>
-            <td>Total plus fees plus withdrawals</td>
-            <td className="text-right">
+            <td className=" text-green-800 font-bold">
+              Total plus fees plus withdrawals
+            </td>
+            <td className="text-right text-green-800 font-bold">
               {formatMoney(
                 summary.transTotal +
                   summary.feesTotal +
@@ -36,14 +38,35 @@ const SummaryTable = ({ summary }: Props) => {
               )}
             </td>
           </tr>
+          <DividerRow />
           <tr>
-            <td></td>
-            <td></td>
+            <td>Refunds</td>
+            <td className="text-right">{formatMoney(summary.refundsTotal)}</td>
           </tr>
+          <tr>
+            <td>Shipping</td>
+            <td className="text-right">{formatMoney(summary.shippingTotal)}</td>
+          </tr>
+          <tr>
+            <td className="text-purple-700 font-bold">Card purchases</td>
+            <td className="text-right text-purple-700 font-bold">
+              {formatMoney(summary.cardTotal)}
+            </td>
+          </tr>
+          <tr>
+            <td>Spending total</td>
+            <td className="text-right">{formatMoney(summary.spendingTotal)}</td>
+          </tr>
+          <tr>
+            <td>Pending</td>
+            <td className="text-right">{formatMoney(summary.pendingValue)}</td>
+          </tr>
+          <DividerRow />
           <tr>
             <td>Transaction count</td>
             <td className="text-right">{summary.transactionCount}</td>
           </tr>
+          <DividerRow />
           <tr>
             <td>Items value</td>
             <td className="text-right">{formatMoney(summary.itemsValue)}</td>
@@ -67,5 +90,12 @@ const SummaryTable = ({ summary }: Props) => {
     </>
   );
 };
+
+const DividerRow = () => (
+  <tr className="border-t-2">
+    <td className=""></td>
+    <td></td>
+  </tr>
+);
 
 export default SummaryTable;
