@@ -4,7 +4,6 @@ import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import {
   Button,
   Card,
-  Input,
   Option,
   Select,
   Typography,
@@ -34,7 +33,11 @@ const MonthlyReport = () => {
   const [error, setError] = useState<null | string>(null);
 
   useEffect(() => {
-    validateForm();
+    if (month && year) {
+      setDisableCreateReportButton(false);
+    } else {
+      setDisableCreateReportButton(true);
+    }
   }, [month, year]);
 
   const handleMonthChange = (e: string | undefined) => {
@@ -42,14 +45,6 @@ const MonthlyReport = () => {
   };
   const handleYearChange = (e: string | undefined) => {
     setYear(e || "");
-  };
-
-  const validateForm = () => {
-    if (month && year) {
-      setDisableCreateReportButton(false);
-    } else {
-      setDisableCreateReportButton(true);
-    }
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {

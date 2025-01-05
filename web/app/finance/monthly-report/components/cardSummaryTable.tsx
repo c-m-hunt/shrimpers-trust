@@ -1,4 +1,4 @@
-import { CardSummary, SummaryData } from "@/src/types/finance";
+import { CardSummary } from "@/src/types/finance";
 import { annoyingDefaultProps, formatMoney } from "@/src/utils";
 import { Typography } from "@material-tailwind/react";
 
