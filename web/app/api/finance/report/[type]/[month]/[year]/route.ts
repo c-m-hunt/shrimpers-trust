@@ -4,6 +4,7 @@ import { CardSummary, SummaryData } from "@/src/types/finance";
 
 export type ResponseData = {
   data: SummaryData | CardSummary;
+  error?: string;
 };
 
 export const GET = async function passwordreset(

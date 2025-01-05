@@ -31,7 +31,7 @@ function NavListMenu() {
   const [openNestedMenu, setopenNestedMenu] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const { user, error, isLoading } = useUser();
+  const { user } = useUser();
 
   return (
     <React.Fragment>

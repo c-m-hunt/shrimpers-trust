@@ -63,12 +63,17 @@ const MonthlyReport = () => {
         `/api/finance/report/paypal/${month}/${year}`,
       );
       const paypalData: ResponseData = await paypalResponse.json();
+      if (paypalData.error) {
+        throw new Error(paypalData.error);
+      }
 
       const zettleResponse = await fetch(
         `/api/finance/report/zettle/${month}/${year}`,
       );
       const zettleData: ResponseData = await zettleResponse.json();
-      console.log(paypalData, zettleData);
+      if (zettleData.error) {
+        throw new Error(zettleData.error);
+      }
       setReportData({
         paypal: paypalData.data as SummaryData,
         zettle: zettleData.data as CardSummary,
