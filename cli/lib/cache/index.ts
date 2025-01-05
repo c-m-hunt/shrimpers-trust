@@ -3,12 +3,15 @@ const CACHE_PATH = `${currentDir}/cache`;
 const OUTPUT_PATH = `${currentDir}/output`;
 const DEBUG_LOG_PATH = `${currentDir}/debug.log`;
 
-// Make sure the cache directory exists
-try {
-  Deno.mkdirSync(CACHE_PATH);
-} catch (_err) {
-  // Directory already exists
-}
+const ensureDir = (path: string) => {
+  // Make sure the cache directory exists
+  try {
+    Deno.mkdirSync(path);
+  } catch (_err) {
+    // Directory already exists
+  }
+};
+ensureDir(CACHE_PATH);
 
 export const getCache = (key: string): null | object => {
   try {
@@ -21,6 +24,7 @@ export const getCache = (key: string): null | object => {
 };
 
 export const setCache = (key: string, data: object): void => {
+  ensureDir(CACHE_PATH);
   Deno.writeFileSync(
     `${CACHE_PATH}/${key}.json`,
     new TextEncoder().encode(JSON.stringify(data)),

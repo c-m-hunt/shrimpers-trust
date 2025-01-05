@@ -18,8 +18,8 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "3 Year Adult Membership - Email": ["Membership"],
   "Junior Blues - Membership": ["Junior Blues", "Membership"],
 
-  "Additional Postage Cost": ["Shipping", "PayPal"],
-  "shipping": ["Shipping", "PayPal"],
+  "Additional Postage Cost": ["Expenses", "Shipping"],
+  "shipping": ["Expenses", "Shipping"],
   "unknown": ["Miscellaneous"],
 
   // Donations
@@ -50,19 +50,32 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Limited Edition 2015 Play-Off Winners Pin Badge": ["Merchandise"],
   "A Snowy Night In January": ["Merchandise", "Keith Bird"],
   "Spirit Of The North Bank": ["Merchandise", "Keith Bird"],
+  "Blue Voice Pin Badge": ["Merchandise"],
+  "Legends Are Forever Print": ["Merchandise"],
+  "Limited Edition 2005 Play Off Winners Pin Badge": ["Merchandise"],
+  "Once Upon A Time In Malta": ["Merchandise"],
+  "Half-time In The West Stand Print": ["Merchandise", "Keith Bird"],
+  "The Scoreboards Finest Hour": ["Merchandise", "Keith Bird"],
+  "West Stand Print": ["Merchandise", "Keith Bird"],
   "Keith Bird Print - Evening Kick Off": ["Merchandise", "Keith Bird"], // Zettle
   "Keith Bird Print - Record Attendance": ["Merchandise", "Keith Bird"], // Zettle
   "Keith Bird Print - Spirit of North Bank": ["Merchandise", "Keith Bird"], // Zettle
+  "Keith Bird Print - Manchester": ["Merchandise", "Keith Bird"], // Zettle
   "Beautiful Grounds": ["Merchandise", "Books"],
   "Christmas Draw 2024": ["Fundraising", "Christmas Draw"], // Zettle
   "Xmas Donation": ["Fundraising", "Christmas Draw"],
   "The Big Christmas Quiz - 2024": ["Fundraising", "Christmas Quiz"],
+  "Shrimpers Trust Xmas Quiz Sponsorship": ["Fundraising", "Christmas Quiz"],
   "Christmas Quiz 2024": ["Fundraising", "Christmas Quiz"], // Zettle
+  "Rebrand Badge": ["Merchandise"], // Zettle
 
   // Junior Blues merchandise
   "Junior Blues Scarf": ["Junior Blues", "Merchandise"],
   "Junior Blues Pop Socket": ["Junior Blues", "Merchandise"],
   "Junior Blues Pin Badge": ["Junior Blues", "Merchandise"],
+  "Junior Blues Battle Cards": ["Junior Blues", "Merchandise"],
+  "Junior Blues Cool / Lunch Bag": ["Junior Blues", "Merchandise"],
+  "Junior Blues Money Box": ["Junior Blues", "Merchandise"],
   "Battle Cards": ["Junior Blues", "Merchandise"], // Zettle
   "Autograph Book": ["Junior Blues", "Merchandise"], // Zettle
   "Junior Blues - Badge": ["Junior Blues", "Merchandise"], // Zettle

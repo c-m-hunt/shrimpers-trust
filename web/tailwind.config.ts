@@ -8,6 +8,14 @@ export default withMT({
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    "bg-green-50",
+    "bg-red-50",
+    "bg-orange-50",
+    "border-green-500",
+    "border-red-500",
+    "border-orange-500",
+  ],
   theme: {
     extend: {
       colors: {
