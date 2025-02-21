@@ -8,6 +8,8 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Travel Tickets": ["Travel"],
   "Social Inclusion Donation": ["Social Inclusion"],
   "Member": ["Membership"],
+  "1 Year Membership": ["Membership"],
+  "3 Year Membership": ["Membership"],
   "1 Year OAP/Student/Disabled": ["Membership"],
   "Online 1 Year Renewal": ["Membership"],
   "Online 3 Year Renewal": ["Membership"],
@@ -47,6 +49,8 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Lanyard": ["Merchandise"],
   "Trolley Key Ring": ["Merchandise"],
   "Go West At Night": ["Merchandise"],
+  "Navy/Royal Blue Polo Shirt - Medium": ["Merchandise"],
+  "1 x Season Card Holder plus Postage to Spain": ["Merchandise"],
   "Limited Edition 2015 Play-Off Winners Pin Badge": ["Merchandise"],
   "A Snowy Night In January": ["Merchandise", "Keith Bird"],
   "Spirit Of The North Bank": ["Merchandise", "Keith Bird"],
@@ -73,6 +77,8 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Shrimpers Trust Xmas Quiz Sponsorship": ["Fundraising", "Christmas Quiz"],
   "Christmas Quiz 2024": ["Fundraising", "Christmas Quiz"], // Zettle
   "Rebrand Badge": ["Merchandise"], // Zettle
+  "Drawstring Rucksack (new)": ["Merchandise"], // Zettle
+  "Trolley Keyring": ["Merchandise"], // Zettle
 
   // Junior Blues merchandise
   "Junior Blues Scarf": ["Junior Blues", "Merchandise"],
