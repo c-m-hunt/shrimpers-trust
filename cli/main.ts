@@ -4,6 +4,7 @@ import { getStartAndEndDates, logger } from "./lib/utils/index.ts";
 import { reconcileAndDisplayZettleTransactionsForMonth } from "./treasurer/reconcileCardPurchases.ts";
 import { setupApi } from "./lib/api/app.ts";
 import { clearCache } from "./lib/cache/index.ts"; // Pba49
+import { sendMemberReminders } from "./membership/sms.ts";
 
 const treasurerCmd = await new Command()
   .description("Treasurer tooling")
@@ -41,6 +42,14 @@ const cacheCmd = await new Command()
     logger.info("Cache cleared successfully");
   });
 
+const smsCmd = await new Command()
+  .description("SMS tooling")
+  .command("send", "Send an SMS")
+  .action(async () => {
+    logger.info("Sending SMS");
+    await sendMemberReminders();
+  });
+
 await new Command()
   .name("st")
   .version("0.1.0")
@@ -48,4 +57,5 @@ await new Command()
   .command("treasurer", treasurerCmd)
   .command("api", apiCmd)
   .command("cache", cacheCmd)
+  .command("sms", smsCmd)
   .parse(Deno.args);
