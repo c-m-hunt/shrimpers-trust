@@ -64,6 +64,12 @@ export const reconcileZettlePurchases = async (
     "Zettle fees": { total: totalFees, qty: 1 },
   };
   for (const key in productTotals) {
+    // Check if key exists in itemSummary
+    if (itemSummary[productNames[key]]) {
+      itemSummary[productNames[key]].total += productTotals[key];
+      itemSummary[productNames[key]].qty += productCount[key];
+      continue;
+    }
     itemSummary[productNames[key]] = {
       total: productTotals[key],
       qty: productCount[key],

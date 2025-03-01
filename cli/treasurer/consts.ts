@@ -9,6 +9,7 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Social Inclusion Donation": ["Social Inclusion"],
   "Member": ["Membership"],
   "1 Year Membership": ["Membership"],
+  "2 Year Membership": ["Membership"],
   "3 Year Membership": ["Membership"],
   "1 Year OAP/Student/Disabled": ["Membership"],
   "Online 1 Year Renewal": ["Membership"],
@@ -79,6 +80,8 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Rebrand Badge": ["Merchandise"], // Zettle
   "Drawstring Rucksack (new)": ["Merchandise"], // Zettle
   "Trolley Keyring": ["Merchandise"], // Zettle
+  "Programmes & Memorabillia": ["Merchandise"], // Zettle
+  "Sammy Shrimp Badge (SUCF)": ["Merchandise"], // Zettle
 
   // Junior Blues merchandise
   "Junior Blues Scarf": ["Junior Blues", "Merchandise"],
