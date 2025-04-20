@@ -28,11 +28,11 @@ import {
 
 const getStartAndEndDatePaypalBalance = async (
   startDate: Date,
-  endDate: Date,
+  endDate: Date
 ): Promise<ReportBalances> => {
   const balanceService = await getBalancesSingleton(
     PAYPAL_CLIENT_ID,
-    PAYPAL_SECRET,
+    PAYPAL_SECRET
   );
   const startBalanceResp = await balanceService.get(startDate);
   const endBalanceResp = await balanceService.get(endDate);
@@ -45,13 +45,13 @@ const getStartAndEndDatePaypalBalance = async (
   }
   if (
     startBalanceResp.balances[0].currency !==
-      endBalanceResp.balances[0].currency
+    endBalanceResp.balances[0].currency
   ) {
     throw new Error("Currency mismatch");
   }
 
   const startBalance = parseFloat(
-    startBalanceResp.balances[0].totalBalance.value,
+    startBalanceResp.balances[0].totalBalance.value
   );
   const endBalance = parseFloat(endBalanceResp.balances[0].totalBalance.value);
 
@@ -60,11 +60,11 @@ const getStartAndEndDatePaypalBalance = async (
 
 export const reconcileAndDisplayPaypalTransactionsForMonth = async (
   startDate: Date,
-  endDate: Date,
+  endDate: Date
 ) => {
   const reconciledData = await reconcilePaypalTransactionsForMonth(
     startDate,
-    endDate,
+    endDate
   );
   displayReconciliationSummary(reconciledData);
 };
@@ -73,7 +73,7 @@ const logMessage = (
   msg: string,
   transactionId: string,
   type: MessageType,
-  messageList: AccountMessage[],
+  messageList: AccountMessage[]
 ) => {
   logger[type](msg);
   messageList.push({
@@ -86,13 +86,13 @@ const logMessage = (
 
 export const reconcilePaypalTransactionsForMonth = async (
   startDate: Date,
-  endDate: Date,
+  endDate: Date
 ): Promise<SummaryData> => {
   let accountMessages: AccountMessage[] = [];
 
   const transClient = await getTransactionSingleton(
     PAYPAL_CLIENT_ID,
-    PAYPAL_SECRET,
+    PAYPAL_SECRET
   );
 
   const trans = await transClient.search({
@@ -144,7 +144,7 @@ export const reconcilePaypalTransactionsForMonth = async (
         `Pending transaction: ${tran.transactionInfo.transactionId} - ${tran.transactionInfo.transactionAmount.value}`,
         tran.transactionInfo.transactionId,
         "error",
-        accountMessages,
+        accountMessages
       );
       prevBalance = currBalance;
       continue;
@@ -159,7 +159,7 @@ export const reconcilePaypalTransactionsForMonth = async (
         `Denied transaction: ${tran.transactionInfo.transactionId}`,
         tran.transactionInfo.transactionId,
         "warn",
-        accountMessages,
+        accountMessages
       );
       prevBalance = currBalance;
       continue;
@@ -173,7 +173,7 @@ export const reconcilePaypalTransactionsForMonth = async (
         `Unknown transaction type: ${tran.transactionInfo.transactionId} ${tran.transactionInfo.transactionEventCode} ${tran.transactionInfo.transactionAmount.value}`,
         tran.transactionInfo.transactionId,
         "error",
-        accountMessages,
+        accountMessages
       );
       continue;
     }
@@ -187,7 +187,7 @@ export const reconcilePaypalTransactionsForMonth = async (
         `Balance mismatch: ${tran.transactionInfo.transactionId} ${prevBalance} + ${transAmt} + ${feeAmt} != ${currBalance}`,
         tran.transactionInfo.transactionId,
         "error",
-        accountMessages,
+        accountMessages
       );
     }
 
@@ -203,7 +203,7 @@ export const reconcilePaypalTransactionsForMonth = async (
 
     // Find out if it's a refund
     let isRefund = refundTransType.includes(
-      tran.transactionInfo.transactionEventCode,
+      tran.transactionInfo.transactionEventCode
     );
 
     if (!isNaN(transAmt)) {
@@ -213,7 +213,7 @@ export const reconcilePaypalTransactionsForMonth = async (
         `Transaction amount not a number: ${tran.transactionInfo.transactionId}`,
         tran.transactionInfo.transactionId,
         "debug",
-        accountMessages,
+        accountMessages
       );
     }
     feesTotal += feeAmt;
@@ -235,7 +235,7 @@ export const reconcilePaypalTransactionsForMonth = async (
         `Chargeback: ${tran.transactionInfo.transactionId} ${transAmt}`,
         tran.transactionInfo.transactionId,
         "warn",
-        accountMessages,
+        accountMessages
       );
       continue;
     }
@@ -251,7 +251,7 @@ export const reconcilePaypalTransactionsForMonth = async (
         `Purchase: ${tran.transactionInfo.transactionId} ${transAmt}`,
         tran.transactionInfo.transactionId,
         "warn",
-        accountMessages,
+        accountMessages
       );
       continue;
     }
@@ -267,7 +267,7 @@ export const reconcilePaypalTransactionsForMonth = async (
           `No cart items: ${tran.transactionInfo.transactionId} ${transAmt}`,
           tran.transactionInfo.transactionId,
           "warn",
-          accountMessages,
+          accountMessages
         );
       }
     }
@@ -281,13 +281,24 @@ export const reconcilePaypalTransactionsForMonth = async (
             `Refund with ID ${tran.transactionInfo.transactionId} has multiple items`,
             tran.transactionInfo.transactionId,
             "debug",
-            accountMessages,
+            accountMessages
           );
           break;
         }
 
         const itemAmt = parseFloat(item.totalItemAmount?.value);
         const itemQty = parseInt(item.itemQuantity);
+
+        // ------------------
+        // Prints the list of puraches of specific object
+        // ------------------
+        if (item.itemName.startsWith("Sponsored Walk")) {
+          console.log(
+            `${tran.transactionInfo.transactionInitiationDate},${
+              tran.payerInfo.payerName.alternateFullName
+            },${tran.payerInfo.emailAddress || ""},${item.itemAmount?.value}`
+          );
+        }
 
         if (isRefund) {
           // If there's no item name, use unknown
@@ -317,7 +328,7 @@ export const reconcilePaypalTransactionsForMonth = async (
               `Item amount not a number: ${tran.transactionInfo.transactionId}`,
               tran.transactionInfo.transactionId,
               "debug",
-              accountMessages,
+              accountMessages
             );
           }
         }
@@ -346,12 +357,12 @@ export const reconcilePaypalTransactionsForMonth = async (
     cardTotal,
     itemsValue: Object.keys(itemTotals).reduce(
       (acc, key) => acc + itemTotals[key]["total"],
-      0,
+      0
     ),
     transactionCount: trans.length,
     pendingValue: Object.values(pendingTrans).reduce(
       (acc, val) => acc + val,
-      0,
+      0
     ),
     itemTotals,
     refundItemTotals,
@@ -359,9 +370,7 @@ export const reconcilePaypalTransactionsForMonth = async (
   };
 };
 
-const displayReconciliationSummary = (
-  summary: SummaryData,
-) => {
+const displayReconciliationSummary = (summary: SummaryData) => {
   const { itemTotals, refundItemTotals } = summary;
   const { start: startDate, end: endDate } = summary.dateRange;
   const mergedItems = mergeItemsAndRefunds(itemTotals, refundItemTotals);
@@ -376,25 +385,25 @@ const displayReconciliationSummary = (
     "PayPal",
     endDate,
     itemTotals,
-    `in-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+    `in-${startDate.getMonth() + 1}-${startDate.getFullYear()}`
   );
   generateCSV(
     "PayPal",
     endDate,
     refundItemTotals,
-    `out-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+    `out-${startDate.getMonth() + 1}-${startDate.getFullYear()}`
   );
   generateCSV(
     "PayPal",
     endDate,
     mergedItems,
-    `total-${startDate.getMonth() + 1}-${startDate.getFullYear()}`,
+    `total-${startDate.getMonth() + 1}-${startDate.getFullYear()}`
   );
 };
 
 const mergeItemsAndRefunds = (
   items: { [key: string]: ItemSummary },
-  refunds: { [key: string]: ItemSummary },
+  refunds: { [key: string]: ItemSummary }
 ): { [key: string]: ItemSummary } => {
   const merged = structuredClone(items);
   for (const key of Object.keys(refunds)) {

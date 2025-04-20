@@ -104,12 +104,14 @@ export const CATEGORIES: { [key: string]: string[] } = {
   ],
   "Junior Blues Christmas Party 2024": ["Junior Blues", "Xmas Party"],
   "Junior Blues Xmas Party": ["Junior Blues", "Xmas Party"],
+  "Junior Blues Easter Fun": ["Junior Blues", "Easter Fun Day"],
 
   // Events
   "An Evening With 'Red Card' Roy McDonough": [
     "Events",
     "Red Card Roy McDonough",
   ],
+  "Sponsored Walk Donation": ["Fundraising", "Sponsored Walk"],
 
   // Micky Steed
   "Micky Stead Donation": ["SUEPA", "Micky Steed"],

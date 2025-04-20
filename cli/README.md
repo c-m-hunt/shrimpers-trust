@@ -65,3 +65,9 @@ In an Excel spreadsheet:
 - Choose Existing Worksheet and select a cell to place the pivot table.
 - Drag Category into Rows and Value into Values.
 - Check the Grand Total matches the bright green `Total` from the summary.
+
+### Start API
+
+```
+deno run --allow-all --env-file main.ts api start
+```

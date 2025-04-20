@@ -34,6 +34,7 @@ type PayerInfo = {
   payerStatus?: string;
   payerName: PayerName;
   countryCode?: string;
+  emailAddress?: string;
 };
 
 type ShippingInfo = {
