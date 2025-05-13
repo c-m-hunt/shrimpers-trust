@@ -4,20 +4,20 @@ import { getStartAndEndDates, logger } from "./lib/utils/index.ts";
 import { reconcileAndDisplayZettleTransactionsForMonth } from "./treasurer/reconcileCardPurchases.ts";
 import { setupApi } from "./lib/api/app.ts";
 import { clearCache } from "./lib/cache/index.ts"; // Pba49
-import { sendMemberReminders } from "./membership/sms.ts";
+import { sendCoachSMS, sendMemberReminders } from "./membership/sms.ts";
 
 const treasurerCmd = await new Command()
   .description("Treasurer tooling")
   .command(
     "account-summary",
-    "Account summary for a month. Takes in month and year",
+    "Account summary for a month. Takes in month and year"
   )
   .alias("as")
   .arguments("<month:number> <year:number>")
   .action(async (_options, ...args) => {
     const { startDate, endDate } = getStartAndEndDates(args[0], args[1]);
     logger.info(
-      `Reconciling PayPal transactions for ${startDate.toDateString()} to ${endDate.toDateString()}`,
+      `Reconciling PayPal transactions for ${startDate.toDateString()} to ${endDate.toDateString()}`
     );
 
     await reconcileAndDisplayPaypalTransactionsForMonth(startDate, endDate);
@@ -47,7 +47,7 @@ const smsCmd = await new Command()
   .command("send", "Send an SMS")
   .action(async () => {
     logger.info("Sending SMS");
-    await sendMemberReminders();
+    await sendCoachSMS();
   });
 
 await new Command()

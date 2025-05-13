@@ -32,7 +32,7 @@ export const sendMemberReminders = async () => {
   const currentDir = new URL(".", import.meta.url).pathname;
   const filePath = `${currentDir}../../member-report/data/renewals.csv`;
 
-  const renewalList = await getRenewalList(filePath);
+  const renewalList = await getMemberList(filePath);
 
   for (const member of renewalList) {
     const message = `Hi ${member.firstName}
@@ -45,7 +45,7 @@ It would be great to have you back!
 Maybe consider a life membership so you never have to renew again!  :-)
 
 Renew here - https://www.shrimperstrust.co.uk/renewal`;
-    const smsMessage = getMemberReminder(member.mobileNo, message);
+    const smsMessage = getSMSMessage(member.mobileNo, message);
     smsCollection.messages.push(smsMessage);
   }
 
@@ -62,10 +62,61 @@ Renew here - https://www.shrimperstrust.co.uk/renewal`;
   }
 };
 
-const getMemberReminder = (to: string, body: string) => {
+export const sendCoachSMS = async () => {
+  const clicksendUser = process.env.CLICKSEND_USERNAME;
+  const clicksendKey = process.env.CLICKSEND_API_KEY;
+
+  if (!clicksendUser || !clicksendKey) {
+    logger.error("No ClickSend username or API key provided");
+    return;
+  }
+
+  const smsApi = new api.SMSApi(clicksendUser, clicksendKey);
+
+  const smsCollection = new api.SmsMessageCollection();
+
+  smsCollection.messages = [];
+
+  const currentDir = new URL(".", import.meta.url).pathname;
+  const filePath = `${currentDir}/data.csv`;
+
+  const coachList = await getMemberList(filePath);
+
+  for (const member of coachList) {
+    const message = `Hi ${member.firstName}
+
+Shrimpers Trust Rochdale Coach
+
+We have had to change the departure times for the coach to Rochdale on Thursday 15th May.
+ROOTS HALL - 12.00
+THE ELMS - 12.10
+HADLEIGH CHURCH - 12.15
+TARPOTS CORNER - 12.25
+THE WATERMILL - 12.40
+FORTUNE OF WAR - 12.45
+
+See you Thursday!`;
+    const smsMessage = getSMSMessage(member.mobileNo, message);
+    smsCollection.messages.push(smsMessage);
+  }
+
+  logger.info("Sending SMS");
+
+  try {
+    const response = await smsApi.smsSendPost(smsCollection, {
+      shortenUrls: true,
+    });
+    logger.info("SMS sent");
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getSMSMessage = (to: string, body: string) => {
   const smsMessage = new api.SmsMessage();
 
-  smsMessage.from = "myNumber";
+  smsMessage.from = "ShrimpTrust";
   smsMessage.to = to;
   smsMessage.body = body;
 
@@ -75,7 +126,7 @@ const getMemberReminder = (to: string, body: string) => {
   return smsMessage;
 };
 
-const getRenewalList = async (filePath: string): Promise<Member[]> => {
+const getMemberList = async (filePath: string): Promise<Member[]> => {
   const file = await Deno.open(filePath);
   const members: Member[] = [];
 
