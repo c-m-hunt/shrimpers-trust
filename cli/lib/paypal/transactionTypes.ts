@@ -5,6 +5,7 @@ type CurrencyAmount = {
 
 type TransactionInfo = {
   paypalAccountId: string;
+  paypalReferenceId: string;
   transactionId: string;
   transactionEventCode: string;
   transactionInitiationDate: string;
@@ -35,6 +36,10 @@ type PayerInfo = {
   payerName: PayerName;
   countryCode?: string;
   emailAddress?: string;
+  phoneNumber?: {
+    countryCode: string;
+    nationalNumber: string;
+  };
 };
 
 type ShippingInfo = {

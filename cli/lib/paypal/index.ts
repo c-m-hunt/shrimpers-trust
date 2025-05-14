@@ -29,7 +29,7 @@ export class PayPal {
     clientId: string,
     secret: string,
     sandbox: boolean = false,
-    version: string = "v2",
+    version: string = "v2"
   ) {
     this.clientID = clientId;
     this.secret = secret;
@@ -39,7 +39,7 @@ export class PayPal {
 
   authenticate = async () => {
     const headers = {
-      "Accept": "application/json",
+      Accept: "application/json",
       "Accept-Language": "en_GB",
       Authorization: `Basic ${base64Encode(`${this.clientID}:${this.secret}`)}`,
     };
@@ -50,10 +50,7 @@ export class PayPal {
       body: "grant_type=client_credentials",
     };
 
-    const response = await fetch(
-      `${this.baseUrl}/v1/oauth2/token`,
-      options,
-    );
+    const response = await fetch(`${this.baseUrl}/v1/oauth2/token`, options);
     if (response.status === 200) {
       // deno-lint-ignore no-explicit-any
       const responseObject: any = await response.json();
@@ -67,7 +64,7 @@ export class PayPal {
     data: object | null = null,
     headers: object | null = null,
     _body: object | string | null = null,
-    expectJson = true,
+    expectJson = true
   ) => {
     // Cache key is MD5 hash of the URL
     const cacheKey = new TextEncoder().encode(url);
@@ -79,7 +76,7 @@ export class PayPal {
 
     headers = headers || {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${this.accessToken}`,
+      Authorization: `Bearer ${this.accessToken}`,
     };
 
     const options: RequestOptions = {
@@ -91,11 +88,11 @@ export class PayPal {
       options.body = JSON.stringify(data);
     }
 
-    logger.info(`Getting data from ${this.baseUrl}/${this.version}${url}`);
+    logger.debug(`Getting data from ${this.baseUrl}/${this.version}${url}`);
 
     const response = await fetch(
       `${this.baseUrl}/${this.version}${url}`,
-      options,
+      options
     );
 
     logger.debug(`Status code ${response.status}`);
