@@ -14,7 +14,7 @@ type Member = {
   expiryDate: string;
 };
 
-export const sendMemberReminders = async () => {
+export const sendSMS = async (smsCollection: api.SmsMessageCollection) => {
   const clicksendUser = process.env.CLICKSEND_USERNAME;
   const clicksendKey = process.env.CLICKSEND_API_KEY;
 
@@ -25,14 +25,25 @@ export const sendMemberReminders = async () => {
 
   const smsApi = new api.SMSApi(clicksendUser, clicksendKey);
 
-  const smsCollection = new api.SmsMessageCollection();
+  try {
+    const response = await smsApi.smsSendPost(smsCollection, {
+      shortenUrls: true,
+    });
+    logger.info("SMS sent");
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-  smsCollection.messages = [];
-
+export const sendMemberReminders = async () => {
   const currentDir = new URL(".", import.meta.url).pathname;
   const filePath = `${currentDir}../../member-report/data/renewals.csv`;
 
   const renewalList = await getMemberList(filePath);
+
+  const smsCollection = new api.SmsMessageCollection();
+  smsCollection.messages = [];
 
   for (const member of renewalList) {
     const message = `Hi ${member.firstName}
@@ -49,38 +60,17 @@ Renew here - https://www.shrimperstrust.co.uk/renewal`;
     smsCollection.messages.push(smsMessage);
   }
 
-  logger.info("Sending SMS");
-
-  try {
-    const response = await smsApi.smsSendPost(smsCollection, {
-      shortenUrls: true,
-    });
-    logger.info("SMS sent");
-    console.log(response);
-  } catch (error) {
-    console.log(error);
-  }
+  await sendSMS(smsCollection);
 };
 
 export const sendCoachSMS = async () => {
-  const clicksendUser = process.env.CLICKSEND_USERNAME;
-  const clicksendKey = process.env.CLICKSEND_API_KEY;
-
-  if (!clicksendUser || !clicksendKey) {
-    logger.error("No ClickSend username or API key provided");
-    return;
-  }
-
-  const smsApi = new api.SMSApi(clicksendUser, clicksendKey);
-
-  const smsCollection = new api.SmsMessageCollection();
-
-  smsCollection.messages = [];
-
   const currentDir = new URL(".", import.meta.url).pathname;
-  const filePath = `${currentDir}/data.csv`;
+  const filePath = `${currentDir}../../member-report/data/coaches.csv`;
 
   const coachList = await getMemberList(filePath);
+
+  const smsCollection = new api.SmsMessageCollection();
+  smsCollection.messages = [];
 
   for (const member of coachList) {
     const message = `Hi ${member.firstName}
@@ -100,17 +90,7 @@ See you Thursday!`;
     smsCollection.messages.push(smsMessage);
   }
 
-  logger.info("Sending SMS");
-
-  try {
-    const response = await smsApi.smsSendPost(smsCollection, {
-      shortenUrls: true,
-    });
-    logger.info("SMS sent");
-    console.log(response);
-  } catch (error) {
-    console.log(error);
-  }
+  await sendSMS(smsCollection);
 };
 
 const getSMSMessage = (to: string, body: string) => {
