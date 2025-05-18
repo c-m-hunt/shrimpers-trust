@@ -1,4 +1,7 @@
-import { getTransactionSingleton } from "../lib/paypal/transaction.ts";
+import {
+  getOrderSingleton,
+  getTransactionSingleton,
+} from "../lib/paypal/transaction.ts";
 import { areNumbersEqual, isIterable } from "../lib/utils/index.ts";
 import { logger } from "../lib/utils/index.ts";
 import {
@@ -94,6 +97,8 @@ export const reconcilePaypalTransactionsForMonth = async (
     PAYPAL_CLIENT_ID,
     PAYPAL_SECRET
   );
+
+  const orderClient = await getOrderSingleton(PAYPAL_CLIENT_ID, PAYPAL_SECRET);
 
   const trans = await transClient.search({
     start_date: startDate.toISOString(),
@@ -272,6 +277,8 @@ export const reconcilePaypalTransactionsForMonth = async (
       }
     }
 
+    const includedNumbers: Array<string> = [];
+
     if (isIterable(tran.cartInfo.itemDetails)) {
       let itemNumber = 0;
       for (const item of tran.cartInfo.itemDetails) {
@@ -292,12 +299,48 @@ export const reconcilePaypalTransactionsForMonth = async (
         // ------------------
         // Prints the list of puraches of specific object
         // ------------------
-        if (item.itemName.startsWith("Sponsored Walk")) {
-          console.log(
-            `${tran.transactionInfo.transactionInitiationDate},${
-              tran.payerInfo.payerName.alternateFullName
-            },${tran.payerInfo.emailAddress || ""},${item.itemAmount?.value}`
-          );
+        if (item.itemName.startsWith("Travel Tickets for ROCHDALE AFC")) {
+          // const paymentDetails = await orderClient.getPaymentDetails(
+          //   tran.transactionInfo.paypalReferenceId
+          // );
+          // const orderDetails = await orderClient.getOrderDetails(
+          //   paymentDetails["supplementaryData"]["relatedIds"]["orderId"]
+          // );
+          // console.log(
+          //   `${tran.transactionInfo.transactionInitiationDate},${
+          //     tran.payerInfo.payerName.alternateFullName
+          //   },${tran.payerInfo.emailAddress || ""},${
+          //     paymentDetails["payee"]["emailAddress"] || ""
+          //   }, ${item.itemAmount?.value}`
+          // );
+          // console.log(
+          //   `${tran.transactionInfo.transactionInitiationDate},${
+          //     tran.payerInfo.payerName.alternateFullName
+          //   },${tran.payerInfo.emailAddress || ""},${item.itemAmount?.value}`
+          // );
+          if (tran.payerInfo.phoneNumber) {
+            const phoneNuber =
+              tran.payerInfo.phoneNumber?.countryCode +
+              tran.payerInfo.phoneNumber?.nationalNumber.substring(1);
+
+            if (
+              !includedNumbers.includes(phoneNuber) &&
+              tran.payerInfo.phoneNumber?.nationalNumber.substring(1, 2) == "7"
+            ) {
+              // console.log(
+              //   `,${tran.payerInfo.payerName.alternateFullName.split(" ")[0]},${
+              //     tran.payerInfo.payerName.alternateFullName.split(" ")[1] || ""
+              //   },${phoneNuber},`
+              // );
+              includedNumbers.push(phoneNuber);
+            }
+          } else {
+            console.log(
+              `${tran.payerInfo.payerName.alternateFullName},${
+                tran.payerInfo.emailAddress || ""
+              }`
+            );
+          }
         }
 
         if (isRefund) {

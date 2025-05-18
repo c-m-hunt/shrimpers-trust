@@ -90,7 +90,8 @@ See you Thursday!`;
     smsCollection.messages.push(smsMessage);
   }
 
-  await sendSMS(smsCollection);
+  // console.log(smsCollection);
+  // await sendSMS(smsCollection);
 };
 
 const getSMSMessage = (to: string, body: string) => {
