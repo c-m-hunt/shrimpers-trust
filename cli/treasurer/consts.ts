@@ -2,12 +2,14 @@ const currentDir = Deno.realPathSync(Deno.cwd());
 export const OUTPUT_PATH = `${currentDir}/output`;
 
 export const CATEGORIES: { [key: string]: string[] } = {
-  "fees": ["Banking", "PayPal"],
-  "withdrawal": ["Banking", "Transfer"],
+  fees: ["Banking", "PayPal"],
+  withdrawal: ["Banking", "Transfer"],
   "Zettle fees": ["Banking", "Zettle"],
   "Travel Tickets": ["Travel"],
   "Social Inclusion Donation": ["Social Inclusion"],
-  "Member": ["Membership"],
+
+  // Membership
+  Member: ["Membership"],
   "1 Year Membership": ["Membership"],
   "2 Year Membership": ["Membership"],
   "3 Year Membership": ["Membership"],
@@ -17,13 +19,15 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Junior Blues Membership": ["Junior Blues", "Membership"],
   "2 Year OAP/Student/Disabled": ["Membership"],
   "Online 2 Year Renewal": ["Membership"],
-  "Life": ["Membership"],
+  Life: ["Membership"],
   "3 Year Adult Membership - Email": ["Membership"],
   "Junior Blues - Membership": ["Junior Blues", "Membership"],
+  "1 Year Junior Blue Membership": ["Junior Blues", "Membership"],
+  "2 Year Adult Membership - Email": ["Membership"],
 
   "Additional Postage Cost": ["Expenses", "Shipping"],
-  "shipping": ["Expenses", "Shipping"],
-  "unknown": ["Miscellaneous"],
+  shipping: ["Expenses", "Shipping"],
+  unknown: ["Miscellaneous"],
 
   // Donations
   "Online Donation": ["Donation", "Online"],
@@ -37,7 +41,7 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Team We Call United DVD": ["Merchandise"], // Zettle
   "Pitch Invasion Print": ["Merchandise"],
   "New Shrimpers Trust Pin Badge": ["Merchandise"],
-  "Badge": ["Merchandise"], // Zettle
+  Badge: ["Merchandise"], // Zettle
   "Coffee Mug": ["Merchandise"],
   "Commemorative Malta Tour Pin Badge": ["Merchandise"],
   "Fridge Magnet": ["Merchandise"],
@@ -47,7 +51,7 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Season Card Holder": ["Merchandise"],
   "Greetings Card": ["Merchandise"],
   "Shrimpers Trust (SUSCT) Pin Badge": ["Merchandise"],
-  "Lanyard": ["Merchandise"],
+  Lanyard: ["Merchandise"],
   "Trolley Key Ring": ["Merchandise"],
   "Go West At Night": ["Merchandise"],
   "Navy/Royal Blue Polo Shirt - Medium": ["Merchandise"],
@@ -95,7 +99,8 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Junior Blues - Badge": ["Junior Blues", "Merchandise"], // Zettle
   "Car Sticker": ["Junior Blues", "Merchandise"], // Zettle
   "Lunch Box": ["Junior Blues", "Merchandise"], // Zettle
-  "Pen": ["Junior Blues", "Merchandise"], // Zettle
+  Pen: ["Junior Blues", "Merchandise"], // Zettle
+  "New Drawstring Bag": ["Junior Blues", "Merchandise"], // Zettle
 
   // Junior Blues events
   "Junior Blues Meet The Players Day - 2024": [
@@ -122,4 +127,8 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Micky Stead Match - Adult": ["SUEPA", "Micky Steed"],
   "Micky Stead Match - Concession": ["SUEPA", "Micky Steed"],
   "Micky Stead Match - Programme": ["SUEPA", "Micky Steed"],
+
+  // Miscellaneous
+  "POTY Auction": ["Miscellaneous", "POTY Auction"],
+  "Online Ticket": ["Miscellaneous", "Online Tickets"],
 };
