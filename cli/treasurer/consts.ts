@@ -17,6 +17,8 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Online 1 Year Renewal": ["Membership"],
   "Online 3 Year Renewal": ["Membership"],
   "Junior Blues Membership": ["Junior Blues", "Membership"],
+  "Junior Blue Membership": ["Junior Blues", "Membership"],
+  "Junior Blue Membership (Sibling Discount)": ["Junior Blues", "Membership"],
   "2 Year OAP/Student/Disabled": ["Membership"],
   "Online 2 Year Renewal": ["Membership"],
   Life: ["Membership"],
@@ -71,6 +73,8 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "Half-time In The West Stand Print": ["Merchandise", "Keith Bird"],
   "The Scoreboards Finest Hour": ["Merchandise", "Keith Bird"],
   "West Stand Print": ["Merchandise", "Keith Bird"],
+  "Drawstring Bag (old)": ["Merchandise"],
+  "Roots & All": ["Merchandise", "Roots & All"],
   "Keith Bird Print - Evening Kick Off": ["Merchandise", "Keith Bird"], // Zettle
   "Keith Bird Print - Record Attendance": ["Merchandise", "Keith Bird"], // Zettle
   "Keith Bird Print - Spirit of North Bank": ["Merchandise", "Keith Bird"], // Zettle

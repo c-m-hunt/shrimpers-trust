@@ -279,6 +279,10 @@ export const reconcilePaypalTransactionsForMonth = async (
 
     const includedNumbers: Array<string> = [];
 
+    // console.log(
+    //   `${tran.transactionInfo.transactionInitiationDate},${tran.payerInfo.payerName.alternateFullName}`
+    // );
+
     if (isIterable(tran.cartInfo.itemDetails)) {
       let itemNumber = 0;
       for (const item of tran.cartInfo.itemDetails) {
