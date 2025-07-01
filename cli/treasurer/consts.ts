@@ -75,11 +75,23 @@ export const CATEGORIES: { [key: string]: string[] } = {
   "West Stand Print": ["Merchandise", "Keith Bird"],
   "Drawstring Bag (old)": ["Merchandise"],
   "Roots & All": ["Merchandise", "Roots & All"],
+  "2 x Roots & All Books including Postage & Packing to Malta": [
+    "Merchandise",
+    "Roots & All",
+  ],
+  "2 x Roots & All Books including Postage & Packing to Australia": [
+    "Merchandise",
+    "Roots & All",
+  ],
   "Keith Bird Print - Evening Kick Off": ["Merchandise", "Keith Bird"], // Zettle
   "Keith Bird Print - Record Attendance": ["Merchandise", "Keith Bird"], // Zettle
   "Keith Bird Print - Spirit of North Bank": ["Merchandise", "Keith Bird"], // Zettle
   "Keith Bird Print - Manchester": ["Merchandise", "Keith Bird"], // Zettle
   "Beautiful Grounds": ["Merchandise", "Books"],
+  "Roots To The 92": ["Merchandise", "Books"],
+  "Ohhh, What A Goal - A3": ["Merchandise"],
+  "Drawstring Bag (new)": ["Merchandise"],
+
   "Christmas Draw 2024": ["Fundraising", "Christmas Draw"], // Zettle
   "Xmas Donation": ["Fundraising", "Christmas Draw"],
   "The Big Christmas Quiz - 2024": ["Fundraising", "Christmas Quiz"],
