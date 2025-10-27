@@ -10,6 +10,8 @@ const unusedProps = {
   placeholder: undefined,
   onPointerEnterCapture: undefined,
   onPointerLeaveCapture: undefined,
+  onResize: undefined,
+  onResizeCapture: undefined,
 };
 
 const PasswordReset = () => {

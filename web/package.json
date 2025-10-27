@@ -6,29 +6,27 @@
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start -p 3001",
-    "lint": "next lint",
-    "format": "yarn prettier . --write",
+    "format": "bun prettier . --write",
     "format-watch": "npx onchange \"**/*\" -- npx prettier --write --ignore-unknown {{changed}}",
     "updateTypes": "cp ../cli/treasurer/types.ts ./src/types/finance.ts"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "^3.5.0",
+    "@auth0/nextjs-auth0": "^3",
     "@heroicons/react": "^2.2.0",
     "@material-tailwind/react": "^2.1.10",
-    "next": "^15.0.4",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106"
+    "eslint-config-next": "^15",
+    "next": "^15.5.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "15.0.3",
-    "postcss": "^8",
-    "prettier": "3.4.2",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "@types/node": "^24.9.1",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^3",
+    "typescript": "5.9.3"
   },
   "imports": {}
 }

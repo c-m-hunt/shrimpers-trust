@@ -12,7 +12,7 @@ export const GET = async function passwordreset(
   {
     params,
   }: {
-    params: Promise<{ type: string; month: number; year: number }>;
+    params: Promise<{ type: string; month: string; year: string }>;
   },
 ) {
   if (!(await hasRole(roles.financeAdmin))) {
