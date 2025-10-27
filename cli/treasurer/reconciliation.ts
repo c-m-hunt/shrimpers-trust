@@ -7,6 +7,7 @@ import { logger } from "../lib/utils/index.ts";
 import {
   allKnownTransTypes,
   feeTransType,
+  otherTransType,
   PAYPAL_CLIENT_ID,
   PAYPAL_SECRET,
   refundTransType,
@@ -207,9 +208,10 @@ export const reconcilePaypalTransactionsForMonth = async (
     }
 
     // Find out if it's a refund
-    let isRefund = refundTransType.includes(
-      tran.transactionInfo.transactionEventCode
-    );
+    let isRefund =
+      refundTransType.includes(tran.transactionInfo.transactionEventCode) ||
+      (otherTransType.includes(tran.transactionInfo.transactionEventCode) &&
+        transAmt < 0);
 
     if (!isNaN(transAmt)) {
       transTotal += transAmt;
@@ -258,7 +260,6 @@ export const reconcilePaypalTransactionsForMonth = async (
         "warn",
         accountMessages
       );
-      continue;
     }
 
     // Things like card payments don't have cart items
@@ -303,49 +304,49 @@ export const reconcilePaypalTransactionsForMonth = async (
         // ------------------
         // Prints the list of puraches of specific object
         // ------------------
-        if (item.itemName.startsWith("Travel Tickets for ROCHDALE AFC")) {
-          // const paymentDetails = await orderClient.getPaymentDetails(
-          //   tran.transactionInfo.paypalReferenceId
-          // );
-          // const orderDetails = await orderClient.getOrderDetails(
-          //   paymentDetails["supplementaryData"]["relatedIds"]["orderId"]
-          // );
-          // console.log(
-          //   `${tran.transactionInfo.transactionInitiationDate},${
-          //     tran.payerInfo.payerName.alternateFullName
-          //   },${tran.payerInfo.emailAddress || ""},${
-          //     paymentDetails["payee"]["emailAddress"] || ""
-          //   }, ${item.itemAmount?.value}`
-          // );
-          // console.log(
-          //   `${tran.transactionInfo.transactionInitiationDate},${
-          //     tran.payerInfo.payerName.alternateFullName
-          //   },${tran.payerInfo.emailAddress || ""},${item.itemAmount?.value}`
-          // );
-          if (tran.payerInfo.phoneNumber) {
-            const phoneNuber =
-              tran.payerInfo.phoneNumber?.countryCode +
-              tran.payerInfo.phoneNumber?.nationalNumber.substring(1);
-
-            if (
-              !includedNumbers.includes(phoneNuber) &&
-              tran.payerInfo.phoneNumber?.nationalNumber.substring(1, 2) == "7"
-            ) {
-              // console.log(
-              //   `,${tran.payerInfo.payerName.alternateFullName.split(" ")[0]},${
-              //     tran.payerInfo.payerName.alternateFullName.split(" ")[1] || ""
-              //   },${phoneNuber},`
-              // );
-              includedNumbers.push(phoneNuber);
-            }
-          } else {
-            console.log(
-              `${tran.payerInfo.payerName.alternateFullName},${
-                tran.payerInfo.emailAddress || ""
-              }`
-            );
-          }
-        }
+        // if (
+        //   item.itemName.startsWith("Sponsored Walk Donation of") ||
+        //   item.itemName.startsWith("Online Donation for Sponsored Walk")
+        // ) {
+        // const paymentDetails = await orderClient.getPaymentDetails(
+        //   tran.transactionInfo.paypalReferenceId
+        // );
+        // const orderDetails = await orderClient.getOrderDetails(
+        //   paymentDetails["supplementaryData"]["relatedIds"]["orderId"]
+        // );
+        // console.log(
+        //   `${tran.transactionInfo.transactionInitiationDate},${
+        //     tran.payerInfo.payerName.alternateFullName
+        //   },${tran.payerInfo.emailAddress || ""},${item.itemAmount?.value}`
+        // );
+        // console.log(
+        //   `${tran.transactionInfo.transactionInitiationDate},${
+        //     tran.payerInfo.payerName.alternateFullName
+        //   },${tran.payerInfo.emailAddress || ""},${item.itemAmount?.value}`
+        // );
+        // if (tran.payerInfo.phoneNumber) {
+        //   const phoneNuber =
+        //     tran.payerInfo.phoneNumber?.countryCode +
+        //     tran.payerInfo.phoneNumber?.nationalNumber.substring(1);
+        //   if (
+        //     !includedNumbers.includes(phoneNuber) &&
+        //     tran.payerInfo.phoneNumber?.nationalNumber.substring(1, 2) == "7"
+        //   ) {
+        //     // console.log(
+        //     //   `,${tran.payerInfo.payerName.alternateFullName.split(" ")[0]},${
+        //     //     tran.payerInfo.payerName.alternateFullName.split(" ")[1] || ""
+        //     //   },${phoneNuber},`
+        //     // );
+        //     includedNumbers.push(phoneNuber);
+        //   }
+        // } else {
+        //   console.log(
+        //     `${tran.payerInfo.payerName.alternateFullName},${
+        //       tran.payerInfo.emailAddress || ""
+        //     }`
+        //   );
+        // }
+        // }
 
         if (isRefund) {
           // If there's no item name, use unknown

@@ -29,7 +29,7 @@ export class PayPal {
     clientId: string,
     secret: string,
     sandbox: boolean = false,
-    version: string = "v2"
+    version: string = "v2",
   ) {
     this.clientID = clientId;
     this.secret = secret;
@@ -64,7 +64,7 @@ export class PayPal {
     data: object | null = null,
     headers: object | null = null,
     _body: object | string | null = null,
-    expectJson = true
+    expectJson = true,
   ) => {
     // Cache key is MD5 hash of the URL
     const cacheKey = new TextEncoder().encode(url);
@@ -92,7 +92,7 @@ export class PayPal {
 
     const response = await fetch(
       `${this.baseUrl}/${this.version}${url}`,
-      options
+      options,
     );
 
     logger.debug(`Status code ${response.status}`);

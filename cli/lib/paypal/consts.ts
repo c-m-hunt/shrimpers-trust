@@ -27,6 +27,10 @@ export const refundTransType = [
   "T1201", // Chargeback
   "T1202", // Chargeback Reversal
 ]; // Refund and chargeback
+export const otherTransType = [
+  "T0013", // Donation Payment
+  "T1105", // Release of Funds
+];
 export const withdrawalTransType = [
   "T0400", // General Withdrawal from PayPal Account
   "T0403", // Transfer from PayPal Balance to Bank Account
@@ -39,4 +43,5 @@ export const allKnownTransTypes = [
   ...feeTransType,
   ...cardTransType,
   ...withdrawalTransType,
+  ...otherTransType,
 ];

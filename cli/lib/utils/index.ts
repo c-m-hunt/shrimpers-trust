@@ -55,7 +55,7 @@ type StartAndEndDate = {
  */
 export const getStartAndEndDates = (
   month: number,
-  year: number
+  year: number,
 ): StartAndEndDate => {
   const startDate = createDateFromMonth(month.toString(), year.toString());
   let endMonth = month + 1;
@@ -76,7 +76,7 @@ export const getStartAndEndDates = (
 export const areNumbersEqual = (
   num1: number,
   num2: number,
-  epsilon: number = 0.001
+  epsilon: number = 0.001,
 ): boolean => {
   return Math.abs(num1 - num2) < epsilon;
 };
