@@ -44,9 +44,15 @@ function NavListMenu() {
             />
           </button>
         </MenuHandler>
-        <MenuList className="hidden lg:block bg-primary-900 border border-gold-400/20 shadow-lg" {...defaultProps}>
+        <MenuList
+          className="hidden lg:block bg-primary-900 border border-gold-400/20 shadow-lg"
+          {...defaultProps}
+        >
           <Link href="/tools/passwordreset">
-            <MenuItem className="text-gold-400 hover:bg-primary-800 hover:text-gold-300 font-medium" {...defaultProps}>
+            <MenuItem
+              className="text-gold-400 hover:bg-primary-800 hover:text-gold-300 font-medium"
+              {...defaultProps}
+            >
               Reset Password Email
             </MenuItem>
           </Link>
@@ -70,9 +76,15 @@ function NavListMenu() {
               />
             </button>
           </MenuHandler>
-          <MenuList className="hidden lg:block bg-primary-900 border border-gold-400/20 shadow-lg" {...defaultProps}>
+          <MenuList
+            className="hidden lg:block bg-primary-900 border border-gold-400/20 shadow-lg"
+            {...defaultProps}
+          >
             <Link href="/finance/monthly-report">
-              <MenuItem className="text-gold-400 hover:bg-primary-800 hover:text-gold-300 font-medium" {...defaultProps}>
+              <MenuItem
+                className="text-gold-400 hover:bg-primary-800 hover:text-gold-300 font-medium"
+                {...defaultProps}
+              >
                 Monthly Report
               </MenuItem>
             </Link>
@@ -83,7 +95,7 @@ function NavListMenu() {
   );
 }
 
-function NavList({ user }: { user: ReturnType<typeof useUser>['user'] }) {
+function NavList({ user }: { user: ReturnType<typeof useUser>["user"] }) {
   return (
     <div className="flex flex-col lg:flex-row lg:items-center lg:gap-2">
       {user && (
@@ -120,7 +132,9 @@ function MobileNavMenu() {
 
           {userHasRole(user, roles.financeAdmin) && (
             <div className="space-y-1 mt-4">
-              <div className="text-gold-400 font-medium text-lg mb-2">Finance</div>
+              <div className="text-gold-400 font-medium text-lg mb-2">
+                Finance
+              </div>
               <Link href="/finance/monthly-report">
                 <div className="text-gold-400/90 hover:text-gold-300 hover:bg-primary-800 px-3 py-2 rounded-md transition-colors duration-200">
                   Monthly Report

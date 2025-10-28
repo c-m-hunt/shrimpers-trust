@@ -34,7 +34,9 @@ export default function RootLayout({
         >
           <Navbar />
           <main className="w-full">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">{children}</div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+              {children}
+            </div>
           </main>
         </body>
       </Auth0Provider>

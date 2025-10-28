@@ -16,7 +16,7 @@ export const hasRole = async (role: RoleValue) => {
   return false;
 };
 
-type User = NonNullable<Awaited<ReturnType<typeof auth0.getSession>>>['user'];
+type User = NonNullable<Awaited<ReturnType<typeof auth0.getSession>>>["user"];
 
 export const userHasRole = (user: User, role: RoleValue) => {
   const roles = user[`${namespace}/roles`];

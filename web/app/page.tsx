@@ -37,7 +37,8 @@ export default function Home() {
             Welcome to Shrimpers Trust Tools
           </h1>
           <p className="text-xl text-primary-700 max-w-2xl mx-auto">
-            Your comprehensive platform for managing and accessing Shrimpers Trust resources
+            Your comprehensive platform for managing and accessing Shrimpers
+            Trust resources
           </p>
         </div>
 
@@ -54,7 +55,9 @@ export default function Home() {
 
             <div className="grid md:grid-cols-2 gap-6">
               <div className="card hover:border-gold-200">
-                <h3 className="text-xl font-semibold text-primary-900 mb-3">Tools</h3>
+                <h3 className="text-xl font-semibold text-primary-900 mb-3">
+                  Tools
+                </h3>
                 <p className="text-primary-700 mb-4">
                   Access various administrative and utility tools.
                 </p>
@@ -66,7 +69,9 @@ export default function Home() {
               </div>
 
               <div className="card hover:border-gold-200">
-                <h3 className="text-xl font-semibold text-primary-900 mb-3">Finance</h3>
+                <h3 className="text-xl font-semibold text-primary-900 mb-3">
+                  Finance
+                </h3>
                 <p className="text-primary-700 mb-4">
                   Financial reporting and management tools.
                 </p>
