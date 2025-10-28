@@ -47,3 +47,32 @@ from the creators of Next.js.
 Check out our
 [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying)
 for more details.
+
+## Auth
+
+Authentication now uses NextAuth.js with Azure AD (Entra ID) provider.
+
+Environment variables:
+
+```
+NEXTAUTH_URL=http://localhost:3001
+NEXTAUTH_SECRET=your-random-secret
+
+AZURE_AD_CLIENT_ID=...        # Application (client) ID
+AZURE_AD_CLIENT_SECRET=...    # Client secret value
+AZURE_AD_TENANT_ID=...        # Directory (tenant) ID
+```
+
+Azure portal setup:
+
+- Redirect URI (web):
+  - http://localhost:3001/api/auth/callback/azure-ad
+- Allowed logout URL (optional but recommended):
+  - http://localhost:3001
+
+Runtime URLs should use your deployed base URL instead of localhost.
+
+Sign-in/out endpoints are handled by NextAuth:
+
+- /api/auth/signin
+- /api/auth/signout

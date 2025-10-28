@@ -1,11 +1,13 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useSession, signIn } from "next-auth/react";
 import Link from "next/link";
 
 export default function Home() {
-  const { user, isLoading } = useUser();
+  const { data, status } = useSession();
+  const user = data?.user as any;
+  const isLoading = status === "loading";
 
   if (isLoading) {
     return (
@@ -92,11 +94,9 @@ export default function Home() {
               <p className="text-primary-700 mb-6">
                 Sign in to access your Shrimpers Trust tools and resources.
               </p>
-              <a href="/auth/login">
-                <button className="w-full bg-primary-900 text-gold-400 px-6 py-3 rounded-md font-medium hover:bg-primary-800 hover:text-gold-300 transition-colors duration-200">
-                  Sign In
-                </button>
-              </a>
+              <button onClick={() => signIn()} className="w-full bg-primary-900 text-gold-400 px-6 py-3 rounded-md font-medium hover:bg-primary-800 hover:text-gold-300 transition-colors duration-200">
+                Sign In
+              </button>
             </div>
           </div>
         )}

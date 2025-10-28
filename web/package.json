@@ -11,11 +11,11 @@
     "updateTypes": "cp ../cli/treasurer/types.ts ./src/types/finance.ts"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "^4",
     "@heroicons/react": "^2.2.0",
     "@material-tailwind/react": "^2.1.10",
     "eslint-config-next": "^15",
     "next": "^15.5.6",
+    "next-auth": "^4.24.7",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

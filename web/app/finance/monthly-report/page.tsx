@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
+import { withPageAuthRequired } from "@/lib/withPageAuthRequired";
 import {
   Button,
   Card,

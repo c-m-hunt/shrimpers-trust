@@ -1,5 +1,6 @@
-import { auth0 } from "../../../lib/auth0";
+import { NextResponse } from "next/server";
 
 export async function GET() {
-  return auth0.startInteractiveLogin();
+  // Redirect to NextAuth sign in
+  return NextResponse.redirect(new URL("/api/auth/signin", process.env.NEXTAUTH_URL || "http://localhost:3001"));
 }

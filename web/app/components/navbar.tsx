@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 
 import {
@@ -23,7 +23,8 @@ function NavListMenu() {
   const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
   const [isFinanceMenuOpen, setIsFinanceMenuOpen] = useState(false);
 
-  const { user } = useUser();
+  const { data } = useSession();
+  const user = data?.user as any;
 
   return (
     <React.Fragment>
@@ -95,7 +96,7 @@ function NavListMenu() {
   );
 }
 
-function NavList({ user }: { user: ReturnType<typeof useUser>["user"] }) {
+function NavList({ user }: { user: any }) {
   return (
     <div className="flex flex-col lg:flex-row lg:items-center lg:gap-2">
       {user && (
@@ -111,7 +112,8 @@ function NavList({ user }: { user: ReturnType<typeof useUser>["user"] }) {
 }
 
 function MobileNavMenu() {
-  const { user } = useUser();
+  const { data } = useSession();
+  const user = data?.user as any;
 
   return (
     <div className="lg:hidden space-y-2 px-4 py-4">
@@ -149,7 +151,9 @@ function MobileNavMenu() {
 }
 
 export default function TopNavbar() {
-  const { user, isLoading: userIsLoading } = useUser();
+  const { data, status } = useSession();
+  const user = data?.user as any;
+  const userIsLoading = status === "loading";
   const [openNav, setOpenNav] = React.useState(false);
 
   React.useEffect(() => {
@@ -183,19 +187,15 @@ export default function TopNavbar() {
               )}
 
               {!user && !userIsLoading && (
-                <a href="/auth/login">
-                  <button className="bg-gold-400 text-primary-900 px-4 py-2 rounded-md font-medium hover:bg-gold-300 transition-colors duration-200">
-                    Log In
-                  </button>
-                </a>
+                <button onClick={() => signIn()} className="bg-gold-400 text-primary-900 px-4 py-2 rounded-md font-medium hover:bg-gold-300 transition-colors duration-200">
+                  Log In
+                </button>
               )}
 
               {user && (
-                <a href="/auth/logout">
-                  <button className="border border-gold-400/40 text-gold-400 px-4 py-2 rounded-md font-medium hover:bg-primary-800 hover:text-gold-300 transition-colors duration-200">
-                    Log Out
-                  </button>
-                </a>
+                <button onClick={() => signOut()} className="border border-gold-400/40 text-gold-400 px-4 py-2 rounded-md font-medium hover:bg-primary-800 hover:text-gold-300 transition-colors duration-200">
+                  Log Out
+                </button>
               )}
             </div>
           </div>
@@ -221,19 +221,15 @@ export default function TopNavbar() {
             {/* Mobile Auth Buttons */}
             <div className="px-4 py-4 border-t border-gold-400/20">
               {!user && !userIsLoading && (
-                <a href="/auth/login">
-                  <button className="w-full bg-gold-400 text-primary-900 px-4 py-3 rounded-md font-medium hover:bg-gold-300 transition-colors duration-200">
-                    Log In
-                  </button>
-                </a>
+                <button onClick={() => signIn()} className="w-full bg-gold-400 text-primary-900 px-4 py-3 rounded-md font-medium hover:bg-gold-300 transition-colors duration-200">
+                  Log In
+                </button>
               )}
 
               {user && (
-                <a href="/auth/logout">
-                  <button className="w-full border border-gold-400/40 text-gold-400 px-4 py-3 rounded-md font-medium hover:bg-primary-800 hover:text-gold-300 transition-colors duration-200">
-                    Log Out
-                  </button>
-                </a>
+                <button onClick={() => signOut()} className="w-full border border-gold-400/40 text-gold-400 px-4 py-3 rounded-md font-medium hover:bg-primary-800 hover:text-gold-300">
+                  Log Out
+                </button>
               )}
             </div>
           </div>

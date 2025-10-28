@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
+import { withPageAuthRequired } from "@/lib/withPageAuthRequired";
 import { useState } from "react";
 import { Button, Card, Input, Typography } from "@material-tailwind/react";
 import { variant } from "@material-tailwind/react/types/components/typography";
