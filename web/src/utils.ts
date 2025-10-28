@@ -19,8 +19,8 @@ export const areNumbersEqual = (
 
 export const annoyingDefaultProps = {
   placeholder: undefined,
-  onPointerEnterCapture: undefined,
-  onPointerLeaveCapture: undefined,
-  onResize: undefined,
-  onResizeCapture: undefined,
+  onResize: () => {},
+  onResizeCapture: () => {},
+  onPointerEnterCapture: () => {},
+  onPointerLeaveCapture: () => {},
 };

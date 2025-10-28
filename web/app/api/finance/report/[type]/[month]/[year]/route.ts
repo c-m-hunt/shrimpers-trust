@@ -7,7 +7,7 @@ export type ResponseData = {
   error?: string;
 };
 
-export const GET = async function passwordreset(
+export const GET = async function monthlyReport(
   request: Request,
   {
     params,
@@ -15,7 +15,8 @@ export const GET = async function passwordreset(
     params: Promise<{ type: string; month: string; year: string }>;
   },
 ) {
-  if (!(await hasRole(roles.financeAdmin))) {
+  const hasPermission = await hasRole(roles.financeAdmin);
+  if (!hasPermission) {
     return Response.json({ error: "Not authorized" }, { status: 401 });
   }
   const { type, month, year } = await params;

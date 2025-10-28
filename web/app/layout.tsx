@@ -1,6 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { Auth0Provider } from "@auth0/nextjs-auth0/client";
 import localFont from "next/font/local";
 import Navbar from "./components/navbar.tsx";
 import "./globals.css";
@@ -28,16 +28,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <UserProvider>
+      <Auth0Provider>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Navbar />
-          <div className="w-full justify-items-center">
-            <div className="max-w-screen-xl w-full">{children}</div>
-          </div>
+          <main className="w-full">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">{children}</div>
+          </main>
         </body>
-      </UserProvider>
+      </Auth0Provider>
     </html>
   );
 }
